@@ -1,0 +1,12 @@
+[package]
+name = "a01_message_box"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.windows-sys]
+git = "https://github.com/microsoft/windows-rs"
+features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Shell",
+]
+
