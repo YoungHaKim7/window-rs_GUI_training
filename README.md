@@ -57,6 +57,41 @@
 - https://users.rust-lang.org/t/gui-or-2d-game-crate-writing-some-drawing-app/79169
 - https://www.reddit.com/r/rust/comments/5j07bx/how_to_draw_a_pixel_to_the_screen/
 
+# 윈도우OS dev) WindowsOS GUI 만들때 이거 쓰자
+
+
+```toml
+[dependencies]
+windows-sys = { version = "0.59", features = [
+  "Win32_Foundation", "Win32_Graphics_Gdi", "Win32_Graphics_Dwm",
+  "Win32_Networking_WinSock", "Win32_NetworkManagement_IpHelper", "Win32_NetworkManagement_NetManagement",
+  "Win32_Security", "Win32_Security_Authorization", "Win32_Security_Cryptography",
+  "Win32_Storage_FileSystem", "Win32_System_Com", "Win32_System_Console",
+  "Win32_System_DataExchange", "Win32_System_Diagnostics_Debug",
+  "Win32_System_Environment", "Win32_System_IO", "Win32_System_JobObjects",
+  "Win32_System_LibraryLoader", "Win32_System_Memory", "Win32_System_Ole",
+  "Win32_System_Pipes", "Win32_System_Power", "Win32_System_Registry", "Win32_System_SystemInformation",
+  "Win32_System_SystemServices", "Win32_System_Threading", "Win32_System_Variant",
+  "Win32_UI_Accessibility", "Win32_UI_Controls", "Win32_UI_Controls_Dialogs", "Win32_UI_HiDpi",
+  "Win32_UI_Input_KeyboardAndMouse", "Win32_UI_Shell", "Win32_UI_Shell_Common", "Win32_UI_WindowsAndMessaging"
+] }
+
+
+[build-dependencies]
+embed-resource = "3.0"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "unwind"
+debug = 1
+strip = "none"
+```
+
+- https://github.com/isolmaz/SSDownload
+
+
 # 외국인의 작품
 - https://github.com/JohnScience/draw_on_screen
 
