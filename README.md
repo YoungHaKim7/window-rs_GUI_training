@@ -47,6 +47,9 @@
 
 # Windows API문서
 - https://github.com/MicrosoftDocs/win32
+  - windows-rs feature search
+    - Type a metadata API name to find the Cargo feature(s) to enable in the windows or windows-sys crate. Rich bindings may project some metadata types to sibling crates such as windows-numerics. A method or function may need more than one feature when its parameters span namespaces. Matching is a case-insensitive regular expression over Namespace::Name.
+    - https://microsoft.github.io/windows-rs/features/
 
 # windows.h
 - https://github.com/wine-mirror/wine
