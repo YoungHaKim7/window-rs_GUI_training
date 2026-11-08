@@ -51,6 +51,9 @@
     - Type a metadata API name to find the Cargo feature(s) to enable in the windows or windows-sys crate. Rich bindings may project some metadata types to sibling crates such as windows-numerics. A method or function may need more than one feature when its parameters span namespaces. Matching is a case-insensitive regular expression over Namespace::Name.
     - https://microsoft.github.io/windows-rs/features/
 
+- User mode and kernel mode
+  - https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode
+
 # windows.h
 - https://github.com/wine-mirror/wine
   - 원본(wine, Linux에서 Windows프로그램 돌리기)
