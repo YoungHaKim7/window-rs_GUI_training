@@ -1,0 +1,11 @@
+[package]
+name = "a01_animation"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+windows-core = {git = "https://github.com/microsoft/windows-rs"}
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
+targets = []
