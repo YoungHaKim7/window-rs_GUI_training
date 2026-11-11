@@ -99,7 +99,7 @@ fn main() {
         debug_assert!(!hwnd_toggle.is_null());
 
         // Stash the edit HWND in the state so wndproc can reach it.
-        if let Some(s) = unsafe { state_of(hwnd) } {
+        if let Some(s) = state_of(hwnd) {
             s.hwnd_edit = hwnd_edit;
         }
 

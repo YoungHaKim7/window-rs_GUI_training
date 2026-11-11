@@ -129,13 +129,17 @@ unsafe fn on_scroll(hwnd: HWND, bar: i32, code: i32) {
         let max_pos = (si.nMax - si.nPage as i32 + 1).max(si.nMin);
         let new = match code {
             // Vertical and horizontal codes share values (SB_TOP = SB_LEFT
-            // = 6 ...), so one match covers both bars.
-            SB_TOP | SB_LEFT => si.nMin, // Home / drag to top
-            SB_BOTTOM | SB_RIGHT => max_pos, // End / drag to bottom
-            SB_LINEUP | SB_LINELEFT => old - LINE_STEP, // arrow button
-            SB_LINEDOWN | SB_LINERIGHT => old + LINE_STEP,
-            SB_PAGEUP | SB_PAGELEFT => old - si.nPage as i32, // bar click above thumb
-            SB_PAGEDOWN | SB_PAGERIGHT => old + si.nPage as i32,
+            // = 6 ...), so one match covers both bars. Rust flags duplicate
+            // constants in one or-pattern as unreachable, so each arm lists
+            // one name; the horizontal alias rides along in a comment.
+            SB_TOP /* = SB_LEFT, Home / drag to top */ => si.nMin,
+            SB_BOTTOM /* = SB_RIGHT, End / drag to bottom */ => max_pos,
+            SB_LINEUP /* = SB_LINELEFT, arrow button */ => old - LINE_STEP,
+            SB_LINEDOWN /* = SB_LINERIGHT */ => old + LINE_STEP,
+            SB_PAGEUP /* = SB_PAGELEFT, bar click above thumb */
+                => old - si.nPage as i32,
+            SB_PAGEDOWN /* = SB_PAGERIGHT, bar click below thumb */
+                => old + si.nPage as i32,
             // Live drag. lparam also carries a 16-bit position, but
             // documents can be longer than 32767 px — nTrackPos is the
             // trustworthy 32-bit value. (SB_THUMBPOSITION is the same
