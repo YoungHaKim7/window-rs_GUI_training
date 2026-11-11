@@ -1,0 +1,11 @@
+[package]
+name = "e52_updown_control"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" provides the updown control class (msctls_updown32) and its
+# UDM_/UDS_ messages and styles.
+features = ["winuser", "libloaderapi", "commctrl"]

@@ -1,0 +1,12 @@
+[package]
+name = "e62_font_picker"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" (comdlg32.dll) provides ChooseFontW and CHOOSEFONTW;
+# LOGFONTW/CreateFontIndirectW come via "wingdi" (pulled in by winuser),
+# but we name it for honesty since the struct lives there.
+features = ["winuser", "libloaderapi", "commdlg", "wingdi"]

@@ -1,0 +1,11 @@
+[package]
+name = "e61_color_picker"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" (comdlg32.dll) provides ChooseColorW, CHOOSECOLORW and the
+# CC_* flags.
+features = ["winuser", "libloaderapi", "commdlg"]

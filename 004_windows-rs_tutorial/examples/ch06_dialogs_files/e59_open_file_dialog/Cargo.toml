@@ -1,0 +1,11 @@
+[package]
+name = "e59_open_file_dialog"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" (comdlg32.dll) provides GetOpenFileNameW, OPENFILENAMEW and
+# the OFN_* flags.
+features = ["winuser", "libloaderapi", "commdlg"]

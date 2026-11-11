@@ -1,0 +1,11 @@
+[package]
+name = "e53_statusbar"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" provides the status bar class (msctls_statusbar32 /
+# STATUSCLASSNAMEW) and its SB_* messages.
+features = ["winuser", "libloaderapi", "commctrl"]

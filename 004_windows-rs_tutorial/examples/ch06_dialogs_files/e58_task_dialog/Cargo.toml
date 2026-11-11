@@ -1,0 +1,11 @@
+[package]
+name = "e58_task_dialog"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" (comctl32.dll) exports TaskDialogIndirect and every TASKDIALOG_
+# /TDF_/TDN_ constant.
+features = ["winuser", "libloaderapi", "commctrl"]

@@ -26,7 +26,7 @@
 //!
 //! Run: `cargo run -p e67_custom_control`
 
-use windows::{Win32::*, core::*;
+use windows::{Win32::*, core::*};
 
 /// The control's class name — what a consumer passes to CreateWindowExW,
 /// exactly like `w!("BUTTON")`. Prefix with something app-specific so it
@@ -170,7 +170,7 @@ extern "system" fn main_wndproc(
                         (WS_CHILD | WS_VISIBLE) as u32,
                         0, 0, 0, 0,       // positioned by layout_tiles
                         Some(hwnd),
-                        Some(id as *mut _), // control id (fake-HMENU trick)
+                        Some(*id as usize as HMENU), // control id (fake-HMENU trick)
                         Some(instance),
                         None,
                     );

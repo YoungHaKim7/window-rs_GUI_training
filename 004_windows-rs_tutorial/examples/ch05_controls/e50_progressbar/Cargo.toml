@@ -1,0 +1,11 @@
+[package]
+name = "e50_progressbar"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" (comctl32.dll) owns InitCommonControlsEx and every PBM_/PBS_
+# progress-bar message and style.
+features = ["winuser", "libloaderapi", "commctrl"]

@@ -1,0 +1,11 @@
+[package]
+name = "e51_trackbar"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" provides the trackbar class (msctls_trackbar32) and its
+# TBM_/TBS_ messages and styles.
+features = ["winuser", "libloaderapi", "commctrl"]

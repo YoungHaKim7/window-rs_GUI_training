@@ -1,0 +1,11 @@
+[package]
+name = "e30_dpi_awareness"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "windef" is needed for the DPI_AWARENESS_CONTEXT_* pseudo-handle constants
+# (they are defined in windef.h in the C headers, not winuser).
+features = ["winuser", "libloaderapi", "wingdi", "windef"]

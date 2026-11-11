@@ -1,0 +1,10 @@
+[package]
+name = "e64_file_io_text"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" for GetOpenFileNameW / GetSaveFileNameW (both file dialogs).
+features = ["winuser", "libloaderapi", "commdlg"]

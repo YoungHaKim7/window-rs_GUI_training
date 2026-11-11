@@ -1,0 +1,11 @@
+[package]
+name = "e54_toolbar"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" provides the toolbar class (ToolbarWindow32 / TOOLBARCLASSNAMEW),
+# the TBBUTTON struct, and all TB_/TBSTYLE_/STD_ constants.
+features = ["winuser", "libloaderapi", "commctrl"]
