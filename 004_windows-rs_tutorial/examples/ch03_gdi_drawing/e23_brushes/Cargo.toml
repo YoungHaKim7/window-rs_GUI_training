@@ -1,0 +1,9 @@
+[package]
+name = "e23_brushes"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+features = ["winuser", "libloaderapi", "wingdi"]

@@ -1,0 +1,11 @@
+[package]
+name = "e45_checkbox"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# sysinfoapi: GetLocalTime (and SYSTEMTIME's natural home is minwinbase,
+# pulled in by winuser) — the clock in the title bar needs it.
+features = ["winuser", "libloaderapi", "sysinfoapi"]

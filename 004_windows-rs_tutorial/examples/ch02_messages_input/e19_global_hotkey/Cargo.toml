@@ -1,0 +1,13 @@
+[package]
+name = "e19_global_hotkey"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "imm" looks odd for a hotkey example. In this crate every constant lives in
+# the module of the C header that defines it first, and MOD_ALT / MOD_CONTROL
+# / MOD_SHIFT happen to come from imm.h (MOD_NOREPEAT and MOD_WIN are in
+# winuser). When a constant "doesn't exist", grep the vendored bindings.
+features = ["winuser", "libloaderapi", "sysinfoapi", "imm"]

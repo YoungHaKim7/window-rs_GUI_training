@@ -130,5 +130,70 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
   `Param<PCWSTR>` is accepted; for raw `PCWSTR` parameters
   (`DrawTextW`, `TextOutW`) use a `Vec<u16>` kept alive in a local:
   `let wide = to_wide(s); TextOutW(hdc, x, y, PCWSTR::from_raw(wide.as_ptr()), -1);`
-* Patterns in `match` can't contain `as` casts — for `VK_ESCAPE` etc. use
-  the char literal `'\u{1b}'` or an arm guard `_ if wparam as i32 == VK_ESCAPE`.
+* Patterns in `match` can't contain `as` casts — but constants themselves
+  ARE legal patterns: `match vk { VK_RETURN => ..., VK_ESCAPE => ... }`
+  works when `vk` is an `i32`. For a mismatched scrutinee type use an arm
+  guard: `_ if wparam as i32 == VK_ESCAPE`.
+* **A constant "doesn't exist"?** Each constant lives in the module of the
+  C header that defines it first, which is not always where you expect:
+  `MOD_ALT` / `MOD_CONTROL` / `MOD_SHIFT` are in `imm` (feature `"imm"`),
+  while `MOD_NOREPEAT` is in `winuser`. Grep the vendored bindings
+  (`grep -rn "pub const NAME" windows-rs/crates/libs/windows/src/Windows/Win32`)
+  and enable that module's feature, with a comment in Cargo.toml saying why.
+* A few constants are `u32` rather than `i32` (e.g. `WS_POPUP`), so
+  mixed expressions need the cast on the other operand:
+  `WS_POPUP | WS_VISIBLE as u32`.
+* There is no `GET_X_LPARAM`: define
+  `fn mouse_pos(lparam: LPARAM) -> (i32, i32) { ((lparam & 0xffff) as i16 as i32, ((lparam >> 16) & 0xffff) as i16 as i32) }`
+  (through `i16`, the coordinates are signed).
+
+## The window-state pattern (introduced in e13, deepened in e65)
+
+Any example that must remember something uses this — never `static mut`:
+
+```rust
+#[derive(Default)]
+struct State { /* plain Rust data */ }
+
+// in main, right after CreateWindowExW:
+let state = Box::into_raw(Box::<State>::default());
+SetWindowLongPtrW(hwnd, GWLP_USERDATA, state as isize);
+
+unsafe fn state_of(hwnd: HWND) -> Option<&'static mut State> {
+    unsafe {
+        let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut State;
+        (!ptr.is_null()).then(|| &mut *ptr)
+    }
+}
+
+// first lines of wndproc:
+let Some(state) = state_of(hwnd) else {
+    return DefWindowProcW(hwnd, message, wparam, lparam);
+};
+
+// in WM_DESTROY, before PostQuitMessage:
+let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut State;
+if !ptr.is_null() {
+    SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);
+    drop(Box::from_raw(ptr));
+}
+```
+
+Messages that arrive during `CreateWindowExW` (before the pointer is
+attached) take the default path. If an example needs state during
+creation (e.g. to create child controls in `WM_CREATE`), create the
+children in `main` after attaching the state instead, or pass the pointer
+through `CreateWindowExW`'s `lpparam` and attach it in `WM_NCCREATE`
+(e65 demonstrates that variant).
+
+## Working rules
+
+* Run cargo from the workspace root using an absolute path:
+  `cd "<abs path>/004_windows-rs_tutorial" && cargo build -p eNN_name`.
+  Do not navigate with relative `cd ..` chains.
+* Do not run the built executables: they are GUI programs that block on a
+  message loop and open windows on the user's desktop. "It compiles with
+  zero warnings" is the verification bar; say so honestly in your report
+  and flag any runtime behavior you are unsure of.
+* Fix problems with targeted edits to the one file concerned. No bulk
+  `sed`/regex rewrites across multiple files.
