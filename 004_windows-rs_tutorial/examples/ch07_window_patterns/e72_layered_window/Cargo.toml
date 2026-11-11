@@ -1,0 +1,11 @@
+[package]
+name = "e72_layered_window"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" provides the trackbar class (msctls_trackbar32) + TBM_/TBS_,
+# "wingdi" the GDI painting underneath the alpha.
+features = ["winuser", "libloaderapi", "wingdi", "commctrl"]

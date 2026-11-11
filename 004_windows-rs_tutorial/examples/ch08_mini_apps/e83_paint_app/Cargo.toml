@@ -1,0 +1,11 @@
+[package]
+name = "e83_paint_app"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "wingdi" for pens/brushes/regions and GetDIBits; "commdlg" is NOT needed
+# here — the .bmp writer names its own file (see main.rs).
+features = ["winuser", "libloaderapi", "wingdi"]

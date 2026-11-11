@@ -1,0 +1,11 @@
+[package]
+name = "e85_minesweeper"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "sysinfoapi" for GetTickCount (the LCG seed); "wingdi" for the board's
+# GDI painting.
+features = ["winuser", "libloaderapi", "wingdi", "sysinfoapi"]

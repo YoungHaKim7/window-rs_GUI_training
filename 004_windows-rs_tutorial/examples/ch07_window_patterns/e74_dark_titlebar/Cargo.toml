@@ -1,0 +1,10 @@
+[package]
+name = "e74_dark_titlebar"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "dwmapi" provides DwmSetWindowAttribute and the DWMWA_* attributes.
+features = ["winuser", "libloaderapi", "wingdi", "dwmapi"]

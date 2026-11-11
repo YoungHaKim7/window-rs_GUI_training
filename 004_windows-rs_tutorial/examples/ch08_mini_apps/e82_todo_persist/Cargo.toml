@@ -1,0 +1,10 @@
+[package]
+name = "e82_todo_persist"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" for GetOpenFileNameW / GetSaveFileNameW (Open/Save As).
+features = ["winuser", "libloaderapi", "commdlg"]

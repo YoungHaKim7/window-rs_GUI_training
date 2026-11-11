@@ -1,0 +1,11 @@
+[package]
+name = "e77_notepad"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commdlg" provides GetOpenFileNameW / GetSaveFileNameW and the OFN_*
+# flags (comdlg32).
+features = ["winuser", "libloaderapi", "commdlg"]

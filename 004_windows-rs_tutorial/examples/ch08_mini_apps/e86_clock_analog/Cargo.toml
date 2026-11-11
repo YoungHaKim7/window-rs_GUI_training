@@ -1,0 +1,10 @@
+[package]
+name = "e86_clock_analog"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "sysinfoapi" for GetLocalTime; "wingdi" for the hands and ticks.
+features = ["winuser", "libloaderapi", "wingdi", "sysinfoapi"]

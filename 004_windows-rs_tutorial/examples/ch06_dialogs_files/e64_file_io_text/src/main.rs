@@ -21,7 +21,7 @@
 //!
 //! Run: `cargo run -p e64_file_io_text`
 
-use windows::{Win32::*, core::*;
+use windows::{Win32::*, core::*};
 
 const IDC_OPEN: i32 = 1001; // "Open..." button
 const IDC_SAVE: i32 = 1002; // "Save as..." button

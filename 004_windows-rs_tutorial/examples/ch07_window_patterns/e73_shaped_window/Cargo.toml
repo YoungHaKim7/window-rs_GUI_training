@@ -1,0 +1,10 @@
+[package]
+name = "e73_shaped_window"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "wingdi" provides the region objects (CreateEllipticRgn / CreatePolygonRgn).
+features = ["winuser", "libloaderapi", "wingdi"]

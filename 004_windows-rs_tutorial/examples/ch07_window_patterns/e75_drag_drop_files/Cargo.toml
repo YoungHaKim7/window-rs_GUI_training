@@ -1,0 +1,11 @@
+[package]
+name = "e75_drag_drop_files"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "shellapi" provides the WM_DROPFILES trio: DragAcceptFiles,
+# DragQueryFileW, DragFinish (shell32 owns shell drag-drop).
+features = ["winuser", "libloaderapi", "wingdi", "shellapi"]

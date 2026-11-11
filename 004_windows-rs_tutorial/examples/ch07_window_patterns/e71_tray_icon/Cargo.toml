@@ -1,0 +1,11 @@
+[package]
+name = "e71_tray_icon"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "shellapi" provides Shell_NotifyIconW / NOTIFYICONDATAW (the notification
+# area lives in shell32), plus DragAcceptFiles used by e75.
+features = ["winuser", "libloaderapi", "shellapi"]
