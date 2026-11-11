@@ -13,3 +13,6 @@
 
 ## Windows API문서(간단한 개념만(쉬움))
 - https://github.com/MicrosoftDocs/win32
+
+### 마소 공식 설명서
+- https://learn.microsoft.com/en-us/windows/win32/
