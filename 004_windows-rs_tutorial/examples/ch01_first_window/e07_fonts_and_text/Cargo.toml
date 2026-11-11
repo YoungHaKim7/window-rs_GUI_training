@@ -1,0 +1,9 @@
+[package]
+name = "e07_fonts_and_text"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+features = ["winuser", "libloaderapi", "wingdi"]

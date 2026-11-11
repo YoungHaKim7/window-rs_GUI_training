@@ -1,0 +1,25 @@
+[workspace]
+resolver = "3"
+members = ["examples/*/*"]
+# The vendored windows-rs clone is its own cargo workspace (its crates inherit
+# dependencies from ITS root manifest). Explicitly exclude it so cargo never
+# treats it as part of this one.
+exclude = ["windows-rs"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace.dependencies]
+# All examples depend on the vendored windows-rs clone in ./windows-rs.
+# The `windows` crate's Win32 features are opt-in per example: each example's
+# Cargo.toml adds only the narrow features it needs (e.g. "winuser").
+windows = { path = "windows-rs/crates/libs/windows" }
+windows-window = { path = "windows-rs/crates/libs/window" }
+windows-webview = { path = "windows-rs/crates/libs/webview" }
+
+[profile.dev]
+# Debug builds are fine for tutorials; slightly optimize for smoother animation
+# examples (bouncing ball, snake, minesweeper...) without slowing down rebuilds.
+opt-level = 1

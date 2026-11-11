@@ -1,0 +1,9 @@
+[package]
+name = "e08_client_rect"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+features = ["winuser", "libloaderapi"]
