@@ -273,7 +273,7 @@ fn build_find_template() -> TemplateBuilder {
 
     // Item 1: the EDIT (class atom 0x0081).
     t.align_dword();
-    t.dword((WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER) as u32 | DS_SETFONT as u32 & 0);
+    t.dword((WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER) as u32);
     t.dword(0);
     t.i16s(&[10, 12, 170, 12]);
     t.word(IDC_FIND_EDIT as u16);

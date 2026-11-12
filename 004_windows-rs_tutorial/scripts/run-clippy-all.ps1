@@ -98,6 +98,14 @@ $Packages = @(
     "e90_screen_capture"
     "e91_process_list"
     "e92_system_info"
+    "e93_registry_settings"
+    "e94_worker_thread"
+    "e95_enum_windows"
+    "e96_direct2d_hello"
+    "e97_webview"
+    "e98_window_builder"
+    "e99_todo_final"
+    "e100_mdi_editor"
 )
 
 $Total = $Packages.Count
