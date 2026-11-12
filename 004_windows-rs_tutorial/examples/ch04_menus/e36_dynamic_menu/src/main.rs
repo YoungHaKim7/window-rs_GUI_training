@@ -128,7 +128,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
         match message as i32 {
             WM_COMMAND => {
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
 
                 if id == ID_ADD_RECENT {
                     // Evict before append: position 0 is the OLDEST entry

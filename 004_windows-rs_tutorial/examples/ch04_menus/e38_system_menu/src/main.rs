@@ -105,7 +105,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Our id 2001 loses its low nibble under the mask — hence
                 // we compare against 2001 & 0xFFF0 = 2000, and the comment
                 // above about choosing ids in multiples of 16.
-                let cmd = (wparam & 0xfff0) as usize;
+                let cmd = wparam & 0xfff0;
 
                 if cmd == IDM_ABOUT_SYS & 0xfff0 {
                     _ = MessageBoxW(

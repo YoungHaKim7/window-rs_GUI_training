@@ -81,7 +81,7 @@ unsafe fn build_icon() -> HICON {
         // ---- AND mask: 1 bpp, bit set = transparent ---------------------
         // One bit per pixel, MSB = leftmost of each 8-pixel group; a
         // 32-px row is exactly 4 bytes (1-bpp rows round up to 4 anyway).
-        let row_bytes = (SIZE as usize + 31) / 32 * 4;
+        let row_bytes = (SIZE as usize).div_ceil(32) * 4;
         let mut mask_bits = vec![0u8; row_bytes * SIZE as usize];
         for y in 0..SIZE {
             for x in 0..SIZE {

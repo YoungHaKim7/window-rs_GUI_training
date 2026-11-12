@@ -5,7 +5,7 @@
 //!   position hides: `lparam`, two signed 16-bit values packed into one isize
 //! * `wparam` carries the modifier flags (`MK_SHIFT`, `MK_CONTROL`, ...)
 //! * `GetDC` / `ReleaseDC` — painting *outside* WM_PAINT (fine for effects;
-//!  not for content that must survive a repaint)
+//! not for content that must survive a repaint)
 //! * `CS_DBLCLKS` — the class flag that makes double-clicks arrive as
 //!   `WM_LBUTTONDBLCLK` instead of a click-stream
 //!

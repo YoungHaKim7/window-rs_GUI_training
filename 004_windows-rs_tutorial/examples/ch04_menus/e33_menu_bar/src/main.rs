@@ -2,8 +2,8 @@
 //!
 //! What you learn:
 //! * The menu-bar recipe: `CreateMenu` (an empty bar) + one
-//! *per menu* `CreatePopupMenu` (a drop-down), `AppendMenuW` the drop-downs
-//! into the bar, then `SetMenu(hwnd, bar)` to attach the whole thing
+//!     *per menu* `CreatePopupMenu` (a drop-down), `AppendMenuW` the drop-downs
+//!   into the bar, then `SetMenu(hwnd, bar)` to attach the whole thing
 //! * `WM_COMMAND` — how a menu pick arrives: LOWORD(wparam) is the item's
 //!   id, HIWORD(wparam) is 0 when the source is a menu (controls put their
 //!   notification code there — the same message serves both)
@@ -106,7 +106,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 //   HIWORD = 0 for menus, the notification code for
                 //            controls (buttons send BN_CLICKED = 0 too)
                 // lparam = the control HWND — 0 for menu picks.
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
                 match id {
                     1001 => {
                         // Exit: route through the same door as the X

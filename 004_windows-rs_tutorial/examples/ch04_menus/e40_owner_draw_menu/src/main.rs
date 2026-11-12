@@ -200,7 +200,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 }
             }
             WM_COMMAND => {
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
                 if let Some((_, label, r, g, b)) =
                     PALETTE.iter().find(|(pid, _, _, _, _)| *pid == id)
                 {

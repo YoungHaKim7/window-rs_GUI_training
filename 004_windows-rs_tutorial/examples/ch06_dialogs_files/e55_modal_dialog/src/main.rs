@@ -106,7 +106,7 @@ impl TemplateBuilder {
         // happens to sit at an odd word (2 mod 4 bytes), skip one word.
         // The fixed capacity means no reallocation can move the base.
         let words = vec![0u16; 256];
-        let start = (words.as_ptr() as usize % 4 != 0) as usize;
+        let start = (!(words.as_ptr() as usize).is_multiple_of(4)) as usize;
         Self {
             words,
             start,
@@ -155,7 +155,7 @@ fn build_template() -> TemplateBuilder {
         // DS_MODALFRAME = the thick modal border. DS_CENTER = open centered
         // on the owner (x/y below are then relative offsets of 0).
         // (WS_POPUP is a u32 constant in this crate — mind the cast dance.)
-        WS_POPUP as u32 | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32,
+        WS_POPUP | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32,
     );
     t.dword(0); // dwExtendedStyle: none
     t.word(1); // cdit: count of DLGITEMTEMPLATEs that follow — one button

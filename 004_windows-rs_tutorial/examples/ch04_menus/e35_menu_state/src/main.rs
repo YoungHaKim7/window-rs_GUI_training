@@ -147,7 +147,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
         match message as i32 {
             WM_COMMAND => {
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
                 // Helper: restamp a ✓ item after its boolean flipped.
                 let mark = |id: usize, on: bool| {
                     _ = CheckMenuItem(
