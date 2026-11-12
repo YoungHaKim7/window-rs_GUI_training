@@ -1,8 +1,9 @@
 [workspace.package]
 edition = "2024"
 publish = false
-version = "0.0.0"
+version = "0.1.0"
 rust-version = "1.99.1"
+description = "Creating a GUI Using the Windows Kernel, Basic Course."
 
 [workspace]
 resolver = "3"
