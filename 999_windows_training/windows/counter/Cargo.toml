@@ -1,0 +1,14 @@
+[package]
+name = "counter"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dependencies.windows]
+git = "https://github.com/microsoft/windows-rs/"
+features = [
+    "pdh",
+]
+rev = "8ca69fd"
+
