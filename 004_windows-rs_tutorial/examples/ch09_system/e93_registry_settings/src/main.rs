@@ -49,13 +49,13 @@ fn main() {
         let status = RegCreateKeyExW(
             HKEY_CURRENT_USER,
             SUBKEY,
-            None,               // reserved, must be None
-            PCWSTR::null(),     // no class string
+            None,                           // reserved, must be None
+            PCWSTR::null(),                 // no class string
             REG_OPTION_NON_VOLATILE as u32, // a normal (on-disk) key
             (KEY_READ | KEY_WRITE) as REGSAM,
-            None,               // default security
+            None, // default security
             &mut hkey,
-            None,               // don't care if it was created vs opened
+            None, // don't care if it was created vs opened
         );
         debug_assert_eq!(status, ERROR_SUCCESS, "RegCreateKeyExW failed");
 
@@ -66,7 +66,9 @@ fn main() {
         let saved_x = read_dword(hkey, w!("x"));
         let restored = saved_x.is_some();
         let x = saved_x.map(|v| v as i32).unwrap_or(CW_USEDEFAULT);
-        let y = read_dword(hkey, w!("y")).map(|v| v as i32).unwrap_or(CW_USEDEFAULT);
+        let y = read_dword(hkey, w!("y"))
+            .map(|v| v as i32)
+            .unwrap_or(CW_USEDEFAULT);
         let w = read_dword(hkey, w!("w")).map(|v| v as i32).unwrap_or(640);
         let h = read_dword(hkey, w!("h")).map(|v| v as i32).unwrap_or(360);
 

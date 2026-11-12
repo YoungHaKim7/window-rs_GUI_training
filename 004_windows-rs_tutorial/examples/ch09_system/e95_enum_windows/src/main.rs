@@ -83,12 +83,8 @@ fn main() {
             0,
             w!("LISTBOX"),
             w!(""),
-            (WS_CHILD
-                | WS_VISIBLE
-                | WS_BORDER
-                | LBS_NOTIFY
-                | LBS_NOINTEGRALHEIGHT
-                | WS_VSCROLL) as u32,
+            (WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL)
+                as u32,
             12,
             12,
             440,

@@ -52,7 +52,9 @@ fn main() {
         // re-entrant message pumping under the hood. MULTITHREADED is for
         // worker threads or headless rendering. Failures other than
         // S_FALSE ("already initialized on this thread") we treat as fatal.
-        CoInitializeEx(None, COINIT_APARTMENTTHREADED as u32).ok().expect("CoInitializeEx");
+        CoInitializeEx(None, COINIT_APARTMENTTHREADED as u32)
+            .ok()
+            .expect("CoInitializeEx");
 
         // ---- The D2D1 factory: the root object everything else comes from.
         // SINGLE_THREADED is cheaper and correct for one UI thread. Note the
@@ -135,7 +137,7 @@ unsafe fn create_target(factory: &ID2D1Factory) -> Result<ID2D1DCRenderTarget> {
             r#type: D2D1_RENDER_TARGET_TYPE_SOFTWARE, // rasterize anywhere, incl. RDP
             pixelFormat: D2D1_PIXEL_FORMAT {
                 format: DXGI_FORMAT_B8G8R8A8_UNORM, // 32-bpp, the window-friendly format
-                alphaMode: D2D1_ALPHA_MODE_IGNORE,   // destination has no alpha channel
+                alphaMode: D2D1_ALPHA_MODE_IGNORE,  // destination has no alpha channel
             },
             dpiX: 0.0, // 0.0 = "use the desktop DPI"
             dpiY: 0.0,

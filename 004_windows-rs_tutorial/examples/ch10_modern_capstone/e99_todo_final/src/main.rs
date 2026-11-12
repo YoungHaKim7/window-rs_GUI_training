@@ -97,18 +97,43 @@ fn main() {
         _ = AppendMenuW(file_menu, MF_STRING as u32, IDM_EXIT as usize, w!("E&xit"));
 
         let todo_menu = CreatePopupMenu();
-        _ = AppendMenuW(todo_menu, MF_STRING as u32, IDM_FOCUS_ENTRY as usize, w!("Focus &entry\tCtrl+N"));
-        _ = AppendMenuW(todo_menu, MF_STRING as u32, IDM_DELETE as usize, w!("&Delete selected\tDel"));
+        _ = AppendMenuW(
+            todo_menu,
+            MF_STRING as u32,
+            IDM_FOCUS_ENTRY as usize,
+            w!("Focus &entry\tCtrl+N"),
+        );
+        _ = AppendMenuW(
+            todo_menu,
+            MF_STRING as u32,
+            IDM_DELETE as usize,
+            w!("&Delete selected\tDel"),
+        );
         _ = AppendMenuW(todo_menu, MF_SEPARATOR as u32, 0, w!(""));
-        _ = AppendMenuW(todo_menu, MF_STRING as u32, IDM_SAVE as usize, w!("&Save\tCtrl+S"));
+        _ = AppendMenuW(
+            todo_menu,
+            MF_STRING as u32,
+            IDM_SAVE as usize,
+            w!("&Save\tCtrl+S"),
+        );
 
         let view_menu = CreatePopupMenu();
         // Checkable item: state lives in the menu itself (e35); MF_CHECKED
         // is toggled in WM_COMMAND when the user picks it.
-        _ = AppendMenuW(view_menu, MF_STRING as u32, IDM_DARK as usize, w!("&Dark titlebar"));
+        _ = AppendMenuW(
+            view_menu,
+            MF_STRING as u32,
+            IDM_DARK as usize,
+            w!("&Dark titlebar"),
+        );
 
         let help_menu = CreatePopupMenu();
-        _ = AppendMenuW(help_menu, MF_STRING as u32, IDM_ABOUT as usize, w!("&About..."));
+        _ = AppendMenuW(
+            help_menu,
+            MF_STRING as u32,
+            IDM_ABOUT as usize,
+            w!("&About..."),
+        );
 
         _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
         _ = AppendMenuW(bar, MF_POPUP as u32, todo_menu as usize, w!("&Todo"));
@@ -309,7 +334,12 @@ unsafe fn refresh_list(state: &mut State) {
         for (text, done) in &state.todos {
             let row = format!("{} {}", if *done { "[x]" } else { "[ ]" }, text);
             let wide: Vec<u16> = row.encode_utf16().chain(std::iter::once(0)).collect();
-            SendMessageW(state.hwnd_list, LB_ADDSTRING as u32, 0, wide.as_ptr() as isize);
+            SendMessageW(
+                state.hwnd_list,
+                LB_ADDSTRING as u32,
+                0,
+                wide.as_ptr() as isize,
+            );
         }
     }
 }
@@ -331,7 +361,12 @@ unsafe fn refresh_status(state: &mut State) {
 
         let done = state.todos.iter().filter(|(_, d)| *d).count();
         let open = state.todos.len() - done;
-        let part0 = format!("{} total \u{b7} {} done \u{b7} {} open", state.todos.len(), done, open);
+        let part0 = format!(
+            "{} total \u{b7} {} done \u{b7} {} open",
+            state.todos.len(),
+            done,
+            open
+        );
         let wide: Vec<u16> = part0.encode_utf16().chain(std::iter::once(0)).collect();
         SendMessageW(
             state.hwnd_status,
@@ -432,7 +467,12 @@ unsafe fn tray_delete(hwnd: HWND) {
 unsafe fn show_tray_menu(hwnd: HWND) {
     unsafe {
         let menu = CreatePopupMenu();
-        _ = AppendMenuW(menu, MF_STRING as u32, IDM_TRAY_RESTORE as usize, w!("&Restore"));
+        _ = AppendMenuW(
+            menu,
+            MF_STRING as u32,
+            IDM_TRAY_RESTORE as usize,
+            w!("&Restore"),
+        );
         _ = AppendMenuW(menu, MF_STRING as u32, IDM_TRAY_EXIT as usize, w!("E&xit"));
 
         // The two-step dismissal dance (documented since Windows 95):
@@ -442,15 +482,7 @@ unsafe fn show_tray_menu(hwnd: HWND) {
 
         let mut pt = POINT::default();
         _ = GetCursorPos(&mut pt);
-        _ = TrackPopupMenu(
-            menu,
-            TPM_RIGHTBUTTON as u32,
-            pt.x,
-            pt.y,
-            None,
-            hwnd,
-            None,
-        );
+        _ = TrackPopupMenu(menu, TPM_RIGHTBUTTON as u32, pt.x, pt.y, None, hwnd, None);
         // ...and a WM_NULL right after, to force the taskbar thread to
         // notice the foreground change (KB Q135788, still true today).
         _ = PostMessageW(Some(hwnd), WM_NULL as u32, 0, 0);
@@ -467,7 +499,11 @@ unsafe fn add_todo(state: &mut State) {
             return; // nothing typed: ignore quietly
         }
         let mut buf = vec![0u16; len as usize + 1];
-        let copied = GetWindowTextW(state.hwnd_entry, PWSTR::from_raw(buf.as_mut_ptr()), buf.len() as i32);
+        let copied = GetWindowTextW(
+            state.hwnd_entry,
+            PWSTR::from_raw(buf.as_mut_ptr()),
+            buf.len() as i32,
+        );
         buf.truncate(copied as usize);
         state.todos.push((String::from_utf16_lossy(&buf), false));
 
@@ -553,7 +589,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     }
                     IDM_SAVE => {
                         save_todos(&state.todos);
-                        println!("saved {} todos to {}", state.todos.len(), todos_path().display());
+                        println!(
+                            "saved {} todos to {}",
+                            state.todos.len(),
+                            todos_path().display()
+                        );
                         0
                     }
                     IDM_DARK => {
@@ -564,7 +604,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         _ = CheckMenuItem(
                             menu,
                             IDM_DARK,
-                            (MF_BYCOMMAND | if state.dark { MF_CHECKED } else { MF_UNCHECKED }) as u32,
+                            (MF_BYCOMMAND | if state.dark { MF_CHECKED } else { MF_UNCHECKED })
+                                as u32,
                         );
                         0
                     }

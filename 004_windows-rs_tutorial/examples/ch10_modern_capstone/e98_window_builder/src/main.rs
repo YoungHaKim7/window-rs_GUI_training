@@ -163,7 +163,7 @@ extern "system" fn builder_wndproc(
         // CreateWindowExW) and after teardown find a null pointer: default.
         match ptr.is_null() {
             false => match (*ptr)(hwnd, message, wparam, lparam) {
-                Some(result) => result,             // handled by the app
+                Some(result) => result, // handled by the app
                 None => DefWindowProcW(hwnd, message, wparam, lparam),
             },
             true => DefWindowProcW(hwnd, message, wparam, lparam),
@@ -189,7 +189,8 @@ fn main() {
                         let hdc = BeginPaint(hwnd, &mut ps);
                         let mut rect = RECT::default();
                         _ = GetClientRect(hwnd, &mut rect);
-                        let text = to_wide("Hello, builder! \u{2014} click to repaint, close to quit.");
+                        let text =
+                            to_wide("Hello, builder! \u{2014} click to repaint, close to quit.");
                         _ = SetBkMode(hdc, TRANSPARENT);
                         _ = DrawTextW(
                             hdc,

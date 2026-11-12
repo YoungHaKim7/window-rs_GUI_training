@@ -73,7 +73,7 @@ fn main() {
             hbrBackground: ((COLOR_APPWORKSPACE + 1) as isize) as HBRUSH,
             lpszClassName: w!("e100_frame"),
             ..Default::default() // no CS_HREDRAW/CS_VREDRAW: the client
-            // manages its own repaints; frame flicker stays away
+                                 // manages its own repaints; frame flicker stays away
         };
         debug_assert!(RegisterClassW(&wc_frame) != 0);
 
@@ -101,10 +101,20 @@ fn main() {
         // list (ids IDM_FIRSTCHILD + n) — position matters, we fish it out
         // by index in WM_CREATE.
         let window_menu = CreatePopupMenu();
-        _ = AppendMenuW(window_menu, MF_STRING as u32, IDM_TILE, w!("Tile &Vertical"));
+        _ = AppendMenuW(
+            window_menu,
+            MF_STRING as u32,
+            IDM_TILE,
+            w!("Tile &Vertical"),
+        );
         _ = AppendMenuW(window_menu, MF_STRING as u32, IDM_CASCADE, w!("&Cascade"));
         _ = AppendMenuW(window_menu, MF_SEPARATOR as u32, 0, w!(""));
-        _ = AppendMenuW(window_menu, MF_STRING as u32, IDM_CLOSEALL, w!("C&lose All"));
+        _ = AppendMenuW(
+            window_menu,
+            MF_STRING as u32,
+            IDM_CLOSEALL,
+            w!("C&lose All"),
+        );
 
         _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
         _ = AppendMenuW(bar, MF_POPUP as u32, window_menu as usize, w!("&Window"));
@@ -212,8 +222,7 @@ extern "system" fn frame_wndproc(
                         // lparam. The client creates the "e100_doc" child,
                         // tracks it, and lists it in the Window menu.
                         state.docs += 1;
-                        let title =
-                            HSTRING::from(format!("Untitled {}", state.docs));
+                        let title = HSTRING::from(format!("Untitled {}", state.docs));
                         let mdics = MDICREATESTRUCTW {
                             szClass: w!("e100_doc"),
                             // PCWSTR borrowed from the HSTRING above (kept
@@ -255,12 +264,9 @@ extern "system" fn frame_wndproc(
                         // the client IS a document — but this loop is the
                         // classic Petzold idiom.)
                         loop {
-                            let active = SendMessageW(
-                                state.hwnd_client,
-                                WM_MDIGETACTIVE as u32,
-                                0,
-                                0,
-                            ) as HWND;
+                            let active =
+                                SendMessageW(state.hwnd_client, WM_MDIGETACTIVE as u32, 0, 0)
+                                    as HWND;
                             if active.is_null() {
                                 break;
                             }
@@ -279,13 +285,7 @@ extern "system" fn frame_wndproc(
                     }
                     // IDM_FIRSTCHILD+n (the appended doc entries) need no
                     // code at all: DefFrameProcW implements them.
-                    _ => DefFrameProcW(
-                        hwnd,
-                        Some(state.hwnd_client),
-                        message,
-                        wparam,
-                        lparam,
-                    ),
+                    _ => DefFrameProcW(hwnd, Some(state.hwnd_client), message, wparam, lparam),
                 }
             }
 

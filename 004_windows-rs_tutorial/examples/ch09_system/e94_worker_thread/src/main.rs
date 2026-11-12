@@ -33,8 +33,8 @@
 //!
 //! Run: `cargo run -p e94_worker_thread`
 
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use windows::{Win32::*, core::*};
 
