@@ -1,6 +1,8 @@
 [workspace.package]
 edition = "2024"
 publish = false
+version = "0.0.0"
+rust-version = "1.99.1"
 
 [workspace]
 resolver = "3"
@@ -10,7 +12,6 @@ members = ["examples/*/*"]
 # treats it as part of this one.
 exclude = ["windows-rs"]
 
-version = "0.0.0"
 
 [workspace.dependencies]
 # All examples depend on the vendored windows-rs clone in ./windows-rs.
