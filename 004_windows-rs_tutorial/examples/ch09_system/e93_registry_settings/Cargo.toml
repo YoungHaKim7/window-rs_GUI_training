@@ -1,0 +1,12 @@
+[package]
+name = "e93_registry_settings"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "winreg" supplies RegCreateKeyExW/RegQueryValueExW/RegSetValueExW and
+# HKEY_CURRENT_USER; "winerror" supplies the LSTATUS result codes we compare
+# against (ERROR_SUCCESS, ERROR_FILE_NOT_FOUND).
+features = ["winuser", "libloaderapi", "winreg", "winerror"]

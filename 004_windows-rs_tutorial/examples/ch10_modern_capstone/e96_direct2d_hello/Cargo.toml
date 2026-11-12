@@ -1,0 +1,13 @@
+[package]
+name = "e96_direct2d_hello"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "d2d" pulls in dcommon/dxgi as well (the property structs live there);
+# "objbase" + "combaseapi" are COM init (COINIT_APARTMENTTHREADED lives in
+# objbase, CoInitializeEx in combaseapi); "winerror" supplies
+# D2DERR_RECREATE_TARGET for the device-lost check.
+features = ["winuser", "libloaderapi", "d2d", "objbase", "combaseapi", "winerror"]

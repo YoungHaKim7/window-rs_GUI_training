@@ -57,7 +57,108 @@ Each chapter directory has its own `README.md` with a per-example index.
 
 ## Full example index
 
-<!-- INDEX -->
+| # | Example | What it teaches |
+|---|---------|-----------------|
+| e01 | `e01_message_box` | Smallest Windows program; `w!()` literals; why Win32 calls are `unsafe` |
+| e02 | `e02_message_box_buttons` | Button/icon combos, default buttons, reading the answer |
+| e03 | `e03_hello_window` | **The canonical window**: class → create → message loop → wndproc |
+| e04 | `e04_hello_paint` | `WM_PAINT`, `BeginPaint`/`EndPaint`, `DrawTextW` |
+| e05 | `e05_window_anatomy` | Every `WNDCLASSW`/`CreateWindowExW` field annotated; `ShowWindow` |
+| e06 | `e06_unicode_strings` | `w!`, `Vec<u16>`, `HSTRING`; reading strings back |
+| e07 | `e07_fonts_and_text` | `CreateFontW`, `SelectObject`, colors, rotation; GDI object lifetime |
+| e08 | `e08_client_rect` | `AdjustWindowRect` — exact client size |
+| e09 | `e09_center_window` | `GetSystemMetrics`, centering, `WM_MOVE` |
+| e10 | `e10_window_styles` | Live WS_/WS_EX_ tour; `SetWindowLongPtrW` + `SWP_FRAMECHANGED` |
+| e11 | `e11_message_loop` | Watching messages flow; the `PeekMessageW` alternative |
+| e12 | `e12_mouse_clicks` | Mouse messages; packed coordinates; `GetDC` vs `WM_PAINT` |
+| e13 | `e13_mouse_move` | **The window-state pattern**; mouse capture; rubber-band model |
+| e14 | `e14_keyboard_input` | `WM_KEYDOWN` vs `WM_CHAR` vs `WM_SYSKEYDOWN` |
+| e15 | `e15_keyboard_focus` | Focus, the caret, a text box by hand |
+| e16 | `e16_timer_clock` | `SetTimer`/`WM_TIMER` heartbeat pattern |
+| e17 | `e17_hit_testing` | `WM_NCHITTEST` — draggable frameless `WS_POPUP` window |
+| e18 | `e18_shift_state` | `GetKeyState` vs `GetAsyncKeyState`; toggles; Shift+click |
+| e19 | `e19_global_hotkey` | `RegisterHotKey` system-wide |
+| e20 | `e20_cursors` | `WM_SETCURSOR`; per-zone cursors |
+| e21 | `e21_pixels_lines` | `SetPixelV`, `MoveToEx`/`LineTo` |
+| e22 | `e22_pens` | `CreatePen` style/width/color gallery |
+| e23 | `e23_brushes` | Solid + hatch brushes; system vs owned brushes |
+| e24 | `e24_shapes` | Rectangle/Ellipse/RoundRect/Pie/Chord/Arc/Polygon |
+| e25 | `e25_drawing_modes` | `SetROP2` XOR self-erasing feedback drawing |
+| e26 | `e26_double_buffering` | Compatible DC/bitmap + `BitBlt`; `WM_ERASEBKGND` |
+| e27 | `e27_bouncing_ball` | Timer + double buffering animation |
+| e28 | `e28_scrollbars` | Window scrollbars: `SetScrollInfo`, all `SB_*` codes |
+| e29 | `e29_resize_aware` | `WM_SIZE`-driven re-layout |
+| e30 | `e30_dpi_awareness` | Per-monitor DPI, `WM_DPICHANGED`, physical-size ruler |
+| e31 | `e31_regions_clipping` | Regions + `CombineRgn` + `SelectClipRgn` |
+| e32 | `e32_save_bitmap` | Client → real `.bmp` file (`GetDIBits`, packed headers) |
+| e33 | `e33_menu_bar` | `CreateMenu`/`AppendMenuW`, `WM_COMMAND` routing |
+| e34 | `e34_context_menu` | Right-click `TrackPopupMenu` |
+| e35 | `e35_menu_state` | Checkmarks, radio groups, graying; painted state |
+| e36 | `e36_dynamic_menu` | Runtime insert/remove; Recent-items submenu |
+| e37 | `e37_accelerators` | `CreateAcceleratorTableW`; pump ordering |
+| e38 | `e38_system_menu` | Extending the ⚙ system menu; `WM_SYSCOMMAND` masking |
+| e39 | `e39_runtime_icon` | `CreateIconIndirect`; `WM_SETICON` |
+| e40 | `e40_owner_draw_menu` | `MF_OWNERDRAW`, `WM_DRAWITEM`/`WM_MEASUREITEM` |
+| e41 | `e41_button` | First child control; `BN_CLICKED`; control ids |
+| e42 | `e42_static` | STATIC styles tour |
+| e43 | `e43_edit_single` | EDIT in/out; runtime style flips (`ES_PASSWORD`) |
+| e44 | `e44_edit_multiline` | Multiline EDIT with free scrolling |
+| e45 | `e45_checkbox` | `BS_AUTOCHECKBOX`; `BM_GETCHECK` |
+| e46 | `e46_radio_buttons` | Radio groups and the `WS_GROUP` rule |
+| e47 | `e47_combobox` | Filling, `CBN_SELCHANGE`, reading the pick |
+| e48 | `e48_listbox` | Selection, double-clicks, `LBS_NOTIFY` |
+| e49 | `e49_scrollbar_controls` | Standalone scrollbar children vs window scrollbars |
+| e50 | `e50_progressbar` | `InitCommonControlsEx`; stepping + marquee |
+| e51 | `e51_trackbar` | The slider: `TBM_*`, `WM_HSCROLL` from controls |
+| e52 | `e52_updown_control` | Spin buttons and buddy edits |
+| e53 | `e53_statusbar` | Parts, live text, the `WM_SIZE` contract |
+| e54 | `e54_toolbar` | Standard image lists, flat toolbar |
+| e55 | `e55_modal_dialog` | **In-memory DLGTEMPLATE** (no .rc files); `DialogBoxIndirectParamW` |
+| e56 | `e56_modeless_dialog` | `CreateDialogIndirectParamW` + `IsDialogMessage` |
+| e57 | `e57_dialog_controls` | Settings dialog; data both ways via `dwInitParam` |
+| e58 | `e58_task_dialog` | Modern `TaskDialogIndirect`: command links, verification |
+| e59 | `e59_open_file_dialog` | `GetOpenFileNameW`; double-null filters |
+| e60 | `e60_save_file_dialog` | `GetSaveFileNameW`; actually writing the file |
+| e61 | `e61_color_picker` | `ChooseColorW` with persistent custom colors |
+| e62 | `e62_font_picker` | `ChooseFontW` → `LOGFONTW` → live preview |
+| e63 | `e63_folder_browse` | `SHBrowseForFolderW` |
+| e64 | `e64_file_io_text` | Open → edit → save end-to-end |
+| e65 | `e65_window_state` | **State pattern, deep**: `WM_NCCREATE` attach, `WM_NCDESTROY` teardown, re-entrancy |
+| e66 | `e66_multiple_windows` | Two classes; **owned vs child** windows; sticky notes |
+| e67 | `e67_custom_control` | Your own reusable child control class |
+| e68 | `e68_subclassing` | `SetWindowSubclass` — hex-only EDIT |
+| e69 | `e69_owner_draw_button` | `BS_OWNERDRAW` + `WM_DRAWITEM` |
+| e70 | `e70_splitter_window` | Draggable divider between panes |
+| e71 | `e71_tray_icon` | `Shell_NotifyIconW`: tray, balloons, cleanup |
+| e72 | `e72_layered_window` | Alpha slider + color-key transparency |
+| e73 | `e73_shaped_window` | `SetWindowRgn` round/star windows |
+| e74 | `e74_dark_titlebar` | `DwmSetWindowAttribute` dark mode & caption colors |
+| e75 | `e75_drag_drop_files` | `WM_DROPFILES` from Explorer |
+| e76 | `e76_message_only_window` | `HWND_MESSAGE` invisible message sinks |
+| e77 | `e77_notepad` | Real notepad: menus, open/save, dirty flag |
+| e78 | `e78_calculator_basic` | Button-grid calculator, two-operand logic |
+| e79 | `e79_calculator_full` | Chained ops, keyboard, history |
+| e80 | `e80_todo_basic` | Todo: add, list, delete |
+| e81 | `e81_todo_complete` | Done-state, status counts, filtered views |
+| e82 | `e82_todo_persist` | File persistence + Ctrl+S + Recent menu |
+| e83 | `e83_paint_app` | Doodle pad with menus and `.bmp` export |
+| e84 | `e84_snake` | Classic snake, double-buffered |
+| e85 | `e85_minesweeper` | Custom-painted board, flood-fill, first-click-safe |
+| e86 | `e86_clock_analog` | Hand geometry + smooth face |
+| e87 | `e87_text_viewer` | Hand-rolled text layout, scrolling, find dialog |
+| e88 | `e88_unit_converter` | Live conversion; `EN_CHANGE`; data-driven units |
+| e89 | `e89_clipboard` | CF_UNICODETEXT both directions; global memory |
+| e90 | `e90_screen_capture` | Screen `BitBlt` + `.bmp` save |
+| e91 | `e91_process_list` | Toolhelp snapshot → listbox |
+| e92 | `e92_system_info` | Metrics, memory, uptime panel |
+| e93 | `e93_registry_settings` | Remember window placement in HKCU |
+| e94 | `e94_worker_thread` | Thread → `PostMessage` mailbox; cancel flag |
+| e95 | `e95_enum_windows` | `EnumWindows` + bring-to-front |
+| e96 | `e96_direct2d_hello` | Direct2D via a DC render target behind the same old HWND |
+| e97 | `e97_webview` | WebView2 hello (adapted from the vendored sample; needs the WebView2 Runtime) |
+| e98 | `e98_window_builder` | Build your own fluent window API — the tutorial recapitulated |
+| e99 | `e99_todo_final` | **Capstone todo**: tray + dark mode + accelerators + persistence |
+| e100 | `e100_mdi_editor` | Classic MDI: frame/client/child, `DefFrameProcW`/`DefMDIChildProcW` |
 
 ## How the code is written
 

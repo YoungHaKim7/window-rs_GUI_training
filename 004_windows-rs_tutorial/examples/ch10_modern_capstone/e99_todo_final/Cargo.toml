@@ -1,0 +1,11 @@
+[package]
+name = "e99_todo_final"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" = status bar + TaskDialog; "shellapi" = tray icon;
+# "dwmapi" = dark titlebar attribute. The rest is the standing set.
+features = ["winuser", "libloaderapi", "commctrl", "shellapi", "dwmapi"]

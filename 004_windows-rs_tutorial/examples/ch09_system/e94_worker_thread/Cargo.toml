@@ -1,0 +1,11 @@
+[package]
+name = "e94_worker_thread"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "commctrl" supplies InitCommonControlsEx + the progress-bar messages
+# (the msctls_progress32 class does not exist until comctl32 is initialized).
+features = ["winuser", "libloaderapi", "commctrl"]

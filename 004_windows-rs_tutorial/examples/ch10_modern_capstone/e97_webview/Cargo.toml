@@ -1,0 +1,20 @@
+[package]
+name = "e97_webview"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+# The ONE example allowed crates beyond `windows` (STYLE.md rule 8):
+# windows-webview hosts a real WebView2 browser inside a windows-window.
+# It mirrors the vendored sample at windows-rs/crates/samples/webview/minimal.
+[dependencies.windows]
+workspace = true
+default-features = true
+
+[dependencies.windows-window]
+workspace = true
+
+[dependencies.windows-webview]
+workspace = true
+# default features = ["system"] — the system WebView2 runtime, exactly what
+# the sample's Cargo.toml requests with features = ["system"].
