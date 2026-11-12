@@ -1,0 +1,10 @@
+[package]
+name = "e91_process_list"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "tlhelp32" = the Tool Help snapshot family; "handleapi" = CloseHandle.
+features = ["winuser", "libloaderapi", "tlhelp32", "handleapi"]

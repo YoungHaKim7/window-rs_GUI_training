@@ -1,0 +1,11 @@
+[package]
+name = "e89_clipboard"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies.windows]
+workspace = true
+# "winbase" supplies the GlobalAlloc/GlobalLock/GlobalUnlock family — the
+# 16-bit-era global heap the clipboard still requires you to allocate from.
+features = ["winuser", "libloaderapi", "winbase"]
