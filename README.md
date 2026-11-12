@@ -9,11 +9,6 @@
 
 <hr>
 
-# 여기에 정리중.
-- https://github.com/YoungHaKim7/window-rs_GUI_training
-
-<hr />
-
 # windows-rs
 
 - https://github.com/microsoft/windows-rs
@@ -100,4 +95,8 @@ strip = "none"
 
 # 외국인의 작품
 - https://github.com/JohnScience/draw_on_screen
+
+## 국내 유료 win32강의 인프런(Windows System 프로그래밍)
+- Windows System 프로그래밍 | Windows용 게임과 어플리케이션을 개발하기 위한 필수 Windows System프로그래밍 기술을 알려드립니다.
+  - https://www.inflearn.com/course/windows-system-programming?cid=336247
 
