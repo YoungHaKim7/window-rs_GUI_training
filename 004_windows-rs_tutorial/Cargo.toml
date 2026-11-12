@@ -1,3 +1,7 @@
+[workspace.package]
+edition = "2024"
+publish = false
+
 [workspace]
 resolver = "3"
 members = ["examples/*/*"]
@@ -6,10 +10,7 @@ members = ["examples/*/*"]
 # treats it as part of this one.
 exclude = ["windows-rs"]
 
-[workspace.package]
 version = "0.0.0"
-edition = "2024"
-publish = false
 
 [workspace.dependencies]
 # All examples depend on the vendored windows-rs clone in ./windows-rs.
