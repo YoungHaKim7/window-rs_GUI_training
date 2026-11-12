@@ -95,7 +95,7 @@ fn main() {
             500,
             28,
             Some(hwnd),
-            Some(1001 as usize as HMENU),
+            Some(1001usize as HMENU),
             Some(instance),
             None,
         );

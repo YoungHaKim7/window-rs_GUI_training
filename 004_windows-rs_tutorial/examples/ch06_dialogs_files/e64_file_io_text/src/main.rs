@@ -246,47 +246,45 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 //         { state.dirty = true; retitle with '*'; }
                 // We skip it here so closing never blocks on "save?".
 
-                if notification == BN_CLICKED as u32 && control_id == IDC_OPEN as u32 {
-                    if let Some(path) = file_dialog(hwnd, false) {
-                        // Read the whole file as UTF-8. A non-UTF-8 file
-                        // errors here — a real editor would offer an
-                        // encoding fallback; we report and keep the old
-                        // contents.
-                        match std::fs::read_to_string(&path) {
-                            Ok(text) => {
-                                state.bytes = text.len();
-                                state.path = path;
-                                _ = SetWindowTextW(state.hwnd_edit, &HSTRING::from(text));
-                            }
-                            Err(err) => {
-                                _ = MessageBoxW(
-                                    Some(hwnd),
-                                    &HSTRING::from(format!("open failed — {err}")),
-                                    w!("Open"),
-                                    (MB_OK | MB_ICONWARNING) as u32,
-                                );
-                            }
+                if notification == BN_CLICKED as u32 && control_id == IDC_OPEN as u32
+                    && let Some(path) = file_dialog(hwnd, false) {
+                    // Read the whole file as UTF-8. A non-UTF-8 file
+                    // errors here — a real editor would offer an
+                    // encoding fallback; we report and keep the old
+                    // contents.
+                    match std::fs::read_to_string(&path) {
+                        Ok(text) => {
+                            state.bytes = text.len();
+                            state.path = path;
+                            _ = SetWindowTextW(state.hwnd_edit, &HSTRING::from(text));
+                        }
+                        Err(err) => {
+                            _ = MessageBoxW(
+                                Some(hwnd),
+                                &HSTRING::from(format!("open failed — {err}")),
+                                w!("Open"),
+                                (MB_OK | MB_ICONWARNING) as u32,
+                            );
                         }
                     }
                 }
-                if notification == BN_CLICKED as u32 && control_id == IDC_SAVE as u32 {
-                    if let Some(path) = file_dialog(hwnd, true) {
-                        // The document's truth lives in the control —
-                        // pull it out and write it, byte for byte.
-                        let text = window_text(state.hwnd_edit);
-                        match std::fs::write(&path, text.as_bytes()) {
-                            Ok(()) => {
-                                state.bytes = text.len();
-                                state.path = path;
-                            }
-                            Err(err) => {
-                                _ = MessageBoxW(
-                                    Some(hwnd),
-                                    &HSTRING::from(format!("save failed — {err}")),
-                                    w!("Save"),
-                                    (MB_OK | MB_ICONWARNING) as u32,
-                                );
-                            }
+                if notification == BN_CLICKED as u32 && control_id == IDC_SAVE as u32
+                    && let Some(path) = file_dialog(hwnd, true) {
+                    // The document's truth lives in the control —
+                    // pull it out and write it, byte for byte.
+                    let text = window_text(state.hwnd_edit);
+                    match std::fs::write(&path, text.as_bytes()) {
+                        Ok(()) => {
+                            state.bytes = text.len();
+                            state.path = path;
+                        }
+                        Err(err) => {
+                            _ = MessageBoxW(
+                                Some(hwnd),
+                                &HSTRING::from(format!("save failed — {err}")),
+                                w!("Save"),
+                                (MB_OK | MB_ICONWARNING) as u32,
+                            );
                         }
                     }
                 }

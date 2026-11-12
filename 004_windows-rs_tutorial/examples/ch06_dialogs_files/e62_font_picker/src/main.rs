@@ -74,7 +74,7 @@ fn main() {
         // the fixed [WCHAR; 32] array, null included.
         if let Some(s) = state_of(hwnd) {
             s.logfont.lfHeight = -28;
-            s.logfont.lfWeight = FW_NORMAL as i32;
+            s.logfont.lfWeight = FW_NORMAL;
             for (i, u) in "Segoe UI".encode_utf16().enumerate() {
                 s.logfont.lfFaceName[i] = u;
             }
@@ -192,7 +192,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let info = to_wide(&format!(
                     "{} {} — height {} px, weight {}",
                     face,
-                    if state.logfont.lfWeight == FW_BOLD as i32 {
+                    if state.logfont.lfWeight == FW_BOLD {
                         "bold"
                     } else {
                         "regular"

@@ -139,7 +139,7 @@ impl TemplateBuilder {
         // DWORD-align the template start inside a u16 buffer (e55 explains
         // the rounding trick; fixed capacity means the base never moves).
         let words = vec![0u16; 256];
-        let start = (words.as_ptr() as usize % 4 != 0) as usize;
+        let start = (!(words.as_ptr() as usize).is_multiple_of(4)) as usize;
         Self {
             words,
             start,
@@ -180,7 +180,7 @@ fn build_template() -> TemplateBuilder {
     let mut t = TemplateBuilder::new();
 
     // Header (see e55 for the field-by-field walkthrough).
-    t.dword(WS_POPUP as u32 | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
+    t.dword(WS_POPUP | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
     t.dword(0); // dwExtendedStyle
     t.word(2); // cdit: checkbox + close button
     t.i16s(&[0, 0, 170, 70]); // x, y, cx, cy (dialog units)

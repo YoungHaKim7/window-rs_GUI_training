@@ -301,18 +301,16 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
             WM_COMMAND => {
                 let notification = ((wparam >> 16) & 0xffff) as u32;
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
 
                 // EN_CHANGE: the EDIT text changed under the user (and
                 // under us: SetWindowTextW triggers it too — note how
                 // load/open below clears the flag AFTER setting text).
-                if notification == EN_CHANGE as u32 && id == IDC_EDIT as usize {
-                    if let Some(state) = state_of(hwnd) {
-                        if !state.dirty {
-                            state.dirty = true;
-                            update_title(hwnd);
-                        }
-                    }
+                if notification == EN_CHANGE as u32 && id == IDC_EDIT as usize
+                    && let Some(state) = state_of(hwnd)
+                    && !state.dirty {
+                    state.dirty = true;
+                    update_title(hwnd);
                     return 0;
                 }
 

@@ -6,9 +6,9 @@
 //!   dropping posts a single `WM_DROPFILES` whose **wparam is an HDROP**
 //!   — an opaque handle to the dropped-file list.
 //! * The three-query dance on that handle:
-//!     `DragQueryFileW(hdrop, 0xFFFFFFFF, None, 0)` → file COUNT;
-//!     `DragQueryFileW(hdrop, i, None, 0)` → file i's length;
-//!     `DragQueryFileW(hdrop, i, Some(buf), len)` → the path itself.
+//!   `DragQueryFileW(hdrop, 0xFFFFFFFF, None, 0)` → file COUNT;
+//!   `DragQueryFileW(hdrop, i, None, 0)` → file i's length;
+//!   `DragQueryFileW(hdrop, i, Some(buf), len)` → the path itself.
 //!   Two lessons in one: the i32::MAX index is the "just count" idiom,
 //!   and the None-buffer call is the classic query-then-fetch pattern
 //!   Win32 uses wherever a string's size is unknown up front.

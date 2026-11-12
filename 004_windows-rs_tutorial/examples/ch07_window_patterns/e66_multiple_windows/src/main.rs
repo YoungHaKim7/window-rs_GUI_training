@@ -38,10 +38,10 @@ static LIVE_NOTES: AtomicUsize = AtomicUsize::new(0);
 
 /// Sticky-note pastel palette. Each note owns one brush created for it.
 const NOTE_COLORS: [COLORREF; 4] = [
-    0x82E0_FF, // yellow  (COLORREF is 0x00BBGGRR)
-    0xA8E7_B4, // green
-    0xE7D4_A8, // blue
-    0xC8B0_E7, // pink
+    0x0082_E0FF, // yellow  (COLORREF is 0x00BBGGRR)
+    0x00A8_E7B4, // green
+    0x00E7_D4A8, // blue
+    0x00C8_B0E7, // pink
 ];
 
 const IDC_NEW_NOTE: i32 = 1001;

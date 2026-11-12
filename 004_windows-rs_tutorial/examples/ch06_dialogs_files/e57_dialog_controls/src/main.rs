@@ -143,7 +143,7 @@ struct TemplateBuilder {
 impl TemplateBuilder {
     fn new() -> Self {
         let words = vec![0u16; 512];
-        let start = (words.as_ptr() as usize % 4 != 0) as usize;
+        let start = (!(words.as_ptr() as usize).is_multiple_of(4)) as usize;
         Self {
             words,
             start,
@@ -203,7 +203,7 @@ fn item(
 fn build_template() -> TemplateBuilder {
     let mut t = TemplateBuilder::new();
 
-    t.dword(WS_POPUP as u32 | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
+    t.dword(WS_POPUP | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
     t.dword(0);
     t.word(7); // cdit: 7 items
     t.i16s(&[0, 0, 190, 92]);
@@ -297,7 +297,7 @@ extern "system" fn dlgproc(hdlg: HWND, message: u32, wparam: WPARAM, lparam: LPA
             // ParamW — the *mut Settings. Stash it in the dialog's own
             // GWLP_USERDATA: from now on every message can recover it.
             WM_INITDIALOG => {
-                SetWindowLongPtrW(hdlg, GWLP_USERDATA, lparam as isize);
+                SetWindowLongPtrW(hdlg, GWLP_USERDATA, lparam);
                 let ptr = GetWindowLongPtrW(hdlg, GWLP_USERDATA) as *mut Settings;
 
                 // Prefill the controls from the settings.
@@ -400,9 +400,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     0,
                     0,
                     if s.bold {
-                        FW_BOLD as i32
+                        FW_BOLD
                     } else {
-                        FW_NORMAL as i32
+                        FW_NORMAL
                     },
                     0,
                     0,

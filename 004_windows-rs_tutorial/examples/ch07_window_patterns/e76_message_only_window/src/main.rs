@@ -150,28 +150,26 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             }
 
             WM_TIMER => {
-                if wparam == TIMER_ID {
-                    if let Some(state) = state_of(hwnd) {
-                        if !state.worker.is_null() {
-                            state.sent += 1;
-                            // Alternate the message id so the mailbox's
-                            // match arms both get exercise. POST (async)
-                            // not SEND: the point of a mailbox is that the
-                            // sender never waits.
-                            let msg = if state.sent % 2 == 1 {
-                                WM_APP_PING
-                            } else {
-                                WM_APP_NOTE
-                            };
-                            _ = PostMessageW(
-                                Some(state.worker),
-                                msg as u32,
-                                state.sent as WPARAM,
-                                (state.sent as isize * TICK_MS as isize) as LPARAM,
-                            );
-                            _ = InvalidateRect(Some(hwnd), None, false);
-                        }
-                    }
+                if wparam == TIMER_ID
+                    && let Some(state) = state_of(hwnd)
+                    && !state.worker.is_null() {
+                    state.sent += 1;
+                    // Alternate the message id so the mailbox's
+                    // match arms both get exercise. POST (async)
+                    // not SEND: the point of a mailbox is that the
+                    // sender never waits.
+                    let msg = if state.sent % 2 == 1 {
+                        WM_APP_PING
+                    } else {
+                        WM_APP_NOTE
+                    };
+                    _ = PostMessageW(
+                        Some(state.worker),
+                        msg as u32,
+                        state.sent as WPARAM,
+                        (state.sent as isize * TICK_MS as isize) as LPARAM,
+                    );
+                    _ = InvalidateRect(Some(hwnd), None, false);
                 }
                 0
             }

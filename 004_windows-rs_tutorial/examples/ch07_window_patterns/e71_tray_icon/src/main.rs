@@ -130,13 +130,15 @@ unsafe fn shell_notify(
     info: Option<(&str, &str)>,
 ) {
     unsafe {
-        let mut nid = NOTIFYICONDATAW::default();
-        nid.cbSize = std::mem::size_of::<NOTIFYICONDATAW>() as u32;
-        nid.hWnd = hwnd; // who receives the callback message
-        nid.uID = TRAY_ID; // our id among this window's icons
-        nid.uFlags = flags; // which members of this struct are meaningful
-        nid.uCallbackMessage = WM_APP_TRAY as u32; // mouse events arrive as this
-        nid.hIcon = LoadIconW(None, PCWSTR(IDI_APPLICATION.0.cast()));
+        let mut nid = NOTIFYICONDATAW {
+            cbSize: std::mem::size_of::<NOTIFYICONDATAW>() as u32,
+            hWnd: hwnd, // who receives the callback message
+            uID: TRAY_ID, // our id among this window's icons
+            uFlags: flags, // which members of this struct are meaningful
+            uCallbackMessage: WM_APP_TRAY as u32, // mouse events arrive as this
+            hIcon: LoadIconW(None, PCWSTR(IDI_APPLICATION.0.cast())),
+            ..Default::default()
+        };
 
         if let Some(tip) = tip {
             copy_into_fixed(&mut nid.szTip, tip);

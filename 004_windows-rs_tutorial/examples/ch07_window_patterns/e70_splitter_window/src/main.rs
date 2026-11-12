@@ -191,7 +191,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     0,
                     0, // sized by layout()
                     Some(hwnd),
-                    Some(1001 as usize as HMENU),
+                    Some(1001usize as HMENU),
                     Some(instance),
                     None,
                 );
@@ -206,7 +206,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     0,
                     0,
                     Some(hwnd),
-                    Some(1003 as usize as HMENU),
+                    Some(1003usize as HMENU),
                     Some(instance),
                     None,
                 );
@@ -222,7 +222,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     0,
                     0,
                     Some(hwnd),
-                    Some(1002 as usize as HMENU),
+                    Some(1002usize as HMENU),
                     Some(instance),
                     None,
                 );

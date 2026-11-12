@@ -40,7 +40,7 @@ const TILE_CLICKED: i32 = 0x8000;
 
 /// Palette the tile cycles through. COLORREF layout is 0x00BBGGRR.
 const TILE_COLORS: [COLORREF; 4] = [
-    0x000000_C0, // red
+    0x0000_00C0, // red
     0x00C0_0000, // blue
     0x00C0_C000, // green
     0x0000_80FF, // orange

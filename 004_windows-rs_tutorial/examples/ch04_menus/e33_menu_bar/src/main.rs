@@ -2,7 +2,7 @@
 //!
 //! What you learn:
 //! * The menu-bar recipe: `CreateMenu` (an empty bar) + one
-//!     *per menu* `CreatePopupMenu` (a drop-down), `AppendMenuW` the drop-downs
+//!   *per menu* `CreatePopupMenu` (a drop-down), `AppendMenuW` the drop-downs
 //!   into the bar, then `SetMenu(hwnd, bar)` to attach the whole thing
 //! * `WM_COMMAND` — how a menu pick arrives: LOWORD(wparam) is the item's
 //!   id, HIWORD(wparam) is 0 when the source is a menu (controls put their
