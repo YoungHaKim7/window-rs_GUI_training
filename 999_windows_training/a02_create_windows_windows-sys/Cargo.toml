@@ -1,0 +1,16 @@
+[package]
+name = "a02_create_windows_windows-sys"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dependencies.windows-sys]
+git = "https://github.com/microsoft/windows-rs/"
+features = [
+    "libloaderapi",
+    "minwindef",
+    "windef",
+    "winuser",
+]
+rev = "8ca69fd"
