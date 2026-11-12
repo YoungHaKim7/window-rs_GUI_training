@@ -40,8 +40,14 @@ fn main() {
             w!("e24_class"),
             w!("e24 · Shape Gallery"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 860, 480,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            860,
+            480,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -155,7 +161,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                 }
                                 // Chord: arc closed by a straight line, filled.
                                 1 => {
-                                    _ = Chord(hdc, left, top, right, bottom, p3.0, p3.1, p4.0, p4.1);
+                                    _ = Chord(
+                                        hdc, left, top, right, bottom, p3.0, p3.1, p4.0, p4.1,
+                                    );
                                     label("Chord — arc + closing chord, filled", 8);
                                 }
                                 // Pie: arc closed through the CENTER, filled —

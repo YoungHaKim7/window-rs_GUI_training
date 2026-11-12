@@ -39,8 +39,14 @@ fn main() {
             w!("e18_class"),
             w!("e18 · Shift State — hold modifiers, click"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 600, 340,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            600,
+            340,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -117,12 +123,22 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // bypassing the queue. Same bit layout for "down".
                     format!(
                         "GetAsyncKeyState(VK_SHIFT) says: {}",
-                        if GetAsyncKeyState(VK_SHIFT) < 0 { "down" } else { "up" }
+                        if GetAsyncKeyState(VK_SHIFT) < 0 {
+                            "down"
+                        } else {
+                            "up"
+                        }
                     ),
                 ];
                 for (i, line) in lines.iter().enumerate() {
                     let wide = to_wide(line);
-                    _ = TextOutW(hdc, 24, 20 + i as i32 * 24, PCWSTR::from_raw(wide.as_ptr()), -1);
+                    _ = TextOutW(
+                        hdc,
+                        24,
+                        20 + i as i32 * 24,
+                        PCWSTR::from_raw(wide.as_ptr()),
+                        -1,
+                    );
                 }
 
                 _ = EndPaint(hwnd, &ps);

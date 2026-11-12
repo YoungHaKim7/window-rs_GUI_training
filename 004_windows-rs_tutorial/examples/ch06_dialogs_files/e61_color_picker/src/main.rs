@@ -55,8 +55,14 @@ fn main() {
             w!("e61_class"),
             w!("e61 · Color Picker — the window wears the choice"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 320,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            320,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -68,8 +74,14 @@ fn main() {
             w!("BUTTON"),
             w!("Pick color..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 20, 110, 32,
-            Some(hwnd), Some(IDC_PICK as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            110,
+            32,
+            Some(hwnd),
+            Some(IDC_PICK as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!pick.is_null());
 
@@ -143,7 +155,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     state.background
                 ));
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, 20, 70, PCWSTR::from_raw(text.as_ptr()), text.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    70,
+                    PCWSTR::from_raw(text.as_ptr()),
+                    text.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
 
                 _ = EndPaint(hwnd, &ps);

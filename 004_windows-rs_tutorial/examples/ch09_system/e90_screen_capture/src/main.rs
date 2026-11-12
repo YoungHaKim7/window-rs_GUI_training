@@ -59,8 +59,14 @@ fn main() {
             w!("e90_class"),
             w!("e90 · Screen Capture — R = recapture, S = save .bmp"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 800, 500,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            800,
+            500,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -200,7 +206,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                 hwnd,
                                 &HSTRING::from(format!(
                                     "e90 · saved {} ({}x{} px)",
-                                    path.display(), state.size.0, state.size.1
+                                    path.display(),
+                                    state.size.0,
+                                    state.size.1
                                 )),
                             );
                         }
@@ -227,9 +235,15 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let old = SelectObject(mem, state.hbmp as HGDIOBJ);
                     _ = StretchBlt(
                         hdc,
-                        0, 0, rc.right, rc.bottom,
+                        0,
+                        0,
+                        rc.right,
+                        rc.bottom,
                         Some(mem),
-                        0, 0, state.size.0, state.size.1,
+                        0,
+                        0,
+                        state.size.0,
+                        state.size.1,
                         SRCCOPY,
                     );
                     SelectObject(hdc, old);
@@ -238,7 +252,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 _ = SetBkMode(hdc, TRANSPARENT);
                 let hint = to_wide("R = recapture · S = save screen_capture.bmp");
-                _ = TextOutW(hdc, 8, 8, PCWSTR::from_raw(hint.as_ptr()), hint.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    8,
+                    8,
+                    PCWSTR::from_raw(hint.as_ptr()),
+                    hint.len() as i32 - 1,
+                );
 
                 _ = EndPaint(hwnd, &ps);
                 0

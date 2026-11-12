@@ -81,8 +81,13 @@ fn main() {
             w!("e70_class"),
             w!("e70 · Splitter — drag the strip between the panes"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 760, 420,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            760,
+            420,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -117,7 +122,9 @@ unsafe fn layout(hwnd: HWND) {
         let w = rc.right;
 
         // Clamp so neither pane can be squeezed out of existence.
-        state.split_x = state.split_x.clamp(MIN_PANE, (w - SPLIT_W - MIN_PANE).max(MIN_PANE));
+        state.split_x = state
+            .split_x
+            .clamp(MIN_PANE, (w - SPLIT_W - MIN_PANE).max(MIN_PANE));
 
         // SetWindowPos over MoveWindow here because the splitter example
         // is the canonical place to meet it: handle + (x,y,cx,cy) + flags.
@@ -127,20 +134,28 @@ unsafe fn layout(hwnd: HWND) {
             _ = SetWindowPos(
                 GetDlgItem(Some(hwnd), 1001), // left EDIT
                 None,
-                0, 0, state.split_x, rc.bottom,
+                0,
+                0,
+                state.split_x,
+                rc.bottom,
                 SWP_NOZORDER as u32,
             );
             _ = SetWindowPos(
                 GetDlgItem(Some(hwnd), 1002), // the splitter
                 None,
-                state.split_x, 0, SPLIT_W, rc.bottom,
+                state.split_x,
+                0,
+                SPLIT_W,
+                rc.bottom,
                 SWP_NOZORDER as u32,
             );
             _ = SetWindowPos(
                 GetDlgItem(Some(hwnd), 1003), // right EDIT
                 None,
-                state.split_x + SPLIT_W, 0,
-                w - state.split_x - SPLIT_W, rc.bottom,
+                state.split_x + SPLIT_W,
+                0,
+                w - state.split_x - SPLIT_W,
+                rc.bottom,
                 SWP_NOZORDER as u32,
             );
         }
@@ -159,16 +174,26 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_CREATE => {
                 let cs = lparam as *const CREATESTRUCTW;
                 let instance = (*cs).hInstance;
-                let edit_style = (WS_CHILD | WS_VISIBLE | WS_VSCROLL
-                    | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL) as u32;
+                let edit_style = (WS_CHILD
+                    | WS_VISIBLE
+                    | WS_VSCROLL
+                    | ES_MULTILINE
+                    | ES_READONLY
+                    | ES_AUTOVSCROLL) as u32;
 
                 let left = CreateWindowExW(
                     WS_EX_CLIENTEDGE as u32,
                     w!("EDIT"),
                     w!(""),
                     edit_style,
-                    0, 0, 0, 0, // sized by layout()
-                    Some(hwnd), Some(1001 as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0, // sized by layout()
+                    Some(hwnd),
+                    Some(1001 as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!left.is_null());
                 let right = CreateWindowExW(
@@ -176,8 +201,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("EDIT"),
                     w!(""),
                     edit_style,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(1003 as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(1003 as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!right.is_null());
 
@@ -186,8 +217,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("e70_splitter"), // our class, not "BUTTON"/"EDIT"
                     w!(""),
                     (WS_CHILD | WS_VISIBLE) as u32,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(1002 as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(1002 as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!splitter.is_null());
                 let _ = splitter;

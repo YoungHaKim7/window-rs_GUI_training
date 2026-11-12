@@ -45,8 +45,14 @@ fn main() {
             w!("e20_class"),
             w!("e20 · Cursors — sweep the mouse across the quadrants"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            480,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -111,10 +117,46 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Four tinted quadrants with labels.
                 let (w, h) = (rect.right, rect.bottom);
                 let quads: [(RECT, COLORREF, &str); 4] = [
-                    (RECT { left: 0, top: 0, right: w / 2, bottom: h / 2 }, rgb(0xF5, 0xF5, 0xF5), "IDC_ARROW"),
-                    (RECT { left: w / 2, top: 0, right: w, bottom: h / 2 }, rgb(0xE8, 0xF0, 0xE8), "IDC_CROSS"),
-                    (RECT { left: 0, top: h / 2, right: w / 2, bottom: h }, rgb(0xF0, 0xE8, 0xF0), "IDC_HAND"),
-                    (RECT { left: w / 2, top: h / 2, right: w, bottom: h }, rgb(0xF0, 0xF0, 0xE0), "IDC_WAIT"),
+                    (
+                        RECT {
+                            left: 0,
+                            top: 0,
+                            right: w / 2,
+                            bottom: h / 2,
+                        },
+                        rgb(0xF5, 0xF5, 0xF5),
+                        "IDC_ARROW",
+                    ),
+                    (
+                        RECT {
+                            left: w / 2,
+                            top: 0,
+                            right: w,
+                            bottom: h / 2,
+                        },
+                        rgb(0xE8, 0xF0, 0xE8),
+                        "IDC_CROSS",
+                    ),
+                    (
+                        RECT {
+                            left: 0,
+                            top: h / 2,
+                            right: w / 2,
+                            bottom: h,
+                        },
+                        rgb(0xF0, 0xE8, 0xF0),
+                        "IDC_HAND",
+                    ),
+                    (
+                        RECT {
+                            left: w / 2,
+                            top: h / 2,
+                            right: w,
+                            bottom: h,
+                        },
+                        rgb(0xF0, 0xF0, 0xE0),
+                        "IDC_WAIT",
+                    ),
                 ];
                 for (r, color, label) in quads {
                     let brush = CreateSolidBrush(color);
@@ -122,7 +164,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     _ = DeleteObject(brush as HGDIOBJ);
                     let wide = to_wide(label);
                     _ = SetBkMode(hdc, TRANSPARENT);
-                    _ = TextOutW(hdc, r.left + 20, r.top + 20, PCWSTR::from_raw(wide.as_ptr()), -1);
+                    _ = TextOutW(
+                        hdc,
+                        r.left + 20,
+                        r.top + 20,
+                        PCWSTR::from_raw(wide.as_ptr()),
+                        -1,
+                    );
                 }
 
                 _ = EndPaint(hwnd, &ps);

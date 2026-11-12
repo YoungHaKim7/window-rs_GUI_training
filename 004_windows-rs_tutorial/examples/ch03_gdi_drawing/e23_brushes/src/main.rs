@@ -40,8 +40,14 @@ fn main() {
             w!("e23_class"),
             w!("e23 · Brush Gallery"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 780, 460,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            780,
+            460,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -146,7 +152,16 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let (cw, ch) = (130, 44);
                 for (name, index) in systems {
                     let brush = GetSysColorBrush(index);
-                    _ = FillRect(hdc, &RECT { left: x, top: y, right: x + cw, bottom: y + ch }, brush);
+                    _ = FillRect(
+                        hdc,
+                        &RECT {
+                            left: x,
+                            top: y,
+                            right: x + cw,
+                            bottom: y + ch,
+                        },
+                        brush,
+                    );
                     // (FillRect needs no SelectObject — takes the brush directly.)
 
                     let wide = to_wide(name);

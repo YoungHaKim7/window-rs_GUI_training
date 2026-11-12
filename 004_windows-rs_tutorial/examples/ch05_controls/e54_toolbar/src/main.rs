@@ -67,8 +67,14 @@ fn main() {
             w!("e54_class"),
             w!("e54 · Toolbar — click the standard buttons"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 260,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            260,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -88,8 +94,14 @@ fn main() {
             TOOLBARCLASSNAMEW,
             w!(""),
             (WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS) as u32,
-            0, 0, 0, 0, // the toolbar sizes itself
-            Some(hwnd), None, Some(instance), None,
+            0,
+            0,
+            0,
+            0, // the toolbar sizes itself
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!toolbar.is_null());
 
@@ -212,10 +224,18 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_PAINT => {
                 let mut ps = PAINTSTRUCT::default();
                 let hdc = BeginPaint(hwnd, &mut ps);
-                let line = to_wide("New · Open · Save · Help — standard images via \
-                                   TB_LOADIMAGES, ids via WM_COMMAND");
+                let line = to_wide(
+                    "New · Open · Save · Help — standard images via \
+                                   TB_LOADIMAGES, ids via WM_COMMAND",
+                );
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, 20, 80, PCWSTR::from_raw(line.as_ptr()), line.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    80,
+                    PCWSTR::from_raw(line.as_ptr()),
+                    line.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
                 _ = EndPaint(hwnd, &ps);
                 0

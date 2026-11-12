@@ -46,8 +46,14 @@ fn main() {
             w!("e92_class"),
             w!("e92 · System Info — CPU, memory, screens, uptime"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 560,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            560,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -120,7 +126,10 @@ fn gather_rows() -> Vec<(String, String)> {
         ));
 
         let remote = GetSystemMetrics(SM_REMOTESESSION) != 0;
-        rows.push(("Remote Desktop session".into(), if remote { "yes".into() } else { "no".into() }));
+        rows.push((
+            "Remote Desktop session".into(),
+            if remote { "yes".into() } else { "no".into() },
+        ));
 
         // ---- Uptime -----------------------------------------------------
         let ms = GetTickCount64();
@@ -155,20 +164,41 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // Bold labels: a font made on the fly (CreateFontW
                         // takes DWORDs for everything but height and weight).
                         let font = CreateFontW(
-                            20, 0, 0, 0, FW_SEMIBOLD, 0, 0, 0,
-                            DEFAULT_CHARSET as u32, OUT_DEFAULT_PRECIS as u32,
-                            CLIP_DEFAULT_PRECIS as u32, DEFAULT_QUALITY as u32,
+                            20,
+                            0,
+                            0,
+                            0,
+                            FW_SEMIBOLD,
+                            0,
+                            0,
+                            0,
+                            DEFAULT_CHARSET as u32,
+                            OUT_DEFAULT_PRECIS as u32,
+                            CLIP_DEFAULT_PRECIS as u32,
+                            DEFAULT_QUALITY as u32,
                             (DEFAULT_PITCH | FF_DONTCARE) as u32,
                             w!("Segoe UI"),
                         );
                         let old = SelectObject(hdc, font as HGDIOBJ);
                         let wide = to_wide(text);
-                        _ = TextOutW(hdc, x, *y, PCWSTR::from_raw(wide.as_ptr()), wide.len() as i32 - 1);
+                        _ = TextOutW(
+                            hdc,
+                            x,
+                            *y,
+                            PCWSTR::from_raw(wide.as_ptr()),
+                            wide.len() as i32 - 1,
+                        );
                         SelectObject(hdc, old);
                         _ = DeleteObject(font as HGDIOBJ);
                     } else {
                         let wide = to_wide(text);
-                        _ = TextOutW(hdc, x, *y, PCWSTR::from_raw(wide.as_ptr()), wide.len() as i32 - 1);
+                        _ = TextOutW(
+                            hdc,
+                            x,
+                            *y,
+                            PCWSTR::from_raw(wide.as_ptr()),
+                            wide.len() as i32 - 1,
+                        );
                     }
                     *y += 28;
                 };

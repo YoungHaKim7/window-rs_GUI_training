@@ -64,8 +64,13 @@ fn main() {
             w!("e75_class"),
             w!("e75 · Drag & Drop — drop files from Explorer here"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 680, 420,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            680,
+            420,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -134,12 +139,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     // Query 3 — the path itself, into a len+1 buffer.
                     let mut buf = vec![0u16; len + 1];
-                    let copied = DragQueryFileW(
-                        hdrop,
-                        i,
-                        Some(PWSTR(buf.as_mut_ptr())),
-                        buf.len() as u32,
-                    );
+                    let copied =
+                        DragQueryFileW(hdrop, i, Some(PWSTR(buf.as_mut_ptr())), buf.len() as u32);
                     debug_assert!(copied as usize == len);
 
                     let end = buf.iter().position(|&u| u == 0).unwrap_or(buf.len());
@@ -197,7 +198,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         );
                     }
                     if state.paths.len() > MAX_SHOWN {
-                        let more = to_wide(&format!("... and {} more", state.paths.len() - MAX_SHOWN));
+                        let more =
+                            to_wide(&format!("... and {} more", state.paths.len() - MAX_SHOWN));
                         _ = SetTextColor(hdc, rgb(0x80, 0x80, 0x80));
                         _ = TextOutW(
                             hdc,

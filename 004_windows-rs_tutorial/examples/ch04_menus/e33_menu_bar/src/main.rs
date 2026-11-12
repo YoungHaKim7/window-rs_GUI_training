@@ -41,8 +41,14 @@ fn main() {
             w!("e33_class"),
             w!("e33 · Menu Bar — File / Help"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 320,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            320,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -56,8 +62,8 @@ fn main() {
         _ = AppendMenuW(
             file_menu,
             MF_STRING as u32, // a plain text item
-            1001, // the id we will read back in WM_COMMAND
-            w!("E&xit"), // &x = Alt,F then X works from the keyboard
+            1001,             // the id we will read back in WM_COMMAND
+            w!("E&xit"),      // &x = Alt,F then X works from the keyboard
         );
 
         let help_menu = CreatePopupMenu();
@@ -111,7 +117,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     1002 => {
                         _ = MessageBoxW(
                             Some(hwnd),
-                            w!("A menu bar, built with AppendMenuW and attached with SetMenu.\n\nThe pick arrived as WM_COMMAND with id 1002 in LOWORD(wparam)."),
+                            w!(
+                                "A menu bar, built with AppendMenuW and attached with SetMenu.\n\nThe pick arrived as WM_COMMAND with id 1002 in LOWORD(wparam)."
+                            ),
                             w!("About e33"),
                             (MB_OK | MB_ICONINFORMATION) as u32,
                         );
@@ -130,7 +138,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let mut hint = rc;
                 DrawTextW(
                     hdc,
-                    w!("Try the bar above: File → Exit, Help → About.\n\nShortcuts work too: Alt+F opens File, then X exits."),
+                    w!(
+                        "Try the bar above: File → Exit, Help → About.\n\nShortcuts work too: Alt+F opens File, then X exits."
+                    ),
                     -1,
                     &mut hint,
                     (DT_CENTER | DT_VCENTER | DT_WORDBREAK) as u32,

@@ -70,8 +70,13 @@ fn main() {
             w!("e73_class"),
             w!("e73 · Shaped Window — press 1 / 2 / 3"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 420,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            420,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());

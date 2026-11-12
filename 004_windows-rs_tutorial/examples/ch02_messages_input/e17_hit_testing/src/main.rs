@@ -45,8 +45,14 @@ fn main() {
             w!("e17_class"),
             w!("e17 · Hit Testing"),
             WS_POPUP | WS_VISIBLE as u32,
-            240, 200, 560, 300,
-            None, None, Some(instance), None,
+            240,
+            200,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -116,7 +122,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = GetClientRect(hwnd, &mut rect);
 
                 // The fake title strip.
-                let strip = RECT { bottom: CAPTION_HEIGHT, ..rect };
+                let strip = RECT {
+                    bottom: CAPTION_HEIGHT,
+                    ..rect
+                };
                 FillRect(hdc, &strip, GetSysColorBrush(COLOR_HIGHLIGHT));
 
                 _ = SetBkMode(hdc, TRANSPARENT);
@@ -135,8 +144,20 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // Body text, plus a 1px frame since WS_POPUP has no border.
                 _ = SetTextColor(hdc, 0x0000_0000);
-                _ = TextOutW(hdc, 14, CAPTION_HEIGHT + 20, w!("The area below the strip answers HTCLIENT: no dragging here."), -1);
-                _ = TextOutW(hdc, 14, CAPTION_HEIGHT + 48, w!("Esc or the X box closes the window."), -1);
+                _ = TextOutW(
+                    hdc,
+                    14,
+                    CAPTION_HEIGHT + 20,
+                    w!("The area below the strip answers HTCLIENT: no dragging here."),
+                    -1,
+                );
+                _ = TextOutW(
+                    hdc,
+                    14,
+                    CAPTION_HEIGHT + 48,
+                    w!("Esc or the X box closes the window."),
+                    -1,
+                );
                 FrameRect(hdc, &rect, GetSysColorBrush(COLOR_WINDOWTEXT));
 
                 _ = EndPaint(hwnd, &ps);

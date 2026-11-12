@@ -40,8 +40,14 @@ fn main() {
             w!("e19_class"),
             w!("e19 · Global Hotkey"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 200,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            200,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -60,7 +66,9 @@ fn main() {
             // we explain and carry on without the feature.
             MessageBoxW(
                 None,
-                w!("RegisterHotKey failed — another program owns Ctrl+Alt+H.\nThe window still runs; the hotkey just won't fire."),
+                w!(
+                    "RegisterHotKey failed — another program owns Ctrl+Alt+H.\nThe window still runs; the hotkey just won't fire."
+                ),
                 w!("e19"),
                 (MB_OK | MB_ICONEXCLAMATION) as u32,
             );

@@ -96,8 +96,14 @@ fn main() {
             w!("e67_main"),
             w!("e67 · Custom Control — ColorTile"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 240,
-            None, None, Some(instance), Some(state as LPVOID),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            240,
+            None,
+            None,
+            Some(instance),
+            Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
 
@@ -165,10 +171,13 @@ extern "system" fn main_wndproc(
                 for (i, id) in TILE_IDS.iter().enumerate() {
                     let tile = CreateWindowExW(
                         0,
-                        TILE_CLASS,       // the custom class, like "BUTTON"
-                        w!(""),           // window text: unused by ColorTile
+                        TILE_CLASS, // the custom class, like "BUTTON"
+                        w!(""),     // window text: unused by ColorTile
                         (WS_CHILD | WS_VISIBLE) as u32,
-                        0, 0, 0, 0,       // positioned by layout_tiles
+                        0,
+                        0,
+                        0,
+                        0, // positioned by layout_tiles
                         Some(hwnd),
                         Some(*id as usize as HMENU), // control id (fake-HMENU trick)
                         Some(instance),
@@ -202,7 +211,11 @@ extern "system" fn main_wndproc(
                         state.last_report = format!(
                             "WM_COMMAND: id={} code=TILE_CLICKED tile=#{:?} color={}",
                             id,
-                            TILE_IDS.iter().position(|&x| x == id).map(|n| n + 1).unwrap_or(0),
+                            TILE_IDS
+                                .iter()
+                                .position(|&x| x == id)
+                                .map(|n| n + 1)
+                                .unwrap_or(0),
                             color
                         );
                         state.last_report.clone()
@@ -290,8 +303,8 @@ extern "system" fn tile_wndproc(
                 // Cycle, repaint, and REPORT — the heart of being a
                 // control. A control never assumes who listens; it just
                 // speaks WM_COMMAND and lets any parent decide.
-                let next = (GetWindowLongPtrW(hwnd, GWLP_USERDATA) as usize + 1)
-                    % TILE_COLORS.len();
+                let next =
+                    (GetWindowLongPtrW(hwnd, GWLP_USERDATA) as usize + 1) % TILE_COLORS.len();
                 SetWindowLongPtrW(hwnd, GWLP_USERDATA, next as isize);
                 _ = InvalidateRect(Some(hwnd), None, true);
 

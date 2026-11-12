@@ -58,18 +58,34 @@ fn main() {
             w!("e36_class"),
             w!("e36 · Dynamic Menu — a Recent list that grows"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 620, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            620,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
         // ---- Menu: File owns the action item and the Recent submenu ----
         let bar = CreateMenu();
         let file_menu = CreatePopupMenu();
-        _ = AppendMenuW(file_menu, MF_STRING as u32, ID_ADD_RECENT, w!("&Add recent item"));
+        _ = AppendMenuW(
+            file_menu,
+            MF_STRING as u32,
+            ID_ADD_RECENT,
+            w!("&Add recent item"),
+        );
         _ = AppendMenuW(file_menu, MF_SEPARATOR as u32, 0, w!(""));
         let recent_menu = CreatePopupMenu(); // starts empty — it fills at runtime
-        _ = AppendMenuW(file_menu, MF_POPUP as u32, recent_menu as usize, w!("&Recent"));
+        _ = AppendMenuW(
+            file_menu,
+            MF_POPUP as u32,
+            recent_menu as usize,
+            w!("&Recent"),
+        );
         _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
         _ = SetMenu(hwnd, Some(bar));
 
@@ -176,7 +192,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = SetTextColor(hdc, rgb(0x40, 0x40, 0x40));
                 for (i, (_, label)) in state.recents.iter().enumerate() {
                     let wide = to_wide(label);
-                    _ = TextOutW(hdc, 20, 52 + i as i32 * 24, PCWSTR::from_raw(wide.as_ptr()), -1);
+                    _ = TextOutW(
+                        hdc,
+                        20,
+                        52 + i as i32 * 24,
+                        PCWSTR::from_raw(wide.as_ptr()),
+                        -1,
+                    );
                 }
 
                 // The pick, if any, in a louder color at the bottom.

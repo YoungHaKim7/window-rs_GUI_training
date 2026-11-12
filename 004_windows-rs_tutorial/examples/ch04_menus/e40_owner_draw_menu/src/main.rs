@@ -61,8 +61,14 @@ fn main() {
             w!("e40_class"),
             w!("e40 · Owner-Draw Menu — Palette"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 340,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            340,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -123,8 +129,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let mis = &mut *(lparam as *mut MEASUREITEMSTRUCT);
 
                 if mis.CtlType == ODT_MENU as u32 {
-                    let Some((_, label, _, _, _)) =
-                        PALETTE.iter().find(|(id, _, _, _, _)| *id as u32 == mis.itemID)
+                    let Some((_, label, _, _, _)) = PALETTE
+                        .iter()
+                        .find(|(id, _, _, _, _)| *id as u32 == mis.itemID)
                     else {
                         return 0;
                     };
@@ -144,8 +151,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let dis = &mut *(lparam as *mut DRAWITEMSTRUCT);
 
                 if dis.CtlType == ODT_MENU as u32 {
-                    let Some((_, label, r, g, b)) =
-                        PALETTE.iter().find(|(id, _, _, _, _)| *id as u32 == dis.itemID)
+                    let Some((_, label, r, g, b)) = PALETTE
+                        .iter()
+                        .find(|(id, _, _, _, _)| *id as u32 == dis.itemID)
                     else {
                         return 0;
                     };
@@ -223,7 +231,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let mut hint = rc;
                     DrawTextW(
                         hdc,
-                        w!("Open the Palette menu: every item is painted by this program (WM_MEASUREITEM sizes it, WM_DRAWITEM paints it, ODS_SELECTED drives the hover)."),
+                        w!(
+                            "Open the Palette menu: every item is painted by this program (WM_MEASUREITEM sizes it, WM_DRAWITEM paints it, ODS_SELECTED drives the hover)."
+                        ),
                         -1,
                         &mut hint,
                         (DT_CENTER | DT_VCENTER | DT_WORDBREAK) as u32,

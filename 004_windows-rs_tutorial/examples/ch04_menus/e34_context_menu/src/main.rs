@@ -58,8 +58,14 @@ fn main() {
             w!("e34_class"),
             w!("e34 · Context Menu — right-click me"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 360,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            360,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -152,7 +158,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // in a little so the menu isn't flush with the edge.
                     let mut rc = RECT::default();
                     _ = GetClientRect(hwnd, &mut rc);
-                    let mut pt = POINT { x: rc.left + 24, y: rc.top + 24 };
+                    let mut pt = POINT {
+                        x: rc.left + 24,
+                        y: rc.top + 24,
+                    };
                     _ = ClientToScreen(hwnd, &mut pt);
                     show_context_menu(hwnd, pt.x, pt.y);
                 } else {
@@ -188,7 +197,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let mut hint = rc;
                     DrawTextW(
                         hdc,
-                        w!("Right-click anywhere (or press Shift+F10) for a context menu.\n\nTPM_RETURNCMD makes TrackPopupMenu return the pick instead of posting WM_COMMAND."),
+                        w!(
+                            "Right-click anywhere (or press Shift+F10) for a context menu.\n\nTPM_RETURNCMD makes TrackPopupMenu return the pick instead of posting WM_COMMAND."
+                        ),
                         -1,
                         &mut hint,
                         (DT_CENTER | DT_VCENTER | DT_WORDBREAK) as u32,

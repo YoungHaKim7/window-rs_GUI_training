@@ -52,8 +52,14 @@ fn main() {
             w!("e15_class"),
             w!("e15 · Keyboard Focus — type something"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 220,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            220,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -92,7 +98,12 @@ unsafe fn text_width(hwnd: HWND, text: &str) -> i32 {
         let hdc = GetDC(Some(hwnd));
         let wide: Vec<u16> = text.encode_utf16().collect();
         let mut size = SIZE::default();
-        _ = GetTextExtentPoint32W(hdc, PCWSTR::from_raw(wide.as_ptr()), wide.len() as i32, &mut size);
+        _ = GetTextExtentPoint32W(
+            hdc,
+            PCWSTR::from_raw(wide.as_ptr()),
+            wide.len() as i32,
+            &mut size,
+        );
         ReleaseDC(Some(hwnd), hdc);
         size.cx
     }
@@ -152,7 +163,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // Focus indicator: a highlight-colored frame when focused,
                 // a muted gray one when not.
-                let frame = GetSysColorBrush(if state.focused { COLOR_HIGHLIGHT } else { COLOR_GRAYTEXT });
+                let frame = GetSysColorBrush(if state.focused {
+                    COLOR_HIGHLIGHT
+                } else {
+                    COLOR_GRAYTEXT
+                });
                 let mut border = rect;
                 border.left += 16;
                 border.top += 44;

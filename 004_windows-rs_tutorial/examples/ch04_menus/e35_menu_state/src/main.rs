@@ -65,8 +65,14 @@ fn main() {
             w!("e35_class"),
             w!("e35 · Menu State — checks, radios, graying"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 680, 380,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            680,
+            380,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -97,12 +103,16 @@ fn main() {
         // Underline starts grayed because Allow underline is off.
         _ = CheckMenuRadioItem(
             format,
-            ID_SMALL as u32, // first id of the group
-            ID_LARGE as u32, // last id of the group
+            ID_SMALL as u32,  // first id of the group
+            ID_LARGE as u32,  // last id of the group
             ID_MEDIUM as u32, // the one that gets the ●
             MF_BYCOMMAND as u32,
         );
-        _ = EnableMenuItem(format, ID_UNDERLINE as u32, (MF_BYCOMMAND | MF_GRAYED) as u32);
+        _ = EnableMenuItem(
+            format,
+            ID_UNDERLINE as u32,
+            (MF_BYCOMMAND | MF_GRAYED) as u32,
+        );
 
         let mut message = MSG::default();
         while GetMessageW(&mut message, None, 0, 0).0 > 0 {
@@ -180,8 +190,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             state.format_menu,
                             ID_UNDERLINE as u32,
                             (MF_BYCOMMAND
-                                | if state.underline_allowed { MF_ENABLED } else { MF_GRAYED })
-                                as u32,
+                                | if state.underline_allowed {
+                                    MF_ENABLED
+                                } else {
+                                    MF_GRAYED
+                                }) as u32,
                         );
                         // Disabling also means: forget any underline the
                         // user had set while it was allowed.
@@ -208,11 +221,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // The sentence that reflects every menu choice.
                 let font = CreateFontW(
                     state.font_h,
-                    0, 0, 0,
+                    0,
+                    0,
+                    0,
                     if state.bold { FW_BOLD } else { FW_NORMAL },
-                    state.italic as u32, // BOOL-ish: 1 = italic
+                    state.italic as u32,    // BOOL-ish: 1 = italic
                     state.underline as u32, // 1 = underline
-                    0, // strikeout
+                    0,                      // strikeout
                     DEFAULT_CHARSET as u32,
                     OUT_DEFAULT_PRECIS as u32,
                     CLIP_DEFAULT_PRECIS as u32,
@@ -231,17 +246,30 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 SelectObject(hdc, old_font);
                 _ = DeleteObject(font as HGDIOBJ);
                 let small = CreateFontW(
-                    18, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET as u32,
-                    OUT_DEFAULT_PRECIS as u32, CLIP_DEFAULT_PRECIS as u32,
-                    CLEARTYPE_QUALITY as u32, (DEFAULT_PITCH | FF_DONTCARE) as u32,
+                    18,
+                    0,
+                    0,
+                    0,
+                    FW_NORMAL,
+                    0,
+                    0,
+                    0,
+                    DEFAULT_CHARSET as u32,
+                    OUT_DEFAULT_PRECIS as u32,
+                    CLIP_DEFAULT_PRECIS as u32,
+                    CLEARTYPE_QUALITY as u32,
+                    (DEFAULT_PITCH | FF_DONTCARE) as u32,
                     w!("Segoe UI"),
                 );
                 SelectObject(hdc, small as HGDIOBJ);
                 _ = SetTextColor(hdc, rgb(0x60, 0x60, 0x60));
                 let report = format!(
                     "bold={} · italic={} · underline={} (allowed={}) · height={}px",
-                    state.bold, state.italic, state.underline,
-                    state.underline_allowed, state.font_h,
+                    state.bold,
+                    state.italic,
+                    state.underline,
+                    state.underline_allowed,
+                    state.font_h,
                 );
                 let wide = to_wide(&report);
                 _ = TextOutW(hdc, 24, 130, PCWSTR::from_raw(wide.as_ptr()), -1);

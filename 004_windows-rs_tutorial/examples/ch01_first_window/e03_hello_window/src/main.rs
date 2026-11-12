@@ -64,18 +64,18 @@ fn main() {
         // 3. Build an actual window from the class. Note the "W" string
         //    parameters: class name must match the registration above.
         let hwnd = CreateWindowExW(
-            0,                                   // no extended styles
-            w!("e03_class"),                     // the blueprint to use
-            w!("Hello, World!"),                 // title-bar caption
+            0,                                         // no extended styles
+            w!("e03_class"),                           // the blueprint to use
+            w!("Hello, World!"),                       // title-bar caption
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32, // standard frame + show immediately
-            CW_USEDEFAULT,                       // x: let Windows place it
-            CW_USEDEFAULT,                       // y
-            CW_USEDEFAULT,                       // width
-            CW_USEDEFAULT,                       // height
-            None,                                // no parent → top-level window
-            None,                                // no menu
-            Some(instance),                      // owning module
-            None,                                // no extra creation data
+            CW_USEDEFAULT,                             // x: let Windows place it
+            CW_USEDEFAULT,                             // y
+            CW_USEDEFAULT,                             // width
+            CW_USEDEFAULT,                             // height
+            None,                                      // no parent → top-level window
+            None,                                      // no menu
+            Some(instance),                            // owning module
+            None,                                      // no extra creation data
         );
         debug_assert!(!hwnd.is_null(), "CreateWindowExW failed");
 

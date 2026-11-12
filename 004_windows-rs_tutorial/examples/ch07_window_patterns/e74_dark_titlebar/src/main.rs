@@ -65,8 +65,13 @@ fn main() {
             w!("e74_class"),
             w!("e74 · Dark Title Bar — press D to flip"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 320,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            320,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());

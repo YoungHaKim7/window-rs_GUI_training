@@ -37,8 +37,14 @@ fn main() {
             w!("e42_class"),
             w!("e42 · Static — labels, frames, sunken boxes"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 340,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            340,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -46,25 +52,29 @@ fn main() {
         // One helper so the SS_* style is the only thing that varies. Note
         // `hmenu = None`: a pure label never sends WM_COMMAND, so it needs
         // no control id.
-        let mk_static = |style: i32, text: PCWSTR, ex_style: u32, x: i32, y: i32, w: i32, h: i32| {
-            CreateWindowExW(
-                ex_style,
-                w!("STATIC"),
-                text,
-                (WS_CHILD | WS_VISIBLE | style) as u32,
-                x, y, w, h,
-                Some(hwnd),
-                None,
-                Some(instance),
-                None,
-            )
-        };
+        let mk_static =
+            |style: i32, text: PCWSTR, ex_style: u32, x: i32, y: i32, w: i32, h: i32| {
+                CreateWindowExW(
+                    ex_style,
+                    w!("STATIC"),
+                    text,
+                    (WS_CHILD | WS_VISIBLE | style) as u32,
+                    x,
+                    y,
+                    w,
+                    h,
+                    Some(hwnd),
+                    None,
+                    Some(instance),
+                    None,
+                )
+            };
 
         // ---- Column 1: the three text alignments -----------------------------
         // SS_LEFT is 0 (the default) — spelled out anyway for symmetry.
-        _ = mk_static(SS_LEFT,   w!("SS_LEFT — flush left"), 0, 20, 20, 170, 20);
-        _ = mk_static(SS_CENTER, w!("SS_CENTER"),            0, 20, 48, 170, 20);
-        _ = mk_static(SS_RIGHT,  w!("SS_RIGHT — flush right"), 0, 20, 76, 170, 20);
+        _ = mk_static(SS_LEFT, w!("SS_LEFT — flush left"), 0, 20, 20, 170, 20);
+        _ = mk_static(SS_CENTER, w!("SS_CENTER"), 0, 20, 48, 170, 20);
+        _ = mk_static(SS_RIGHT, w!("SS_RIGHT — flush right"), 0, 20, 76, 170, 20);
 
         // ---- Column 2: frames and sunken boxes --------------------------------
         // SS_ETCHEDFRAME: the classic two-tone "etched" border — exactly what
@@ -74,12 +84,28 @@ fn main() {
         _ = mk_static(SS_SUNKEN, w!(""), 0, 210, 72, 150, 40);
         // The everyday "sunken box" is often SS_SUNKEN combined with the
         // WS_EX_CLIENTEDGE extended style — heavier, edit-control-like border.
-        _ = mk_static(SS_SUNKEN, w!(""), WS_EX_CLIENTEDGE as usize as u32, 380, 20, 150, 40);
+        _ = mk_static(
+            SS_SUNKEN,
+            w!(""),
+            WS_EX_CLIENTEDGE as usize as u32,
+            380,
+            20,
+            150,
+            40,
+        );
 
         // Captions naming each frame — STATICs captioning STATICs.
         _ = mk_static(SS_LEFT, w!("SS_ETCHEDFRAME"), 0, 210, 66, 150, 18);
-        _ = mk_static(SS_LEFT, w!("SS_SUNKEN"),      0, 210, 118, 150, 18);
-        _ = mk_static(SS_LEFT, w!("SS_SUNKEN + EX_CLIENTEDGE"), 0, 380, 66, 170, 18);
+        _ = mk_static(SS_LEFT, w!("SS_SUNKEN"), 0, 210, 118, 150, 18);
+        _ = mk_static(
+            SS_LEFT,
+            w!("SS_SUNKEN + EX_CLIENTEDGE"),
+            0,
+            380,
+            66,
+            170,
+            18,
+        );
 
         // ---- The input lesson --------------------------------------------------
         // Click anywhere in the client area — including on a label — and the
@@ -90,7 +116,10 @@ fn main() {
             SS_CENTER,
             w!("Labels eat no input — click anywhere; the parent answers"),
             0,
-            20, 170, 510, 20,
+            20,
+            170,
+            510,
+            20,
         );
 
         let mut message = MSG::default();
@@ -110,7 +139,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // through to us. (Its whole job: draw and stay out of the way.)
                 _ = MessageBoxW(
                     Some(hwnd),
-                    w!("You clicked the PARENT window.\nA STATIC never sees this message — it is disabled for input by design."),
+                    w!(
+                        "You clicked the PARENT window.\nA STATIC never sees this message — it is disabled for input by design."
+                    ),
                     w!("Clicks fall through"),
                     (MB_OK | MB_ICONINFORMATION) as u32,
                 );

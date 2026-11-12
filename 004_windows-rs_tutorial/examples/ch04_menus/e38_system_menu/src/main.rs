@@ -55,8 +55,14 @@ fn main() {
             w!("e38_class"),
             w!("e38 · System Menu — look under the window icon"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 320,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            320,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -70,7 +76,12 @@ fn main() {
         debug_assert!(!sys.is_null());
 
         _ = AppendMenuW(sys, MF_SEPARATOR as u32, 0, w!(""));
-        _ = AppendMenuW(sys, MF_STRING as u32, IDM_ABOUT_SYS, w!("About the system &menu..."));
+        _ = AppendMenuW(
+            sys,
+            MF_STRING as u32,
+            IDM_ABOUT_SYS,
+            w!("About the system &menu..."),
+        );
 
         let mut message = MSG::default();
         while GetMessageW(&mut message, None, 0, 0).0 > 0 {
@@ -99,7 +110,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 if cmd == IDM_ABOUT_SYS & 0xfff0 {
                     _ = MessageBoxW(
                         Some(hwnd),
-                        w!("You picked the custom item in the system menu.\n\nIt arrived as WM_SYSCOMMAND with wparam masked by 0xFFF0."),
+                        w!(
+                            "You picked the custom item in the system menu.\n\nIt arrived as WM_SYSCOMMAND with wparam masked by 0xFFF0."
+                        ),
                         w!("System menu item"),
                         (MB_OK | MB_ICONINFORMATION) as u32,
                     );
@@ -121,7 +134,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let mut hint = rc;
                 DrawTextW(
                     hdc,
-                    w!("Click the icon at the top-left (or press Alt+Space):\na separator and \"About the system menu\" sit under the built-ins."),
+                    w!(
+                        "Click the icon at the top-left (or press Alt+Space):\na separator and \"About the system menu\" sit under the built-ins."
+                    ),
                     -1,
                     &mut hint,
                     (DT_CENTER | DT_VCENTER | DT_WORDBREAK) as u32,

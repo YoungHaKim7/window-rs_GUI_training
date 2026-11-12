@@ -55,8 +55,14 @@ fn main() {
             w!("e25_class"),
             w!("e25 · XOR Crosshair (move the mouse)"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -163,7 +169,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 _ = SetBkMode(hdc, TRANSPARENT);
                 _ = SetTextColor(hdc, rgb(0x40, 0x40, 0x40));
-                _ = TextOutW(hdc, 12, 10, w!("R2_NOT crosshair — move the mouse; the grid heals itself"), -1);
+                _ = TextOutW(
+                    hdc,
+                    12,
+                    10,
+                    w!("R2_NOT crosshair — move the mouse; the grid heals itself"),
+                    -1,
+                );
 
                 _ = EndPaint(hwnd, &ps);
                 0

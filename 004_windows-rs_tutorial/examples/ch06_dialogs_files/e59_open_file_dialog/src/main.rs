@@ -47,8 +47,14 @@ fn main() {
             w!("e59_class"),
             w!("e59 · Open File — pick anything on disk"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 240,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            240,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -57,8 +63,14 @@ fn main() {
             w!("BUTTON"),
             w!("Open..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 30, 110, 32,
-            Some(hwnd), Some(IDC_OPEN as usize as HMENU), Some(instance), None,
+            20,
+            30,
+            110,
+            32,
+            Some(hwnd),
+            Some(IDC_OPEN as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!open.is_null());
 

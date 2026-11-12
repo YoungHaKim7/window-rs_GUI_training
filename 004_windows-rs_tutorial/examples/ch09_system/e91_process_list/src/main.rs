@@ -52,8 +52,14 @@ fn main() {
             w!("e91_class"),
             w!("e91 · Process List"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 520,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            520,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -65,8 +71,14 @@ fn main() {
             w!("LISTBOX"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY | WS_VSCROLL) as u32,
-            20, 20, 420, 400,
-            Some(hwnd), Some(IDC_LIST as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            420,
+            400,
+            Some(hwnd),
+            Some(IDC_LIST as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!list.is_null());
 
@@ -75,8 +87,14 @@ fn main() {
             w!("BUTTON"),
             w!("Refresh"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 436, 110, 34,
-            Some(hwnd), Some(IDC_REFRESH as usize as HMENU), Some(instance), None,
+            20,
+            436,
+            110,
+            34,
+            Some(hwnd),
+            Some(IDC_REFRESH as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!refresh.is_null());
 
@@ -132,12 +150,7 @@ unsafe fn refresh_list(hwnd: HWND, hwnd_list: HWND) {
                 let name = wide_array_to_string(&entry.szExeFile);
                 let line = format!("{:6}  {}", entry.th32ProcessID, name);
                 let wide = to_wide(&line);
-                _ = SendMessageW(
-                    hwnd_list,
-                    LB_ADDSTRING as u32,
-                    0,
-                    wide.as_ptr() as isize,
-                );
+                _ = SendMessageW(hwnd_list, LB_ADDSTRING as u32, 0, wide.as_ptr() as isize);
                 count += 1;
 
                 if !Process32NextW(snap, &mut entry).as_bool() {

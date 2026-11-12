@@ -62,8 +62,14 @@ fn main() {
             w!("e56_class"),
             w!("e56 · Modeless Dialog — both windows stay alive"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -77,8 +83,14 @@ fn main() {
             w!("BUTTON"),
             w!("Show / hide the modeless dialog"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 30, 220, 32,
-            Some(hwnd), Some(IDC_TOGGLE as usize as HMENU), Some(instance), None,
+            20,
+            30,
+            220,
+            32,
+            Some(hwnd),
+            Some(IDC_TOGGLE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!toggle.is_null());
 
@@ -128,7 +140,11 @@ impl TemplateBuilder {
         // the rounding trick; fixed capacity means the base never moves).
         let words = vec![0u16; 256];
         let start = (words.as_ptr() as usize % 4 != 0) as usize;
-        Self { words, start, pos: start }
+        Self {
+            words,
+            start,
+            pos: start,
+        }
     }
     fn word(&mut self, w: u16) {
         self.words[self.pos] = w;
@@ -201,12 +217,7 @@ fn build_template() -> TemplateBuilder {
 // ======================================================================
 // The dialog procedure.
 // ======================================================================
-extern "system" fn dlgproc(
-    hdlg: HWND,
-    message: u32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> INT_PTR {
+extern "system" fn dlgproc(hdlg: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> INT_PTR {
     unsafe {
         match message as i32 {
             WM_INITDIALOG => {
@@ -222,8 +233,8 @@ extern "system" fn dlgproc(
                         // GWLP_USERDATA carries the same State the main
                         // wndproc sees. Two windows, one struct.
                         if let Some(state) = state_of(GetParent(hdlg)) {
-                            state.banner = IsDlgButtonChecked(hdlg, IDC_BANNER)
-                                == BST_CHECKED as u32;
+                            state.banner =
+                                IsDlgButtonChecked(hdlg, IDC_BANNER) == BST_CHECKED as u32;
                             _ = InvalidateRect(Some(GetParent(hdlg)), None, true);
                         }
                         1
@@ -300,7 +311,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     ("banner off — tick the dialog's checkbox", 150)
                 };
                 let wide = to_wide(text);
-                _ = TextOutW(hdc, 20, y, PCWSTR::from_raw(wide.as_ptr()), wide.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    y,
+                    PCWSTR::from_raw(wide.as_ptr()),
+                    wide.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
                 _ = EndPaint(hwnd, &ps);
                 0

@@ -43,8 +43,14 @@ fn main() {
             w!("e16_class"),
             w!("e16 · Timer Clock"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 260,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            260,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -104,9 +110,19 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 FillRect(hdc, &rect, GetSysColorBrush(COLOR_WINDOW));
 
                 let big = CreateFontW(
-                    96, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET as u32,
-                    OUT_DEFAULT_PRECIS as u32, CLIP_DEFAULT_PRECIS as u32,
-                    CLEARTYPE_QUALITY as u32, (FIXED_PITCH | FF_MODERN) as u32,
+                    96,
+                    0,
+                    0,
+                    0,
+                    FW_BOLD,
+                    0,
+                    0,
+                    0,
+                    DEFAULT_CHARSET as u32,
+                    OUT_DEFAULT_PRECIS as u32,
+                    CLIP_DEFAULT_PRECIS as u32,
+                    CLEARTYPE_QUALITY as u32,
+                    (FIXED_PITCH | FF_MODERN) as u32,
                     w!("Consolas"),
                 );
                 let old_font = SelectObject(hdc, big as HGDIOBJ);

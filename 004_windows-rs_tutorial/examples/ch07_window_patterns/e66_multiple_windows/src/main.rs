@@ -114,8 +114,14 @@ fn main() {
             w!("e66_main"),
             w!("e66 · Notes — 0 live"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 240,
-            None, None, Some(instance), Some(main_state as LPVOID),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            240,
+            None,
+            None,
+            Some(instance),
+            Some(main_state as LPVOID),
         );
         debug_assert!(!main.is_null());
         update_main_title(main);
@@ -165,9 +171,14 @@ unsafe fn spawn_note(owner: HWND, instance: HINSTANCE, id: u32) {
             // that nevertheless follows its owner (stays above it,
             // minimizes, hides, and is destroyed with it — automatically).
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            x, y, 220, 170,
+            x,
+            y,
+            220,
+            170,
             Some(owner), // owner (no WS_CHILD → ownership, not parenting)
-            None, Some(instance), Some(state as LPVOID),
+            None,
+            Some(instance),
+            Some(state as LPVOID),
         );
         debug_assert!(!note.is_null());
     }
@@ -183,11 +194,7 @@ extern "system" fn main_wndproc(
         match message as i32 {
             WM_NCCREATE => {
                 let cs = lparam as *const CREATESTRUCTW;
-                SetWindowLongPtrW(
-                    hwnd,
-                    GWLP_USERDATA,
-                    (*cs).lpCreateParams as isize,
-                );
+                SetWindowLongPtrW(hwnd, GWLP_USERDATA, (*cs).lpCreateParams as isize);
                 DefWindowProcW(hwnd, message, wparam, lparam)
             }
             WM_CREATE => {
@@ -201,7 +208,10 @@ extern "system" fn main_wndproc(
                     w!("BUTTON"),
                     w!("New note"),
                     (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-                    20, 20, 120, 36,
+                    20,
+                    20,
+                    120,
+                    36,
                     Some(hwnd),
                     // The hmenu parameter doubles as the CHILD CONTROL ID
                     // for WS_CHILD windows — smuggled in as a fake HMENU.
@@ -225,7 +235,9 @@ extern "system" fn main_wndproc(
                 if (wparam & 0xffff) as i32 == IDC_NEW_NOTE
                     && ((wparam >> 16) & 0xffff) as i32 == BN_CLICKED
                 {
-                    let Some(state) = main_state_of(hwnd) else { return 0 };
+                    let Some(state) = main_state_of(hwnd) else {
+                        return 0;
+                    };
                     let id = state.next_note_id;
                     state.next_note_id += 1;
                     let instance = GetModuleHandleW(PCWSTR::null());
@@ -267,11 +279,7 @@ extern "system" fn note_wndproc(
         match message as i32 {
             WM_NCCREATE => {
                 let cs = lparam as *const CREATESTRUCTW;
-                SetWindowLongPtrW(
-                    hwnd,
-                    GWLP_USERDATA,
-                    (*cs).lpCreateParams as isize,
-                );
+                SetWindowLongPtrW(hwnd, GWLP_USERDATA, (*cs).lpCreateParams as isize);
                 DefWindowProcW(hwnd, message, wparam, lparam)
             }
             WM_ERASEBKGND => {
@@ -294,8 +302,10 @@ extern "system" fn note_wndproc(
                     rect.top += 14;
                     rect.left += 12;
                     rect.right -= 12;
-                    let text =
-                        format!("Note #{}\n\nDrag me. Close the\nowner and I go too.", state.id);
+                    let text = format!(
+                        "Note #{}\n\nDrag me. Close the\nowner and I go too.",
+                        state.id
+                    );
                     let wide = to_wide(&text);
                     _ = SetBkMode(hdc, TRANSPARENT);
                     DrawTextW(
@@ -328,7 +338,9 @@ extern "system" fn note_wndproc(
                 // the main window sends every note here without a single
                 // line of our code). Reclaim state, then tell the main
                 // window to re-count.
-                let owner = note_state_of(hwnd).map(|s| s.owner).unwrap_or(std::ptr::null_mut());
+                let owner = note_state_of(hwnd)
+                    .map(|s| s.owner)
+                    .unwrap_or(std::ptr::null_mut());
                 let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut NoteState;
                 if !ptr.is_null() {
                     SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);

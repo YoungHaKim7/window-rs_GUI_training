@@ -45,8 +45,14 @@ fn main() {
             w!("e14_class"),
             w!("e14 · Keyboard — press keys (try Shift+1)"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 680, 380,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            680,
+            380,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -131,7 +137,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // layout by TranslateMessage. THIS is the message for text.
                 let unit = wparam as u32;
                 let shown = char::from_u32(unit)
-                    .map(|c| if c.is_control() { format!("U+{unit:04X}") } else { c.to_string() })
+                    .map(|c| {
+                        if c.is_control() {
+                            format!("U+{unit:04X}")
+                        } else {
+                            c.to_string()
+                        }
+                    })
                     .unwrap_or_else(|| format!("U+{unit:04X}"));
                 let line = format!("WM_CHAR      '{shown}'");
                 state.log.push(line.clone());
@@ -143,7 +155,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 0
             }
             WM_KEYUP => {
-                state.log.push(format!("WM_KEYUP     {}", vk_name(wparam as i32)));
+                state
+                    .log
+                    .push(format!("WM_KEYUP     {}", vk_name(wparam as i32)));
                 if state.log.len() > 12 {
                     state.log.remove(0);
                 }
@@ -154,7 +168,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Alt+key. Log it, then hand it to DefWindowProc — swallow
                 // this and Alt+F4, Alt+Space, the system menu all stop
                 // working (try replacing the last line of this arm with 0!).
-                state.log.push(format!("WM_SYSKEYDOWN {} (with Alt)", vk_name(wparam as i32)));
+                state.log.push(format!(
+                    "WM_SYSKEYDOWN {} (with Alt)",
+                    vk_name(wparam as i32)
+                ));
                 if state.log.len() > 12 {
                     state.log.remove(0);
                 }
@@ -167,9 +184,19 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // Monospace font keeps the log columns aligned.
                 let font = CreateFontW(
-                    20, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET as u32,
-                    OUT_DEFAULT_PRECIS as u32, CLIP_DEFAULT_PRECIS as u32,
-                    CLEARTYPE_QUALITY as u32, (DEFAULT_PITCH | FF_MODERN) as u32,
+                    20,
+                    0,
+                    0,
+                    0,
+                    FW_NORMAL,
+                    0,
+                    0,
+                    0,
+                    DEFAULT_CHARSET as u32,
+                    OUT_DEFAULT_PRECIS as u32,
+                    CLIP_DEFAULT_PRECIS as u32,
+                    CLEARTYPE_QUALITY as u32,
+                    (DEFAULT_PITCH | FF_MODERN) as u32,
                     w!("Consolas"),
                 );
                 let old_font = SelectObject(hdc, font as HGDIOBJ);

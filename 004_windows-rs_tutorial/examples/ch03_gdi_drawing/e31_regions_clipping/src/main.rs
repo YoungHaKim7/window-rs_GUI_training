@@ -45,8 +45,14 @@ fn main() {
             w!("e31_class"),
             w!("e31 · Regions — CombineRgn set operations as clip shapes"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 720, 560,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            720,
+            560,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -68,12 +74,7 @@ fn to_wide(value: &str) -> Vec<u16> {
 
 /// Draw a dense diagonal hatch across `cell`, then label it. The hatch is
 /// clipped by `clip`, so the visible hatched area shows the region's shape.
-unsafe fn hatch_through(
-    hdc: HDC,
-    cell: &RECT,
-    clip: HRGN,
-    mode_name: &str,
-) {
+unsafe fn hatch_through(hdc: HDC, cell: &RECT, clip: HRGN, mode_name: &str) {
     unsafe {
         // Install the region as the DC's clip. From here until the None
         // call below, every drawing primitive is trimmed to the region.
@@ -98,7 +99,13 @@ unsafe fn hatch_through(
 
         _ = SetTextColor(hdc, rgb(0x30, 0x30, 0x30));
         let wide = to_wide(mode_name);
-        _ = TextOutW(hdc, cell.left + 8, cell.top + 8, PCWSTR::from_raw(wide.as_ptr()), -1);
+        _ = TextOutW(
+            hdc,
+            cell.left + 8,
+            cell.top + 8,
+            PCWSTR::from_raw(wide.as_ptr()),
+            -1,
+        );
     }
 }
 
@@ -115,7 +122,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // Reserve the bottom band for the round-rect demo.
                 let band_h = 90;
-                let grid = RECT { bottom: rc.bottom - band_h, ..rc };
+                let grid = RECT {
+                    bottom: rc.bottom - band_h,
+                    ..rc
+                };
 
                 // Faint outlines of the two source shapes, drawn once per
                 // quadrant so the eye can compare source vs result.
@@ -142,7 +152,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         bottom: grid.top + (i as i32 / 2 + 1) * half_h,
                     };
                     // Inset so the quadrants have breathing room.
-                    let cell = RECT { left: cell.left + 12, top: cell.top + 12, right: cell.right - 12, bottom: cell.bottom - 32 };
+                    let cell = RECT {
+                        left: cell.left + 12,
+                        top: cell.top + 12,
+                        right: cell.right - 12,
+                        bottom: cell.bottom - 32,
+                    };
 
                     // Source shape A: rectangle over the left 3/4 of the cell.
                     let rect = CreateRectRgn(
@@ -163,7 +178,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     SelectObject(hdc, outline as HGDIOBJ);
                     _ = MoveToEx(hdc, cell.left, cell.top, None);
                     _ = LineTo(hdc, cell.left + 3 * (cell.right - cell.left) / 4, cell.top);
-                    _ = LineTo(hdc, cell.left + 3 * (cell.right - cell.left) / 4, cell.bottom);
+                    _ = LineTo(
+                        hdc,
+                        cell.left + 3 * (cell.right - cell.left) / 4,
+                        cell.bottom,
+                    );
                     _ = LineTo(hdc, cell.left, cell.bottom);
                     _ = LineTo(hdc, cell.left, cell.top);
                     _ = Ellipse(
@@ -192,12 +211,19 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = DeleteObject(outline as HGDIOBJ);
 
                 // ---- Bottom band: a rounded-rectangle clip ---------------
-                let band = RECT { top: grid.bottom + 10, bottom: rc.bottom - 10, ..rc };
-                let band = RECT { left: band.left + 12, right: band.right - 12, ..band };
+                let band = RECT {
+                    top: grid.bottom + 10,
+                    bottom: rc.bottom - 10,
+                    ..rc
+                };
+                let band = RECT {
+                    left: band.left + 12,
+                    right: band.right - 12,
+                    ..band
+                };
                 // Corner "radius" w=h=36: the ellipse the corners follow.
-                let round = CreateRoundRectRgn(
-                    band.left, band.top, band.right, band.bottom, 36, 36,
-                );
+                let round =
+                    CreateRoundRectRgn(band.left, band.top, band.right, band.bottom, 36, 36);
                 hatch_through(hdc, &band, round, "CreateRoundRectRgn — rounded clip");
                 _ = DeleteObject(round as HGDIOBJ);
 

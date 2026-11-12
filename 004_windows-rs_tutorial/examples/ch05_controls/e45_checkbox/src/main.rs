@@ -46,8 +46,14 @@ fn main() {
             w!("e45_class"),
             w!("e45 · Checkbox — tick 'Show clock'"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 460, 160,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            460,
+            160,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -64,8 +70,14 @@ fn main() {
             w!("BUTTON"),
             w!("Show clock"),
             (WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX) as u32,
-            20, 20, 200, 24,
-            Some(hwnd), Some(IDC_SHOW_CLOCK as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            200,
+            24,
+            Some(hwnd),
+            Some(IDC_SHOW_CLOCK as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_check.is_null());
 
@@ -102,8 +114,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // The control has ALREADY flipped its box (auto style).
                     // We could trust that and keep a bool — but the honest
                     // way is to ask the control, because it owns the truth:
-                    let checked =
-                        SendMessageW(state.hwnd_check, BM_GETCHECK as u32, 0, 0) as i32;
+                    let checked = SendMessageW(state.hwnd_check, BM_GETCHECK as u32, 0, 0) as i32;
 
                     if checked == BST_CHECKED && !state.clock_on {
                         // One timer, ticking once per second. WM_TIMER is a

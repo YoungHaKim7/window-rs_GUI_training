@@ -72,8 +72,13 @@ fn main() {
             w!("e87_class"),
             w!("e87 · Text Viewer — open a file, then Search → Find"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_VSCROLL) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 720, 520,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            720,
+            520,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -102,7 +107,11 @@ fn main() {
 unsafe fn find_dialog_of(hwnd: HWND) -> HWND {
     unsafe {
         let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut State;
-        if ptr.is_null() { std::ptr::null_mut() } else { (*ptr).hwnd_find }
+        if ptr.is_null() {
+            std::ptr::null_mut()
+        } else {
+            (*ptr).hwnd_find
+        }
     }
 }
 
@@ -170,7 +179,11 @@ unsafe fn scroll_to_line(hwnd: HWND, line: i32) {
         let Some(state) = state_of(hwnd) else { return };
         let mut rc = RECT::default();
         _ = GetClientRect(hwnd, &mut rc);
-        let page = if state.line_height > 0 { (rc.bottom / state.line_height).max(1) } else { 1 };
+        let page = if state.line_height > 0 {
+            (rc.bottom / state.line_height).max(1)
+        } else {
+            1
+        };
         // Center the target line in the viewport (classic viewer move).
         state.top_line = (line - page / 2).clamp(0, (state.lines.len() as i32 - page).max(0));
         _ = SetScrollPos(hwnd, SB_VERT, state.top_line, true);
@@ -210,7 +223,11 @@ impl TemplateBuilder {
     fn new() -> Self {
         let words = vec![0u16; 256];
         let start = (words.as_ptr() as usize % 4 != 0) as usize;
-        Self { words, start, pos: start }
+        Self {
+            words,
+            start,
+            pos: start,
+        }
     }
     fn word(&mut self, w: u16) {
         self.words[self.pos] = w;
@@ -316,7 +333,8 @@ extern "system" fn find_dlgproc(
                         // jump. The owner is GetParent(hdlg).
                         let owner = GetParent(hdlg);
                         let mut buf = [0u16; 128];
-                        let got = GetDlgItemTextW(hdlg, IDC_FIND_EDIT, PWSTR(buf.as_mut_ptr()), 128);
+                        let got =
+                            GetDlgItemTextW(hdlg, IDC_FIND_EDIT, PWSTR(buf.as_mut_ptr()), 128);
                         let query = wide_to_string(&buf[..got as usize]);
                         if let Some(state) = state_of(owner) {
                             state.query = query;
@@ -367,7 +385,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = AppendMenuW(file_menu, MF_STRING as u32, IDM_EXIT, w!("E&xit"));
                 _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
                 let search_menu = CreatePopupMenu();
-                _ = AppendMenuW(search_menu, MF_STRING as u32, IDM_FIND, w!("&Find...\tF3-ready"));
+                _ = AppendMenuW(
+                    search_menu,
+                    MF_STRING as u32,
+                    IDM_FIND,
+                    w!("&Find...\tF3-ready"),
+                );
                 _ = AppendMenuW(bar, MF_POPUP as u32, search_menu as usize, w!("&Search"));
                 _ = SetMenu(hwnd, Some(bar));
 
@@ -449,7 +472,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     IDM_OPEN => {
                         // e59 picker, condensed.
                         let mut blob = Vec::new();
-                        for part in ["Text files (*.txt;*.md;*.rs)", "*.txt;*.md;*.rs", "All files (*.*)", "*.*"] {
+                        for part in [
+                            "Text files (*.txt;*.md;*.rs)",
+                            "*.txt;*.md;*.rs",
+                            "All files (*.*)",
+                            "*.*",
+                        ] {
                             blob.extend(part.encode_utf16());
                             blob.push(0);
                         }
@@ -608,11 +636,21 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let report = if state.match_lines.is_empty() {
                             format!("no matches for \"{}\"", state.query)
                         } else {
-                            format!("{} matching line(s) for \"{}\" — F3: next", state.match_lines.len(), state.query)
+                            format!(
+                                "{} matching line(s) for \"{}\" — F3: next",
+                                state.match_lines.len(),
+                                state.query
+                            )
                         };
                         _ = SetTextColor(hdc, 0x00808080);
                         let wide = to_wide(&report);
-                        _ = TextOutW(hdc, 4, rc.bottom - line_h, PCWSTR::from_raw(wide.as_ptr()), -1);
+                        _ = TextOutW(
+                            hdc,
+                            4,
+                            rc.bottom - line_h,
+                            PCWSTR::from_raw(wide.as_ptr()),
+                            -1,
+                        );
                     }
                 }
 

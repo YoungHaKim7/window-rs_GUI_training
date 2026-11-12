@@ -57,8 +57,14 @@ fn main() {
             w!("e52_class"),
             w!("e52 · Updown — arrows renumber the buddy EDIT"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 460, 220,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            460,
+            220,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -74,8 +80,14 @@ fn main() {
             w!("EDIT"),
             w!(""),
             (WS_CHILD | WS_VISIBLE) as u32,
-            20, 24, 150, 26,
-            Some(hwnd), None, Some(instance), None,
+            20,
+            24,
+            150,
+            26,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!edit.is_null());
         _ = SetWindowTextW(edit, w!("7"));
@@ -90,8 +102,14 @@ fn main() {
             w!("msctls_updown32"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS) as u32,
-            0, 0, 16, 26, // position is irrelevant — ALIGNRIGHT overrides it
-            Some(hwnd), None, Some(instance), None,
+            0,
+            0,
+            16,
+            26, // position is irrelevant — ALIGNRIGHT overrides it
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!updown.is_null());
 
@@ -108,8 +126,14 @@ fn main() {
             w!("BUTTON"),
             w!("Show value"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 70, 110, 28,
-            Some(hwnd), Some(IDC_SHOW as usize as HMENU), Some(instance), None,
+            20,
+            70,
+            110,
+            28,
+            Some(hwnd),
+            Some(IDC_SHOW as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!show.is_null());
         let double = CreateWindowExW(
@@ -117,8 +141,14 @@ fn main() {
             w!("BUTTON"),
             w!("Double it (writes back)"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            140, 70, 200, 28,
-            Some(hwnd), Some(IDC_DOUBLE as usize as HMENU), Some(instance), None,
+            140,
+            70,
+            200,
+            28,
+            Some(hwnd),
+            Some(IDC_DOUBLE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!double.is_null());
 
@@ -189,13 +219,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // set a value programmatically is UDM_SETPOS32; we
                         // keep it simple and only rewrite the text, which
                         // the NEXT arrow click will re-clamp into range.
-                        let value: i32 =
-                            window_text(state.hwnd_buddy).trim().parse().unwrap_or(0);
+                        let value: i32 = window_text(state.hwnd_buddy).trim().parse().unwrap_or(0);
                         let doubled = (value * 2).clamp(0, 99);
-                        _ = SetWindowTextW(
-                            state.hwnd_buddy,
-                            &HSTRING::from(doubled.to_string()),
-                        );
+                        _ = SetWindowTextW(state.hwnd_buddy, &HSTRING::from(doubled.to_string()));
                         0
                     }
                     _ => 0,

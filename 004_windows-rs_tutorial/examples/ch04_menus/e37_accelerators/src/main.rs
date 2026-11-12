@@ -41,7 +41,7 @@ fn main() {
         let mut accels = [
             ACCEL {
                 fVirt: (FVIRTKEY | FCONTROL) as u8, // Ctrl, virtual key
-                key: 'O' as u16, // virtual-key code for O
+                key: 'O' as u16,                    // virtual-key code for O
                 cmd: ID_OPEN,
             },
             ACCEL {
@@ -69,8 +69,14 @@ fn main() {
             w!("e37_class"),
             w!("e37 · Accelerators — Ctrl+O / Ctrl+X"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 320,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            320,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -78,8 +84,18 @@ fn main() {
         // hint into the menu's right-hand column automatically.
         let bar = CreateMenu();
         let file_menu = CreatePopupMenu();
-        _ = AppendMenuW(file_menu, MF_STRING as u32, ID_OPEN as usize, w!("Open...\tCtrl+O"));
-        _ = AppendMenuW(file_menu, MF_STRING as u32, ID_EXIT as usize, w!("Exit\tCtrl+X"));
+        _ = AppendMenuW(
+            file_menu,
+            MF_STRING as u32,
+            ID_OPEN as usize,
+            w!("Open...\tCtrl+O"),
+        );
+        _ = AppendMenuW(
+            file_menu,
+            MF_STRING as u32,
+            ID_EXIT as usize,
+            w!("Exit\tCtrl+X"),
+        );
         _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
         _ = SetMenu(hwnd, Some(bar));
 
@@ -122,7 +138,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     ID_OPEN => {
                         _ = MessageBoxW(
                             Some(hwnd),
-                            w!("Ctrl+O or the menu — either way you got here through one WM_COMMAND with id 5001."),
+                            w!(
+                                "Ctrl+O or the menu — either way you got here through one WM_COMMAND with id 5001."
+                            ),
                             w!("Open (accelerator)"),
                             (MB_OK | MB_ICONINFORMATION) as u32,
                         );
@@ -145,7 +163,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let mut hint = rc;
                 DrawTextW(
                     hdc,
-                    w!("Press Ctrl+O for the box, Ctrl+X to exit.\n\nThe menu items below the title bar share the same ids — one handler, two triggers."),
+                    w!(
+                        "Press Ctrl+O for the box, Ctrl+X to exit.\n\nThe menu items below the title bar share the same ids — one handler, two triggers."
+                    ),
                     -1,
                     &mut hint,
                     (DT_CENTER | DT_VCENTER | DT_WORDBREAK) as u32,

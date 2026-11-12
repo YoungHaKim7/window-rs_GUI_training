@@ -27,7 +27,7 @@ const TIMER_MS: u32 = 100; // one step every 100 ms → full sweep in 10 s
 #[derive(Default)]
 struct State {
     hwnd_determinate: HWND, // the classic 0..100 bar
-    hwnd_marquee: HWND, // the forever-animating bar
+    hwnd_marquee: HWND,     // the forever-animating bar
 }
 
 fn main() {
@@ -66,8 +66,14 @@ fn main() {
             w!("e50_class"),
             w!("e50 · Progress Bars — determinate and marquee"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 240,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            240,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -83,8 +89,14 @@ fn main() {
             w!("msctls_progress32"),
             w!(""),
             (WS_CHILD | WS_VISIBLE) as u32,
-            20, 40, 420, 24,
-            Some(hwnd), None, Some(instance), None,
+            20,
+            40,
+            420,
+            24,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!bar1.is_null());
 
@@ -103,8 +115,14 @@ fn main() {
             w!("msctls_progress32"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | PBS_MARQUEE) as u32,
-            20, 120, 420, 24,
-            Some(hwnd), None, Some(instance), None,
+            20,
+            120,
+            420,
+            24,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!bar2.is_null());
         SendMessageW(bar2, PBM_SETMARQUEE as u32, 1, 30); // TRUE, 30 ms
@@ -153,12 +171,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // Ask the bar where it is (don't track it yourself) and
                     // mirror it into the caption. Single source of truth:
                     // the control.
-                    let pos = SendMessageW(
-                        state.hwnd_determinate,
-                        PBM_GETPOS as u32,
-                        0,
-                        0,
-                    ) as i32;
+                    let pos = SendMessageW(state.hwnd_determinate, PBM_GETPOS as u32, 0, 0) as i32;
                     _ = SetWindowTextW(
                         hwnd,
                         &HSTRING::from(format!("e50 · Progress Bars — {pos}%")),
@@ -171,13 +184,29 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let hdc = BeginPaint(hwnd, &mut ps);
 
                 // Static labels so the two bars need no explanation.
-                let l1 = to_wide("Determinate: 0..100 in PBM_SETSTEP=5 steps \
-                                  (WM_TIMER + PBM_STEPIT)");
-                let l2 = to_wide("Marquee: use when the duration is unknown \
-                                  (PBS_MARQUEE + PBM_SETMARQUEE)");
+                let l1 = to_wide(
+                    "Determinate: 0..100 in PBM_SETSTEP=5 steps \
+                                  (WM_TIMER + PBM_STEPIT)",
+                );
+                let l2 = to_wide(
+                    "Marquee: use when the duration is unknown \
+                                  (PBS_MARQUEE + PBM_SETMARQUEE)",
+                );
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, 20, 16, PCWSTR::from_raw(l1.as_ptr()), l1.len() as i32 - 1);
-                _ = TextOutW(hdc, 20, 96, PCWSTR::from_raw(l2.as_ptr()), l2.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    16,
+                    PCWSTR::from_raw(l1.as_ptr()),
+                    l1.len() as i32 - 1,
+                );
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    96,
+                    PCWSTR::from_raw(l2.as_ptr()),
+                    l2.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
 
                 _ = EndPaint(hwnd, &ps);

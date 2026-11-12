@@ -39,8 +39,14 @@ fn main() {
             w!("e10_class"),
             w!("e10 · Window Styles"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 340,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            340,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -97,8 +103,15 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let is_topmost = ex & WS_EX_TOPMOST as u32 != 0;
                         _ = SetWindowPos(
                             hwnd,
-                            Some(if is_topmost { HWND_NOTOPMOST } else { HWND_TOPMOST }),
-                            0, 0, 0, 0,
+                            Some(if is_topmost {
+                                HWND_NOTOPMOST
+                            } else {
+                                HWND_TOPMOST
+                            }),
+                            0,
+                            0,
+                            0,
+                            0,
                             (SWP_NOMOVE | SWP_NOSIZE) as u32,
                         );
                         _ = InvalidateRect(Some(hwnd), None, true);
@@ -124,12 +137,30 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 let mark = |on: bool| if on { "[x]" } else { "[ ]" };
                 let lines = [
-                    format!("{} [1]  WS_CAPTION      title bar + draggable frame", mark(style & WS_CAPTION as u32 != 0)),
-                    format!("{} [2]  WS_THICKFRAME   resize borders", mark(style & WS_THICKFRAME as u32 != 0)),
-                    format!("{} [3]  WS_MINIMIZEBOX  minimize button", mark(style & WS_MINIMIZEBOX as u32 != 0)),
-                    format!("{} [4]  WS_MAXIMIZEBOX  maximize button", mark(style & WS_MAXIMIZEBOX as u32 != 0)),
-                    format!("{} [5]  WS_SYSMENU      system menu (X / Alt+Space)", mark(style & WS_SYSMENU as u32 != 0)),
-                    format!("{} [T]  WS_EX_TOPMOST   float above other windows", mark(ex_style & WS_EX_TOPMOST as u32 != 0)),
+                    format!(
+                        "{} [1]  WS_CAPTION      title bar + draggable frame",
+                        mark(style & WS_CAPTION as u32 != 0)
+                    ),
+                    format!(
+                        "{} [2]  WS_THICKFRAME   resize borders",
+                        mark(style & WS_THICKFRAME as u32 != 0)
+                    ),
+                    format!(
+                        "{} [3]  WS_MINIMIZEBOX  minimize button",
+                        mark(style & WS_MINIMIZEBOX as u32 != 0)
+                    ),
+                    format!(
+                        "{} [4]  WS_MAXIMIZEBOX  maximize button",
+                        mark(style & WS_MAXIMIZEBOX as u32 != 0)
+                    ),
+                    format!(
+                        "{} [5]  WS_SYSMENU      system menu (X / Alt+Space)",
+                        mark(style & WS_SYSMENU as u32 != 0)
+                    ),
+                    format!(
+                        "{} [T]  WS_EX_TOPMOST   float above other windows",
+                        mark(ex_style & WS_EX_TOPMOST as u32 != 0)
+                    ),
                     String::new(),
                     "Esc = quit".to_string(),
                 ];
@@ -140,7 +171,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let mut r = rect;
                     r.top += 24 + i as i32 * 26;
                     let wide = to_wide(line);
-                    DrawTextW(hdc, PCWSTR::from_raw(wide.as_ptr()), -1, &mut r, (DT_LEFT | DT_SINGLELINE) as u32);
+                    DrawTextW(
+                        hdc,
+                        PCWSTR::from_raw(wide.as_ptr()),
+                        -1,
+                        &mut r,
+                        (DT_LEFT | DT_SINGLELINE) as u32,
+                    );
                 }
 
                 _ = EndPaint(hwnd, &ps);

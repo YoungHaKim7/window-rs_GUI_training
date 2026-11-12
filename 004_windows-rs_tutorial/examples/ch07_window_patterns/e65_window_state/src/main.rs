@@ -69,8 +69,13 @@ fn main() {
             w!("e65_class"),
             w!("e65 · Window State, attached at WM_NCCREATE"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 320,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            320,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID), // <-- rides along into WM_NCCREATE
         );
         debug_assert!(!hwnd.is_null());

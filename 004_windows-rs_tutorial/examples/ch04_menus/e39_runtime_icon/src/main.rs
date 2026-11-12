@@ -87,8 +87,7 @@ unsafe fn build_icon() -> HICON {
             for x in 0..SIZE {
                 if icon_pixel(x, y).is_none() {
                     let byte = mask_bits[y as usize * row_bytes + (x / 8) as usize];
-                    mask_bits[y as usize * row_bytes + (x / 8) as usize] =
-                        byte | (0x80 >> (x % 8)); // set = see-through
+                    mask_bits[y as usize * row_bytes + (x / 8) as usize] = byte | (0x80 >> (x % 8)); // set = see-through
                 }
             }
         }
@@ -141,8 +140,14 @@ fn main() {
             w!("e39_class"),
             w!("e39 · Runtime Icon — look at the title bar"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 420,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            420,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -224,7 +229,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = SetBkMode(hdc, TRANSPARENT);
                 _ = SetTextColor(hdc, rgb(0x30, 0x30, 0x30));
                 let caption = to_wide("the title-bar icon, magnified 8× — same icon_pixel() data");
-                _ = TextOutW(hdc, 12, rc.bottom - 30, PCWSTR::from_raw(caption.as_ptr()), -1);
+                _ = TextOutW(
+                    hdc,
+                    12,
+                    rc.bottom - 30,
+                    PCWSTR::from_raw(caption.as_ptr()),
+                    -1,
+                );
 
                 _ = EndPaint(hwnd, &ps);
                 0

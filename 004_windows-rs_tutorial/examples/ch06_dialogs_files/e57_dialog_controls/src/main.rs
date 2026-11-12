@@ -69,8 +69,14 @@ fn main() {
             w!("e57_class"),
             w!("e57 · Settings Dialog — the canonical pattern"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -82,8 +88,14 @@ fn main() {
             w!("BUTTON"),
             w!("Settings..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 30, 110, 32,
-            Some(hwnd), Some(IDC_SETTINGS as usize as HMENU), Some(instance), None,
+            20,
+            30,
+            110,
+            32,
+            Some(hwnd),
+            Some(IDC_SETTINGS as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!settings.is_null());
 
@@ -132,7 +144,11 @@ impl TemplateBuilder {
     fn new() -> Self {
         let words = vec![0u16; 512];
         let start = (words.as_ptr() as usize % 4 != 0) as usize;
-        Self { words, start, pos: start }
+        Self {
+            words,
+            start,
+            pos: start,
+        }
     }
     fn word(&mut self, w: u16) {
         self.words[self.pos] = w;
@@ -197,29 +213,76 @@ fn build_template() -> TemplateBuilder {
 
     // Label: a plain STATIC. id 0xFFFF (= -1) is the convention for
     // controls nobody will ever address — statics, group frames.
-    item(&mut t, (WS_CHILD | WS_VISIBLE | SS_LEFT) as u32, 0,
-         [10, 14, 30, 8], -1, 0x0082, "Name:");
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | SS_LEFT) as u32,
+        0,
+        [10, 14, 30, 8],
+        -1,
+        0x0082,
+        "Name:",
+    );
     // The EDIT: WS_EX_CLIENTEDGE rides in dwExtendedStyle — this is where
     // extended styles live in a template (there is no second style field).
-    item(&mut t, (WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL) as u32,
-         WS_EX_CLIENTEDGE as u32,
-         [45, 12, 130, 12], IDC_NAME, 0x0081, "");
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL) as u32,
+        WS_EX_CLIENTEDGE as u32,
+        [45, 12, 130, 12],
+        IDC_NAME,
+        0x0081,
+        "",
+    );
     // Checkbox.
-    item(&mut t, (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX) as u32, 0,
-         [10, 30, 60, 10], IDC_BOLD, 0x0080, "Bold text");
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX) as u32,
+        0,
+        [10, 30, 60, 10],
+        IDC_BOLD,
+        0x0080,
+        "Bold text",
+    );
     // Radio pair: WS_GROUP on the FIRST radio opens a group — arrow keys
     // cycle within it, and BS_AUTORADIOBUTTON auto-unchecks the sibling.
-    item(&mut t,
-         (WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_AUTORADIOBUTTON) as u32, 0,
-         [10, 44, 45, 10], IDC_BLUE, 0x0080, "Blue");
-    item(&mut t, (WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON) as u32, 0,
-         [60, 44, 45, 10], IDC_RED, 0x0080, "Red");
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_AUTORADIOBUTTON) as u32,
+        0,
+        [10, 44, 45, 10],
+        IDC_BLUE,
+        0x0080,
+        "Blue",
+    );
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON) as u32,
+        0,
+        [60, 44, 45, 10],
+        IDC_RED,
+        0x0080,
+        "Red",
+    );
     // OK is the default button; ids 1/2 are the standard IDOK/IDCANCEL,
     // so the dialog manager's Enter/Esc mapping finds them automatically.
-    item(&mut t, (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON) as u32, 0,
-         [85, 68, 45, 14], IDOK, 0x0080, "OK");
-    item(&mut t, (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_PUSHBUTTON) as u32, 0,
-         [138, 68, 45, 14], IDCANCEL, 0x0080, "Cancel");
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON) as u32,
+        0,
+        [85, 68, 45, 14],
+        IDOK,
+        0x0080,
+        "OK",
+    );
+    item(
+        &mut t,
+        (WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_PUSHBUTTON) as u32,
+        0,
+        [138, 68, 45, 14],
+        IDCANCEL,
+        0x0080,
+        "Cancel",
+    );
 
     t
 }
@@ -227,12 +290,7 @@ fn build_template() -> TemplateBuilder {
 // ======================================================================
 // The dialog procedure — prefill on init, copy back on OK.
 // ======================================================================
-extern "system" fn dlgproc(
-    hdlg: HWND,
-    message: u32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> INT_PTR {
+extern "system" fn dlgproc(hdlg: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> INT_PTR {
     unsafe {
         match message as i32 {
             // lparam IS the dwInitParam we passed to DialogBoxIndirect-
@@ -244,7 +302,10 @@ extern "system" fn dlgproc(
 
                 // Prefill the controls from the settings.
                 let s = &*ptr;
-                _ = SetWindowTextW(GetDlgItem(Some(hdlg), IDC_NAME), &HSTRING::from(s.name.clone()));
+                _ = SetWindowTextW(
+                    GetDlgItem(Some(hdlg), IDC_NAME),
+                    &HSTRING::from(s.name.clone()),
+                );
                 _ = CheckDlgButton(hdlg, IDC_BOLD, s.bold as u32);
                 // Radios: check exactly one.
                 _ = CheckDlgButton(
@@ -334,9 +395,18 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // default GUI font face). e62 replaces the hand-rolled
                 // fields with a real LOGFONTW from the font picker.
                 let font = CreateFontW(
-                    32, 0, 0, 0,
-                    if s.bold { FW_BOLD as i32 } else { FW_NORMAL as i32 },
-                    0, 0, 0,
+                    32,
+                    0,
+                    0,
+                    0,
+                    if s.bold {
+                        FW_BOLD as i32
+                    } else {
+                        FW_NORMAL as i32
+                    },
+                    0,
+                    0,
+                    0,
                     DEFAULT_CHARSET as u32,
                     OUT_DEFAULT_PRECIS as u32,
                     CLIP_DEFAULT_PRECIS as u32,
@@ -347,10 +417,17 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let old_font = SelectObject(hdc, font as HGDIOBJ);
                 let old_color = SetTextColor(
                     hdc,
-                    if s.blue { rgb(0x30, 0x50, 0xC0) } else { rgb(0xC0, 0x30, 0x30) },
+                    if s.blue {
+                        rgb(0x30, 0x50, 0xC0)
+                    } else {
+                        rgb(0xC0, 0x30, 0x30)
+                    },
                 );
 
-                let greeting = to_wide(&format!("Hello, {}", if s.name.is_empty() { "?" } else { &s.name }));
+                let greeting = to_wide(&format!(
+                    "Hello, {}",
+                    if s.name.is_empty() { "?" } else { &s.name }
+                ));
                 let mut r = rect;
                 r.top += 120;
                 _ = DrawTextW(

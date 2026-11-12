@@ -26,8 +26,8 @@ use windows::{Win32::*, core::*};
 #[derive(Default)]
 struct State {
     dragging: bool,
-    start: (i32, i32), // anchor point of the in-flight line
-    current: (i32, i32), // mouse position while dragging
+    start: (i32, i32),                    // anchor point of the in-flight line
+    current: (i32, i32),                  // mouse position while dragging
     lines: Vec<((i32, i32), (i32, i32))>, // committed lines
 }
 
@@ -52,8 +52,14 @@ fn main() {
             w!("e13_class"),
             w!("e13 · Mouse Move — drag to draw lines"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -79,11 +85,7 @@ fn main() {
 unsafe fn state_of(hwnd: HWND) -> Option<&'static mut State> {
     unsafe {
         let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut State;
-        if ptr.is_null() {
-            None
-        } else {
-            Some(&mut *ptr)
-        }
+        if ptr.is_null() { None } else { Some(&mut *ptr) }
     }
 }
 

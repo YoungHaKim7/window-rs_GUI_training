@@ -64,8 +64,14 @@ fn main() {
             w!("e48_class"),
             w!("e48 · Listbox — click, then double-click"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 380,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            380,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -85,8 +91,14 @@ fn main() {
             w!("LISTBOX"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | LBS_NOTIFY | WS_VSCROLL) as u32,
-            20, 20, 510, 240,
-            Some(hwnd), Some(IDC_LIST as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            510,
+            240,
+            Some(hwnd),
+            Some(IDC_LIST as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!list.is_null());
 

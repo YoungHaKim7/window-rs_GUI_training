@@ -39,8 +39,14 @@ fn main() {
             w!("e07_class"),
             w!("e07 · Fonts & Text"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -67,14 +73,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // ---- A big title in Segoe UI Semibold ----------------------
                 let title_font = CreateFontW(
-                    48, // height in logical px (0 = "size from width")
-                    0,  // width: 0 = keep the font's natural aspect ratio
-                    0,  // escapement: rotation of the text line (tenths of deg)
-                    0,  // orientation: rotation of individual glyphs
+                    48,          // height in logical px (0 = "size from width")
+                    0,           // width: 0 = keep the font's natural aspect ratio
+                    0,           // escapement: rotation of the text line (tenths of deg)
+                    0,           // orientation: rotation of individual glyphs
                     FW_SEMIBOLD, // weight: 400 normal, 700 bold, 100..900
-                    0,  // italic
-                    0,  // underline
-                    0,  // strikeout
+                    0,           // italic
+                    0,           // underline
+                    0,           // strikeout
                     DEFAULT_CHARSET as u32,
                     OUT_DEFAULT_PRECIS as u32,
                     CLIP_DEFAULT_PRECIS as u32,
@@ -96,10 +102,20 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // ---- Italic red subtitle, same technique, new font --------
                 let sub_font = CreateFontW(
-                    26, 0, 0, 0, FW_NORMAL, 1, // italic = TRUE
-                    0, 0, DEFAULT_CHARSET as u32, OUT_DEFAULT_PRECIS as u32,
-                    CLIP_DEFAULT_PRECIS as u32, CLEARTYPE_QUALITY as u32,
-                    (DEFAULT_PITCH | FF_DONTCARE) as u32, w!("Georgia"),
+                    26,
+                    0,
+                    0,
+                    0,
+                    FW_NORMAL,
+                    1, // italic = TRUE
+                    0,
+                    0,
+                    DEFAULT_CHARSET as u32,
+                    OUT_DEFAULT_PRECIS as u32,
+                    CLIP_DEFAULT_PRECIS as u32,
+                    CLEARTYPE_QUALITY as u32,
+                    (DEFAULT_PITCH | FF_DONTCARE) as u32,
+                    w!("Georgia"),
                 );
                 SelectObject(hdc, sub_font as HGDIOBJ);
                 _ = SetTextColor(hdc, rgb(0xB0, 0x30, 0x30));
@@ -107,12 +123,19 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // ---- Rotated text: escapement 450 = 45 degrees -------------
                 let rotated = CreateFontW(
-                    24, 0,
+                    24,
+                    0,
                     450, // rotate the whole line by 45° (tenths of a degree)
                     450, // rotate glyphs to match
-                    FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET as u32,
-                    OUT_DEFAULT_PRECIS as u32, CLIP_DEFAULT_PRECIS as u32,
-                    CLEARTYPE_QUALITY as u32, (DEFAULT_PITCH | FF_DONTCARE) as u32,
+                    FW_NORMAL,
+                    0,
+                    0,
+                    0,
+                    DEFAULT_CHARSET as u32,
+                    OUT_DEFAULT_PRECIS as u32,
+                    CLIP_DEFAULT_PRECIS as u32,
+                    CLEARTYPE_QUALITY as u32,
+                    (DEFAULT_PITCH | FF_DONTCARE) as u32,
                     w!("Segoe UI"),
                 );
                 SelectObject(hdc, rotated as HGDIOBJ);

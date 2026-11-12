@@ -55,8 +55,14 @@ fn main() {
             w!("e53_class"),
             w!("e53 · Status Bar — move the mouse, click, resize"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 280,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            280,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -74,8 +80,14 @@ fn main() {
             STATUSCLASSNAMEW,
             w!(""), // no initial text; parts get their text below
             (WS_CHILD | WS_VISIBLE) as u32,
-            0, 0, 0, 0, // position/size self-managed by the control
-            Some(hwnd), None, Some(instance), None,
+            0,
+            0,
+            0,
+            0, // position/size self-managed by the control
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!status.is_null());
 

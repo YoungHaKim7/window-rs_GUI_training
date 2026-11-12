@@ -31,7 +31,12 @@ const IDM_WIDTH_BASE: usize = 5200; // 5201/5203/5206 = 1/3/6 px
 const IDM_CLEAR: usize = 5300;
 const IDM_SAVE: usize = 5301;
 
-const PALETTE: [(u8, u8, u8); 4] = [(0xC0, 0x30, 0x30), (0x30, 0x90, 0x40), (0x30, 0x50, 0xC0), (0x20, 0x20, 0x20)];
+const PALETTE: [(u8, u8, u8); 4] = [
+    (0xC0, 0x30, 0x30),
+    (0x30, 0x90, 0x40),
+    (0x30, 0x50, 0xC0),
+    (0x20, 0x20, 0x20),
+];
 const WIDTHS: [i32; 3] = [1, 3, 6];
 const BACKGROUND: COLORREF = 0x00FF_FFFF; // the paper: white
 
@@ -78,8 +83,13 @@ fn main() {
             w!("e83_class"),
             w!("e83 · Paint — left draws, right erases"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 720, 520,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            720,
+            520,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -236,7 +246,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Width submenu: radio items 1/3/6.
                 let width_menu = CreatePopupMenu();
                 for (i, w) in WIDTHS.iter().enumerate() {
-                    let label = if *w == 1 { "&Thin (1 px)" } else if *w == 3 { "&Medium (3 px)" } else { "&Thick (6 px)" };
+                    let label = if *w == 1 {
+                        "&Thin (1 px)"
+                    } else if *w == 3 {
+                        "&Medium (3 px)"
+                    } else {
+                        "&Thick (6 px)"
+                    };
                     let wide: Vec<u16> = label.encode_utf16().chain(std::iter::once(0)).collect();
                     _ = AppendMenuW(
                         width_menu,
@@ -248,7 +264,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 }
 
                 _ = AppendMenuW(draw_menu, MF_SEPARATOR as u32, 0, w!(""));
-                _ = AppendMenuW(draw_menu, MF_POPUP as u32, width_menu as usize, w!("&Width"));
+                _ = AppendMenuW(
+                    draw_menu,
+                    MF_POPUP as u32,
+                    width_menu as usize,
+                    w!("&Width"),
+                );
                 _ = AppendMenuW(draw_menu, MF_SEPARATOR as u32, 0, w!(""));
                 _ = AppendMenuW(draw_menu, MF_STRING as u32, IDM_CLEAR, w!("&Clear..."));
                 _ = AppendMenuW(draw_menu, MF_STRING as u32, IDM_SAVE, w!("Save as &BMP..."));
@@ -285,7 +306,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     state.current = Some(Stroke {
                         pts: vec![mouse_pos(lparam)],
                         color: if eraser { BACKGROUND } else { rgb(r, g, b) },
-                        width: if eraser { 14 } else { WIDTHS[state.width_index] },
+                        width: if eraser {
+                            14
+                        } else {
+                            WIDTHS[state.width_index]
+                        },
                     });
                 }
                 0
@@ -363,7 +388,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     IDM_CLEAR => {
                         // Destructive action → confirm (borrow released
                         // before the MessageBox loop, e65 rule).
-                        let has_art = state_of(hwnd).map(|s| !s.strokes.is_empty()).unwrap_or(false);
+                        let has_art = state_of(hwnd)
+                            .map(|s| !s.strokes.is_empty())
+                            .unwrap_or(false);
                         let confirmed = !has_art
                             || MessageBoxW(
                                 Some(hwnd),

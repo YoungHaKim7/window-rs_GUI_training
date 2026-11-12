@@ -66,7 +66,10 @@ fn main() {
         };
         debug_assert!(RegisterClassW(&wc) != 0);
 
-        let state = Box::into_raw(Box::new(State { alpha_mode: true, alpha: 255 }));
+        let state = Box::into_raw(Box::new(State {
+            alpha_mode: true,
+            alpha: 255,
+        }));
 
         // WS_EX_LAYERED goes in dwExStyle (argument 1). The layered
         // machinery is inert until SetLayeredWindowAttributes configures
@@ -76,8 +79,13 @@ fn main() {
             w!("e72_class"),
             w!("e72 · Layered Window — drag the slider, press C"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 360,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            360,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -149,8 +157,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("msctls_trackbar32"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE) as u32, // TBS_HORZ = 0, the default
-                    30, 270, 440, 40,
-                    Some(hwnd), Some(IDC_ALPHA as usize as HMENU), Some(instance), None,
+                    30,
+                    270,
+                    440,
+                    40,
+                    Some(hwnd),
+                    Some(IDC_ALPHA as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!track.is_null());
 
@@ -209,13 +223,22 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = GetClientRect(hwnd, &mut rc);
 
                 // A small scene worth seeing fade: two-tone bands.
-                let bands = [rgb(0x2D, 0x6C, 0xAF), rgb(0x4F, 0x9D, 0x69), rgb(0xE0, 0x9B, 0x2E)];
+                let bands = [
+                    rgb(0x2D, 0x6C, 0xAF),
+                    rgb(0x4F, 0x9D, 0x69),
+                    rgb(0xE0, 0x9B, 0x2E),
+                ];
                 let band_h = 40;
                 for (i, color) in bands.iter().enumerate() {
                     let brush = CreateSolidBrush(*color);
                     _ = FillRect(
                         hdc,
-                        &RECT { left: 30, top: 60 + i as i32 * band_h, right: 250, bottom: 60 + (i as i32 + 1) * band_h },
+                        &RECT {
+                            left: 30,
+                            top: 60 + i as i32 * band_h,
+                            right: 250,
+                            bottom: 60 + (i as i32 + 1) * band_h,
+                        },
                         brush,
                     );
                     _ = DeleteObject(brush as HGDIOBJ);
@@ -230,7 +253,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let brush = CreateSolidBrush(KEY_COLOR);
                 _ = FillRect(
                     hdc,
-                    &RECT { left: 280, top: 60, right: 470, bottom: 180 },
+                    &RECT {
+                        left: 280,
+                        top: 60,
+                        right: 470,
+                        bottom: 180,
+                    },
                     brush,
                 );
                 _ = SelectObject(hdc, brush as HGDIOBJ);
@@ -249,7 +277,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 ];
                 for (i, line) in lines.iter().enumerate() {
                     let wide = to_wide(line);
-                    _ = TextOutW(hdc, 30, 190 + i as i32 * 18, PCWSTR::from_raw(wide.as_ptr()), -1);
+                    _ = TextOutW(
+                        hdc,
+                        30,
+                        190 + i as i32 * 18,
+                        PCWSTR::from_raw(wide.as_ptr()),
+                        -1,
+                    );
                 }
 
                 _ = EndPaint(hwnd, &ps);

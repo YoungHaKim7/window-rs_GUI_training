@@ -55,8 +55,14 @@ fn main() {
             w!("e49_class"),
             w!("e49 · Scrollbar Control — drag or click the bar"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 340,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            340,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -74,8 +80,14 @@ fn main() {
             w!("SCROLLBAR"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | SBS_VERT) as u32,
-            20, 20, 20, 260,
-            Some(hwnd), Some(IDC_SCROLL as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            20,
+            260,
+            Some(hwnd),
+            Some(IDC_SCROLL as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!bar.is_null());
 
@@ -153,9 +165,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let old_pos = si.nPos;
 
                 si.nPos = match request as i32 {
-                    SB_LINEUP => si.nPos - 1, // up/left arrow: one unit
-                    SB_LINEDOWN => si.nPos + 1, // down/right arrow
-                    SB_PAGEUP => si.nPos - si.nPage as i32, // click above thumb
+                    SB_LINEUP => si.nPos - 1,                 // up/left arrow: one unit
+                    SB_LINEDOWN => si.nPos + 1,               // down/right arrow
+                    SB_PAGEUP => si.nPos - si.nPage as i32,   // click above thumb
                     SB_PAGEDOWN => si.nPos + si.nPage as i32, // click below
                     // Live drag: every pixel of movement fires another
                     // SB_THUMBTRACK. React to it and the view follows the
@@ -195,20 +207,39 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let old_pen = SelectObject(hdc, frame as HGDIOBJ);
                 let fill = CreateSolidBrush(rgb(0x30, 0x90, 0xD0));
                 _ = Rectangle(hdc, x0, y0, x1 + 1, y0 + h); // empty frame first
-                _ = FillRect(hdc, &RECT { left: x0 + 1, top: y0 + 1, right: x0 + fill_w, bottom: y0 + h }, fill);
+                _ = FillRect(
+                    hdc,
+                    &RECT {
+                        left: x0 + 1,
+                        top: y0 + 1,
+                        right: x0 + fill_w,
+                        bottom: y0 + h,
+                    },
+                    fill,
+                );
                 _ = DeleteObject(fill as HGDIOBJ);
                 SelectObject(hdc, old_pen);
                 _ = DeleteObject(frame as HGDIOBJ);
 
                 let text = to_wide(&format!("value = {} / 100", state.value));
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, x0, y0 + h + 12,
-                    PCWSTR::from_raw(text.as_ptr()), text.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    x0,
+                    y0 + h + 12,
+                    PCWSTR::from_raw(text.as_ptr()),
+                    text.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
 
                 let hint = to_wide("arrows: ±1  ·  bar: ±page  ·  drag the thumb (THUMBTRACK)");
-                _ = TextOutW(hdc, x0, y0 + h + 44,
-                    PCWSTR::from_raw(hint.as_ptr()), hint.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    x0,
+                    y0 + h + 44,
+                    PCWSTR::from_raw(hint.as_ptr()),
+                    hint.len() as i32 - 1,
+                );
 
                 _ = EndPaint(hwnd, &ps);
                 0

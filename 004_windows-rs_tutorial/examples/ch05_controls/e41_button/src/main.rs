@@ -49,8 +49,14 @@ fn main() {
             w!("e41_class"),
             w!("e41 · Button — clicked 0 times"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 200,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            200,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -70,11 +76,14 @@ fn main() {
         // BS_PUSHBUTTON is the plain 3D push button (value 0 — the default).
         let _hwnd_button = CreateWindowExW(
             0,
-            w!("BUTTON"),               // one of the built-in control classes
-            w!("Click me"),             // the button label = its window text
+            w!("BUTTON"),   // one of the built-in control classes
+            w!("Click me"), // the button label = its window text
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            24, 24, 120, 32,            // x, y, w, h — in PARENT's client pixels
-            Some(hwnd),                 // parent: our main window
+            24,
+            24,
+            120,
+            32,                                // x, y, w, h — in PARENT's client pixels
+            Some(hwnd),                        // parent: our main window
             Some(IDC_CLICK as usize as HMENU), // control id smuggled through hmenu
             Some(instance),
             None,

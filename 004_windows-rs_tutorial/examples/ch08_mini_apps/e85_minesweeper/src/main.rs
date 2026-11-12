@@ -105,7 +105,10 @@ impl State {
                     for dx in -1..=1 {
                         let (nx, ny) = (x + dx, y + dy);
                         if (dx != 0 || dy != 0)
-                            && nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS
+                            && nx >= 0
+                            && nx < COLS
+                            && ny >= 0
+                            && ny < ROWS
                             && self.at(nx, ny).mine
                         {
                             n += 1;
@@ -147,9 +150,7 @@ impl State {
 
     fn won(&self) -> bool {
         // Won = every mine-free cell is revealed (flags don't matter).
-        self.cells
-            .iter()
-            .all(|c| c.mine || c.revealed)
+        self.cells.iter().all(|c| c.mine || c.revealed)
     }
 }
 
@@ -185,10 +186,13 @@ fn main() {
             w!("e85_class"),
             w!("e85 · Minesweeper — left reveals, right flags"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
             rc.right - rc.left,
             rc.bottom - rc.top,
-            None, None, Some(instance),
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -265,7 +269,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     8,
                     40,
                     32,
-                    Some(hwnd), Some(IDC_RESTART as usize as HMENU), Some(instance), None,
+                    Some(hwnd),
+                    Some(IDC_RESTART as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!restart.is_null());
 
@@ -311,7 +318,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let left = message as i32 == WM_LBUTTONUP;
                     // Play out the click without holding the borrow.
                     let outcome = {
-                        let Some(state) = state_of(hwnd) else { return 0 };
+                        let Some(state) = state_of(hwnd) else {
+                            return 0;
+                        };
                         if state.phase != Phase::Playing {
                             None
                         } else if left {
@@ -378,7 +387,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let counter = to_wide(&format!("{:03}", (MINES - state.flags).max(-99)));
                     _ = TextOutW(hdc, 12, 16, PCWSTR::from_raw(counter.as_ptr()), -1);
                     let clock = to_wide(&format!("{:03}", state.seconds.min(999)));
-                    _ = TextOutW(hdc, COLS * CELL + 16 - 56, 16, PCWSTR::from_raw(clock.as_ptr()), -1);
+                    _ = TextOutW(
+                        hdc,
+                        COLS * CELL + 16 - 56,
+                        16,
+                        PCWSTR::from_raw(clock.as_ptr()),
+                        -1,
+                    );
                 }
 
                 // ---- The board ---------------------------------------
@@ -391,7 +406,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     for gx in 0..COLS {
                         let x = 8 + gx * CELL;
                         let y = STRIP_H + 8 + gy * CELL;
-                        let cell_rect = RECT { left: x, top: y, right: x + CELL, bottom: y + CELL };
+                        let cell_rect = RECT {
+                            left: x,
+                            top: y,
+                            right: x + CELL,
+                            bottom: y + CELL,
+                        };
 
                         let cell = state_of(hwnd).map(|s| *s.at(gx, gy)).unwrap_or_default();
                         let phase = state_of(hwnd).map(|s| s.phase).unwrap_or(Phase::Playing);
@@ -462,7 +482,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let pen = CreatePen(PS_SOLID, 1, rgb(0x80, 0x80, 0x80));
                         let old_pen = SelectObject(hdc, pen as HGDIOBJ);
                         let br = SelectObject(hdc, GetStockObject(NULL_BRUSH));
-                        _ = Rectangle(hdc, cell_rect.left, cell_rect.top, cell_rect.right, cell_rect.bottom);
+                        _ = Rectangle(
+                            hdc,
+                            cell_rect.left,
+                            cell_rect.top,
+                            cell_rect.right,
+                            cell_rect.bottom,
+                        );
                         SelectObject(hdc, br);
                         SelectObject(hdc, old_pen);
                         _ = DeleteObject(pen as HGDIOBJ);

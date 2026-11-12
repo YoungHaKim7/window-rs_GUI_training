@@ -24,7 +24,7 @@ fn main() {
         // compile time, wrapped as a `PCWSTR` — exactly what the "W" (wide)
         // flavor of a Win32 function wants. It costs nothing at runtime.
         MessageBoxW(
-            None, // no owner window (we don't have any window yet)
+            None,                            // no owner window (we don't have any window yet)
             w!("Hello, Windows from Rust!"), // body text
             w!("e01 · Message Box"),         // title bar caption
             // (MB_* style flags are i32 constants in this crate; MessageBoxW

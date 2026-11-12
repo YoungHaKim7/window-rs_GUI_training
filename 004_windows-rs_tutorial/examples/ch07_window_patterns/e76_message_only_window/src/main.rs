@@ -83,7 +83,10 @@ fn main() {
             w!("e76_worker"),
             w!("invisible mailbox"), // name findable via FindWindowEx
             0,                       // no styles — it never shows anything
-            0, 0, 0, 0, // position/size meaningless for a window never drawn
+            0,
+            0,
+            0,
+            0,                  // position/size meaningless for a window never drawn
             Some(HWND_MESSAGE), // <-- THE line: parent = pseudo-handle -3
             None,
             Some(instance),
@@ -98,8 +101,13 @@ fn main() {
             w!("e76_class"),
             w!("e76 · Message-Only Window — watch the console"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 300,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -150,7 +158,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             // match arms both get exercise. POST (async)
                             // not SEND: the point of a mailbox is that the
                             // sender never waits.
-                            let msg = if state.sent % 2 == 1 { WM_APP_PING } else { WM_APP_NOTE };
+                            let msg = if state.sent % 2 == 1 {
+                                WM_APP_PING
+                            } else {
+                                WM_APP_NOTE
+                            };
                             _ = PostMessageW(
                                 Some(state.worker),
                                 msg as u32,
@@ -227,10 +239,7 @@ extern "system" fn worker_wndproc(
         // constants are i32, like all WM_* constants in this crate.
         match message as i32 {
             WM_APP_PING => {
-                println!(
-                    "[mailbox] PING  #{} ({} ms since start)",
-                    wparam, lparam
-                );
+                println!("[mailbox] PING  #{} ({} ms since start)", wparam, lparam);
                 0
             }
             WM_APP_NOTE => {

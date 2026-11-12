@@ -52,7 +52,11 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        State { accumulator: 0.0, current: String::from("0"), pending: None }
+        State {
+            accumulator: 0.0,
+            current: String::from("0"),
+            pending: None,
+        }
     }
 
     fn apply_pending(&mut self) {
@@ -105,8 +109,13 @@ fn main() {
             w!("e78_class"),
             w!("e78 · Calculator"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 300, 460,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            300,
+            460,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -215,8 +224,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("EDIT"),
                     w!("0"),
                     (WS_CHILD | WS_VISIBLE | ES_READONLY | ES_RIGHT) as u32,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(IDC_DISPLAY as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(IDC_DISPLAY as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!display.is_null());
 
@@ -229,8 +244,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             w!("BUTTON"),
                             PCWSTR::from_raw(wide.as_ptr()),
                             (WS_CHILD | WS_VISIBLE) as u32,
-                            0, 0, 0, 0,
-                            Some(hwnd), Some(*id as usize as HMENU), Some(instance), None,
+                            0,
+                            0,
+                            0,
+                            0,
+                            Some(hwnd),
+                            Some(*id as usize as HMENU),
+                            Some(instance),
+                            None,
                         );
                         debug_assert!(!key.is_null());
                     }
@@ -240,8 +261,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("BUTTON"),
                     w!("C"),
                     (WS_CHILD | WS_VISIBLE) as u32,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(IDC_CLEAR as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(IDC_CLEAR as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!clear.is_null());
 

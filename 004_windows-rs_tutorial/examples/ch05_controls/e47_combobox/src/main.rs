@@ -58,8 +58,14 @@ fn main() {
             w!("e47_class"),
             w!("e47 · Combobox — pick a color"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 360,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            360,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -77,8 +83,14 @@ fn main() {
             w!("COMBOBOX"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST) as u32,
-            20, 20, 200, 160,
-            Some(hwnd), Some(IDC_COMBO as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            200,
+            160,
+            Some(hwnd),
+            Some(IDC_COMBO as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!combo.is_null());
 
@@ -87,12 +99,7 @@ fn main() {
         // string, so each entry needs a Vec<u16> that outlives the call.
         for (name, _) in COLORS {
             let wide = to_wide(name);
-            SendMessageW(
-                combo,
-                CB_ADDSTRING as u32,
-                0,
-                wide.as_ptr() as LPARAM,
-            );
+            SendMessageW(combo, CB_ADDSTRING as u32, 0, wide.as_ptr() as LPARAM);
         }
         // Preselect the first entry (CB_SETCURSEL's lparam is the index).
         // Doing it here means no CBN_SELCHANGE fires — we set State directly.
@@ -138,8 +145,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let combo = lparam as HWND;
 
                     // Step 1: which index is selected? -1 = nothing selected.
-                    let index =
-                        SendMessageW(combo, CB_GETCURSEL as u32, 0, 0) as i32;
+                    let index = SendMessageW(combo, CB_GETCURSEL as u32, 0, 0) as i32;
                     if index < 0 {
                         return 0;
                     }
@@ -147,12 +153,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // Step 2: how long is that entry? (Characters, sans the
                     // null terminator.) The two-call dance again — allocate
                     // exactly, then fetch.
-                    let len = SendMessageW(
-                        combo,
-                        CB_GETLBTEXTLEN as u32,
-                        index as usize,
-                        0,
-                    ) as i32;
+                    let len = SendMessageW(combo, CB_GETLBTEXTLEN as u32, index as usize, 0) as i32;
                     let mut buf = vec![0u16; len as usize + 1];
 
                     // Step 3: copy the list-box text of that entry into the
@@ -195,11 +196,18 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = FillRect(hdc, &swatch, brush);
                 _ = DeleteObject(brush as HGDIOBJ); // brushes are GDI objects
 
-                let label = to_wide(&format!("{} — RGB 0x{:06X}",
-                    COLORS[state.selected].0, COLORS[state.selected].1));
+                let label = to_wide(&format!(
+                    "{} — RGB 0x{:06X}",
+                    COLORS[state.selected].0, COLORS[state.selected].1
+                ));
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, 20, 46,
-                    PCWSTR::from_raw(label.as_ptr()), label.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    46,
+                    PCWSTR::from_raw(label.as_ptr()),
+                    label.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
 
                 _ = EndPaint(hwnd, &ps);

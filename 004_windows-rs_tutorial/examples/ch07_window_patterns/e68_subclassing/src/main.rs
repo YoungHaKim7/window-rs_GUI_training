@@ -67,8 +67,14 @@ fn main() {
             w!("e68_class"),
             w!("e68 · Subclassing — an EDIT that only accepts hex"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -84,8 +90,14 @@ fn main() {
             w!("EDIT"),
             w!("123"),
             (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_NUMBER) as u32,
-            20, 60, 500, 28,
-            Some(hwnd), Some(1001 as usize as HMENU), Some(instance), None,
+            20,
+            60,
+            500,
+            28,
+            Some(hwnd),
+            Some(1001 as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!decimal.is_null());
 
@@ -98,8 +110,14 @@ fn main() {
             w!("EDIT"),
             w!("deadbeef"),
             (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL) as u32,
-            20, 120, 500, 28,
-            Some(hwnd), Some(IDC_HEX as usize as HMENU), Some(instance), None,
+            20,
+            120,
+            500,
+            28,
+            Some(hwnd),
+            Some(IDC_HEX as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!hex.is_null());
 
@@ -147,8 +165,8 @@ unsafe extern "system" fn hex_edit_proc(
     message: u32,
     wparam: WPARAM,
     lparam: LPARAM,
-    _uidsubclass: usize,   // == HEX_SUBCLASS_ID; one proc can serve many ids
-    _dwrefdata: usize,     // the context value from SetWindowSubclass
+    _uidsubclass: usize, // == HEX_SUBCLASS_ID; one proc can serve many ids
+    _dwrefdata: usize,   // the context value from SetWindowSubclass
 ) -> LRESULT {
     unsafe {
         // WM_CHAR arrives AFTER TranslateMessage turned a key press into a

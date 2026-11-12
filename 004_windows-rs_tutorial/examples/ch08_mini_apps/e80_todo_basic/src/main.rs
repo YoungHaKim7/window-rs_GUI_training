@@ -56,8 +56,13 @@ fn main() {
             w!("e80_class"),
             w!("e80 · Todo (basic) — add & delete"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 460, 420,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            460,
+            420,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -95,7 +100,12 @@ unsafe fn take_entry(hwnd: HWND) -> String {
         let entry = GetDlgItem(Some(hwnd), IDC_ENTRY);
         let len = SendMessageW(entry, WM_GETTEXTLENGTH as u32, 0, 0) as usize;
         let mut buf = vec![0u16; len + 1];
-        SendMessageW(entry, WM_GETTEXT as u32, buf.len() as WPARAM, buf.as_mut_ptr() as LPARAM);
+        SendMessageW(
+            entry,
+            WM_GETTEXT as u32,
+            buf.len() as WPARAM,
+            buf.as_mut_ptr() as LPARAM,
+        );
         _ = SetWindowTextW(entry, w!(""));
         wide_to_string(&buf)
     }
@@ -132,8 +142,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("EDIT"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL) as u32,
-                    12, 14, 300, 26,
-                    Some(hwnd), Some(IDC_ENTRY as usize as HMENU), Some(instance), None,
+                    12,
+                    14,
+                    300,
+                    26,
+                    Some(hwnd),
+                    Some(IDC_ENTRY as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!entry.is_null());
 
@@ -142,8 +158,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("BUTTON"),
                     w!("Add"),
                     (WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON) as u32,
-                    322, 14, 80, 26, // BS_DEFPUSHBUTTON: Enter in the EDIT fires this
-                    Some(hwnd), Some(IDC_ADD as usize as HMENU), Some(instance), None,
+                    322,
+                    14,
+                    80,
+                    26, // BS_DEFPUSHBUTTON: Enter in the EDIT fires this
+                    Some(hwnd),
+                    Some(IDC_ADD as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!add.is_null());
 
@@ -154,8 +176,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("LISTBOX"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_NOTIFY) as u32,
-                    12, 52, 390, 280,
-                    Some(hwnd), Some(IDC_LIST as usize as HMENU), Some(instance), None,
+                    12,
+                    52,
+                    390,
+                    280,
+                    Some(hwnd),
+                    Some(IDC_LIST as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!list.is_null());
 
@@ -164,8 +192,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("BUTTON"),
                     w!("Delete selected"),
                     (WS_CHILD | WS_VISIBLE) as u32,
-                    12, 344, 140, 28,
-                    Some(hwnd), Some(IDC_DELETE as usize as HMENU), Some(instance), None,
+                    12,
+                    344,
+                    140,
+                    28,
+                    Some(hwnd),
+                    Some(IDC_DELETE as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!delete.is_null());
 

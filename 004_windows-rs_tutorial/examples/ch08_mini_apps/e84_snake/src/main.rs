@@ -104,7 +104,12 @@ fn main() {
 
         // Client area must exactly fit COLS*ROWS cells: ask for the
         // frame that yields it.
-        let mut rc = RECT { left: 0, top: 0, right: COLS * CELL, bottom: ROWS * CELL };
+        let mut rc = RECT {
+            left: 0,
+            top: 0,
+            right: COLS * CELL,
+            bottom: ROWS * CELL,
+        };
         _ = AdjustWindowRect(&mut rc, WS_OVERLAPPEDWINDOW as u32, false);
 
         let state = Box::into_raw(Box::new(State::new()));
@@ -114,10 +119,13 @@ fn main() {
             w!("e84_class"),
             w!("e84 · Snake — arrows steer"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
             rc.right - rc.left,
             rc.bottom - rc.top,
-            None, None, Some(instance),
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -150,7 +158,11 @@ unsafe fn update_title(hwnd: HWND) {
             Some(s) => (s.score, s.alive, s.interval_ms),
             None => (0, true, START_MS),
         };
-        let status = if alive { format!("score {score} · {ms} ms/tick") } else { "DEAD".into() };
+        let status = if alive {
+            format!("score {score} · {ms} ms/tick")
+        } else {
+            "DEAD".into()
+        };
         _ = SetWindowTextW(hwnd, &HSTRING::from(format!("e84 · Snake — {status}")));
     }
 }
@@ -213,7 +225,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Compute the step WITHOUT holding the borrow across the
                 // possible MessageBox below (e65: it re-enters wndproc).
                 let (died, ate) = {
-                    let Some(state) = state_of(hwnd) else { return 0 };
+                    let Some(state) = state_of(hwnd) else {
+                        return 0;
+                    };
                     if !state.alive {
                         return 0;
                     }
@@ -226,7 +240,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     // No &mut alive here — safe to run the box's loop.
                     let retry = MessageBoxW(
                         Some(hwnd),
-                        &HSTRING::from(format!("You died with a score of {}.\n\nAnother run?", score_of(hwnd))),
+                        &HSTRING::from(format!(
+                            "You died with a score of {}.\n\nAnother run?",
+                            score_of(hwnd)
+                        )),
                         w!("e84 · Snake"),
                         (MB_RETRYCANCEL | MB_ICONQUESTION) as u32,
                     ) == IDRETRY;
@@ -330,7 +347,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // Snake: body segments, head brighter.
                         for (i, &(x, y)) in state.snake.iter().enumerate() {
                             let shade = if i == 0 { 0x70 } else { 0x50 };
-                            let seg = CreateSolidBrush(rgb(shade, (shade as f32 * 1.6) as u8, shade / 2));
+                            let seg =
+                                CreateSolidBrush(rgb(shade, (shade as f32 * 1.6) as u8, shade / 2));
                             _ = FillRect(
                                 memdc,
                                 &RECT {

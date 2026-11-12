@@ -39,7 +39,9 @@ fn main() {
         // Escape and Enter both dismiss it (MB_OK has only one outcome).
         MessageBoxW(
             None,
-            w!("That was a MessageBoxW with:\n\u{2022} MB_YESNOCANCEL + MB_ICONWARNING\n\u{2022} MB_DEFBUTTON2 (No was the default)\n\u{2022} and this one: MB_OK + MB_ICONINFORMATION"),
+            w!(
+                "That was a MessageBoxW with:\n\u{2022} MB_YESNOCANCEL + MB_ICONWARNING\n\u{2022} MB_DEFBUTTON2 (No was the default)\n\u{2022} and this one: MB_OK + MB_ICONINFORMATION"
+            ),
             w!("Recap"),
             (MB_OK | MB_ICONINFORMATION) as u32,
         );

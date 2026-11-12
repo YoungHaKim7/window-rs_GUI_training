@@ -22,7 +22,7 @@ const IDC_RADIO_BASE: i32 = 1011; // 1011 = sky, 1012 = moss, 1013 = plum
 #[derive(Default)]
 struct State {
     radios: [HWND; 3], // default (null) — filled after creation
-    color: COLORREF, // current paint color, starts as COLOR_WINDOW gray
+    color: COLORREF,   // current paint color, starts as COLOR_WINDOW gray
 }
 
 fn main() {
@@ -46,8 +46,14 @@ fn main() {
             w!("e46_class"),
             w!("e46 · Radio Buttons — pick a color, then Apply"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -77,7 +83,10 @@ fn main() {
                 w!("BUTTON"),
                 PCWSTR::from_raw(wide.as_ptr()),
                 style as u32,
-                24, 24 + i as i32 * 28, 120, 24,
+                24,
+                24 + i as i32 * 28,
+                120,
+                24,
                 Some(hwnd),
                 Some((IDC_RADIO_BASE + i as i32) as usize as HMENU),
                 Some(instance),
@@ -93,8 +102,14 @@ fn main() {
             w!("BUTTON"),
             w!("Apply"),
             (WS_CHILD | WS_VISIBLE | WS_GROUP | BS_PUSHBUTTON | WS_TABSTOP) as u32,
-            24, 120, 120, 28,
-            Some(hwnd), Some(IDC_APPLY as usize as HMENU), Some(instance), None,
+            24,
+            120,
+            120,
+            28,
+            Some(hwnd),
+            Some(IDC_APPLY as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_apply.is_null());
         let _ = hwnd_apply;

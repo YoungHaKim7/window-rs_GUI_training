@@ -60,8 +60,14 @@ fn main() {
             w!("e51_class"),
             w!("e51 · Trackbar — drag the slider"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 440, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            440,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -75,8 +81,14 @@ fn main() {
             w!("msctls_trackbar32"),
             w!(""),
             (WS_CHILD | WS_VISIBLE) as u32,
-            20, 20, 380, 40,
-            Some(hwnd), None, Some(instance), None,
+            20,
+            20,
+            380,
+            40,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!track.is_null());
 
@@ -148,12 +160,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // unlike a scrollbar the trackbar has already done its own
                 // line/page math and updated its position. One question to
                 // ask, one answer to use:
-                state.volume = SendMessageW(
-                    state.hwnd_trackbar,
-                    TBM_GETPOS as u32,
-                    0,
-                    0,
-                ) as i32;
+                state.volume = SendMessageW(state.hwnd_trackbar, TBM_GETPOS as u32, 0, 0) as i32;
                 _ = InvalidateRect(Some(hwnd), None, true);
                 0
             }
@@ -178,7 +185,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let fill = CreateSolidBrush(rgb(0x50, 0xA0, 0x40));
                 _ = FillRect(
                     hdc,
-                    &RECT { left: x0 + 1, top: y0 + 1, right: x0 + fill_w, bottom: y0 + h },
+                    &RECT {
+                        left: x0 + 1,
+                        top: y0 + 1,
+                        right: x0 + fill_w,
+                        bottom: y0 + h,
+                    },
                     fill,
                 );
                 _ = DeleteObject(fill as HGDIOBJ);
@@ -187,8 +199,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 let text = to_wide(&format!("volume = {} / 100", state.volume));
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, x0, y0 + h + 12,
-                    PCWSTR::from_raw(text.as_ptr()), text.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    x0,
+                    y0 + h + 12,
+                    PCWSTR::from_raw(text.as_ptr()),
+                    text.len() as i32 - 1,
+                );
                 _ = SetBkMode(hdc, OPAQUE);
 
                 _ = EndPaint(hwnd, &ps);

@@ -61,8 +61,13 @@ fn main() {
             w!("e69_class"),
             w!("e69 · Owner-Draw Buttons — WM_DRAWITEM paints these"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 300,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            300,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -122,14 +127,7 @@ unsafe fn layout_buttons(hwnd: HWND) {
         for (i, id) in [IDC_BLUE, IDC_GREEN].iter().enumerate() {
             let btn = GetDlgItem(Some(hwnd), *id);
             if !btn.is_null() {
-                _ = MoveWindow(
-                    btn,
-                    gap + i as i32 * (width + gap),
-                    40,
-                    width,
-                    90,
-                    true,
-                );
+                _ = MoveWindow(btn, gap + i as i32 * (width + gap), 40, width, 90, true);
             }
         }
     }
@@ -157,8 +155,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         w!("BUTTON"),
                         w!("owner-drawn — you never see this text"),
                         (WS_CHILD | WS_VISIBLE | BS_OWNERDRAW) as u32,
-                        0, 0, 0, 0, // sized by layout_buttons
-                        Some(hwnd), Some(id as usize as HMENU), Some(instance), None,
+                        0,
+                        0,
+                        0,
+                        0, // sized by layout_buttons
+                        Some(hwnd),
+                        Some(id as usize as HMENU),
+                        Some(instance),
+                        None,
                     );
                     debug_assert!(!btn.is_null());
                 }
@@ -191,10 +195,26 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // origin is already the button, so (0,0) is its corner.
                 let split = rc.top + (rc.bottom - rc.top) * 3 / 5;
                 let brush_top = CreateSolidBrush(top_color);
-                _ = FillRect(hdc, &RECT { top: rc.top, bottom: split, ..rc }, brush_top);
+                _ = FillRect(
+                    hdc,
+                    &RECT {
+                        top: rc.top,
+                        bottom: split,
+                        ..rc
+                    },
+                    brush_top,
+                );
                 _ = DeleteObject(brush_top as HGDIOBJ);
                 let brush_bottom = CreateSolidBrush(bottom_color);
-                _ = FillRect(hdc, &RECT { top: split, bottom: rc.bottom, ..rc }, brush_bottom);
+                _ = FillRect(
+                    hdc,
+                    &RECT {
+                        top: split,
+                        bottom: rc.bottom,
+                        ..rc
+                    },
+                    brush_bottom,
+                );
                 _ = DeleteObject(brush_bottom as HGDIOBJ);
 
                 // The pressed illusion: nudge the label 1px down-right while

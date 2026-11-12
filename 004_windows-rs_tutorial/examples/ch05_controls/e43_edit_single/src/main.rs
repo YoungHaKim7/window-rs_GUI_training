@@ -22,7 +22,7 @@ const IDC_TOGGLE: i32 = 1002; // password on/off button
 #[derive(Default)]
 struct State {
     hwnd_edit: HWND, // default = null; filled in right after creation
-    masked: bool, // is ES_PASSWORD currently set?
+    masked: bool,    // is ES_PASSWORD currently set?
 }
 
 fn main() {
@@ -46,8 +46,14 @@ fn main() {
             w!("e43_class"),
             w!("e43 · Edit — type, then Echo"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 480, 200,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            480,
+            200,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -66,8 +72,14 @@ fn main() {
             w!("EDIT"),
             w!(""),
             (WS_CHILD | WS_VISIBLE) as u32,
-            20, 24, 320, 26,
-            Some(hwnd), None, Some(instance), None,
+            20,
+            24,
+            320,
+            26,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_edit.is_null());
 
@@ -83,8 +95,14 @@ fn main() {
             w!("BUTTON"),
             w!("Echo"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            352, 24, 90, 26,
-            Some(hwnd), Some(IDC_ECHO as usize as HMENU), Some(instance), None,
+            352,
+            24,
+            90,
+            26,
+            Some(hwnd),
+            Some(IDC_ECHO as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_echo.is_null());
 
@@ -93,8 +111,14 @@ fn main() {
             w!("BUTTON"),
             w!("Password: off"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 64, 180, 26,
-            Some(hwnd), Some(IDC_TOGGLE as usize as HMENU), Some(instance), None,
+            20,
+            64,
+            180,
+            26,
+            Some(hwnd),
+            Some(IDC_TOGGLE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_toggle.is_null());
 
@@ -157,7 +181,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             );
                             return 0;
                         }
-                        _ = SetWindowTextW(hwnd, &HSTRING::from(format!("e43 · you typed: {text}")));
+                        _ = SetWindowTextW(
+                            hwnd,
+                            &HSTRING::from(format!("e43 · you typed: {text}")),
+                        );
                         _ = MessageBoxW(
                             Some(hwnd),
                             &HSTRING::from(format!("The edit contains:\n\n{text}")),
@@ -183,7 +210,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let hwnd_toggle = GetDlgItem(Some(hwnd), IDC_TOGGLE);
                         _ = SetWindowTextW(
                             hwnd_toggle,
-                            if state.masked { w!("Password: on") } else { w!("Password: off") },
+                            if state.masked {
+                                w!("Password: on")
+                            } else {
+                                w!("Password: off")
+                            },
                         );
                         0
                     }

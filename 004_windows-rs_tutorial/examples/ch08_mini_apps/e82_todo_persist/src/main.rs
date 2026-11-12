@@ -85,8 +85,13 @@ fn main() {
             w!("e82_class"),
             w!("e82 · Todo (persistent) — Ctrl+S saves"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 500, 440,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            500,
+            440,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -172,7 +177,12 @@ unsafe fn rebuild_recent_menu(state: &mut State) {
             _ = RemoveMenu(menu, (IDM_RECENT_BASE + i) as u32, MF_BYCOMMAND as u32);
         }
         if state.recent.is_empty() {
-            _ = AppendMenuW(menu, MF_STRING as u32 | MF_GRAYED as u32, 0, w!("(none yet)"));
+            _ = AppendMenuW(
+                menu,
+                MF_STRING as u32 | MF_GRAYED as u32,
+                0,
+                w!("(none yet)"),
+            );
         } else {
             for (i, path) in state.recent.iter().take(3).enumerate() {
                 let name = path
@@ -207,7 +217,11 @@ unsafe fn refill_list(hwnd: HWND) {
         let list = GetDlgItem(Some(hwnd), IDC_LIST);
         SendMessageW(list, LB_RESETCONTENT as u32, 0, 0);
         for (text, done) in state.items.iter() {
-            let label = if *done { format!("[x] {text}") } else { format!("[ ] {text}") };
+            let label = if *done {
+                format!("[x] {text}")
+            } else {
+                format!("[ ] {text}")
+            };
             let wide = to_wide(&label);
             SendMessageW(list, LB_ADDSTRING as u32, 0, wide.as_ptr() as LPARAM);
         }
@@ -218,14 +232,23 @@ unsafe fn refill_list(hwnd: HWND) {
             .and_then(|p| p.file_name())
             .map(|n| n.to_string_lossy().into_owned())
             .unwrap_or_else(|| String::from("Untitled"));
-        _ = SetWindowTextW(hwnd, &HSTRING::from(format!("{name} — {}/{} done — e82", done, state.items.len())));
+        _ = SetWindowTextW(
+            hwnd,
+            &HSTRING::from(format!(
+                "{name} — {}/{} done — e82",
+                done,
+                state.items.len()
+            )),
+        );
     }
 }
 
 /// Save to the current path if any; returns true on success/no-op.
 unsafe fn save_current(hwnd: HWND) -> bool {
     unsafe {
-        let Some(state) = state_of(hwnd) else { return false };
+        let Some(state) = state_of(hwnd) else {
+            return false;
+        };
         // Borrow discipline (e65): MessageBoxW below re-enters wndproc,
         // so clone what we need and drop the &mut first.
         let path = state.path.clone();
@@ -279,7 +302,11 @@ unsafe fn pick_file(owner: HWND, save: bool) -> Option<String> {
         } else {
             GetOpenFileNameW(&mut ofn).0 != 0
         };
-        if ok { Some(wide_to_string(&file_buf)) } else { None }
+        if ok {
+            Some(wide_to_string(&file_buf))
+        } else {
+            None
+        }
     }
 }
 
@@ -322,7 +349,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = AppendMenuW(file_menu, MF_SEPARATOR as u32, 0, w!(""));
 
                 let recent_menu = CreatePopupMenu();
-                _ = AppendMenuW(file_menu, MF_POPUP as u32, recent_menu as usize, w!("Recent"));
+                _ = AppendMenuW(
+                    file_menu,
+                    MF_POPUP as u32,
+                    recent_menu as usize,
+                    w!("Recent"),
+                );
                 _ = AppendMenuW(file_menu, MF_SEPARATOR as u32, 0, w!(""));
                 _ = AppendMenuW(file_menu, MF_STRING as u32, IDM_EXIT, w!("E&xit"));
                 _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
@@ -338,8 +370,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("EDIT"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL) as u32,
-                    12, 14, 360, 26,
-                    Some(hwnd), Some(IDC_ENTRY as usize as HMENU), Some(instance), None,
+                    12,
+                    14,
+                    360,
+                    26,
+                    Some(hwnd),
+                    Some(IDC_ENTRY as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!entry.is_null());
                 let add = CreateWindowExW(
@@ -347,8 +385,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("BUTTON"),
                     w!("Add"),
                     (WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON) as u32,
-                    382, 14, 80, 26,
-                    Some(hwnd), Some(IDC_ADD as usize as HMENU), Some(instance), None,
+                    382,
+                    14,
+                    80,
+                    26,
+                    Some(hwnd),
+                    Some(IDC_ADD as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!add.is_null());
                 let list = CreateWindowExW(
@@ -356,8 +400,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("LISTBOX"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_NOTIFY) as u32,
-                    12, 52, 450, 320,
-                    Some(hwnd), Some(IDC_LIST as usize as HMENU), Some(instance), None,
+                    12,
+                    52,
+                    450,
+                    320,
+                    Some(hwnd),
+                    Some(IDC_LIST as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!list.is_null());
 
@@ -435,8 +485,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // The shown index equals the state index (Recent
                         // entries and menu items were appended together).
                         let idx = id2 - IDM_RECENT_BASE;
-                        let path = state_of(hwnd)
-                            .and_then(|s| s.recent.get(idx).cloned());
+                        let path = state_of(hwnd).and_then(|s| s.recent.get(idx).cloned());
                         if let Some(path) = path {
                             open_into(hwnd, path);
                         }
@@ -447,7 +496,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let entry = GetDlgItem(Some(hwnd), IDC_ENTRY);
                         let len = SendMessageW(entry, WM_GETTEXTLENGTH as u32, 0, 0) as usize;
                         let mut buf = vec![0u16; len + 1];
-                        SendMessageW(entry, WM_GETTEXT as u32, buf.len() as WPARAM, buf.as_mut_ptr() as LPARAM);
+                        SendMessageW(
+                            entry,
+                            WM_GETTEXT as u32,
+                            buf.len() as WPARAM,
+                            buf.as_mut_ptr() as LPARAM,
+                        );
                         _ = SetWindowTextW(entry, w!(""));
                         let text = wide_to_string(&buf).trim().to_string();
                         if !text.is_empty() {

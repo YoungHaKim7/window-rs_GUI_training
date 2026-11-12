@@ -49,8 +49,14 @@ fn main() {
             w!("e60_class"),
             w!("e60 · Save File — type text, pick a name"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 220,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            220,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -62,8 +68,14 @@ fn main() {
             w!("EDIT"),
             w!(""),
             (WS_CHILD | WS_VISIBLE) as u32,
-            20, 24, 400, 26,
-            Some(hwnd), Some(IDC_EDIT as usize as HMENU), Some(instance), None,
+            20,
+            24,
+            400,
+            26,
+            Some(hwnd),
+            Some(IDC_EDIT as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!edit.is_null());
         _ = SetWindowTextW(edit, w!("hello from the EDIT control"));
@@ -74,8 +86,14 @@ fn main() {
             w!("BUTTON"),
             w!("Save as..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            432, 24, 100, 26,
-            Some(hwnd), Some(IDC_SAVE as usize as HMENU), Some(instance), None,
+            432,
+            24,
+            100,
+            26,
+            Some(hwnd),
+            Some(IDC_SAVE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!save.is_null());
 
@@ -171,10 +189,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // dialog has done the asking.
                         let text = window_text(state.hwnd_edit);
                         let report = match std::fs::write(&path, text.as_bytes()) {
-                            Ok(()) => format!(
-                                "e60 · saved {} bytes — {path}",
-                                text.len()
-                            ),
+                            Ok(()) => format!("e60 · saved {} bytes — {path}", text.len()),
                             Err(err) => format!("e60 · write failed — {err}"),
                         };
                         _ = SetWindowTextW(hwnd, &HSTRING::from(report));

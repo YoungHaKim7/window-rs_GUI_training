@@ -60,8 +60,14 @@ fn main() {
             w!("e30_class"),
             w!("e30 · DPI — a ruler that keeps its physical size"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 760, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            760,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -163,7 +169,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let text = format!("{}", inch / 4 + 1);
                         let wide = to_wide(&text);
                         _ = SetTextColor(hdc, rgb(0x30, 0x30, 0x30));
-                        _ = TextOutW(hdc, x + 4, ruler_h - len - 18, PCWSTR::from_raw(wide.as_ptr()), -1);
+                        _ = TextOutW(
+                            hdc,
+                            x + 4,
+                            ruler_h - len - 18,
+                            PCWSTR::from_raw(wide.as_ptr()),
+                            -1,
+                        );
                     }
                     x += quarter;
                     inch += 1;

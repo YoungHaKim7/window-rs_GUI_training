@@ -57,8 +57,14 @@ fn main() {
             w!("e89_class"),
             w!("e89 · Clipboard — Copy/Paste via CF_UNICODETEXT"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -71,8 +77,14 @@ fn main() {
             w!("EDIT"),
             w!("Type something here, press Copy, then Paste it back."),
             (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_WANTRETURN | WS_VSCROLL) as u32,
-            20, 20, 500, 160,
-            Some(hwnd), Some(IDC_EDIT as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            500,
+            160,
+            Some(hwnd),
+            Some(IDC_EDIT as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!edit.is_null());
 
@@ -81,8 +93,14 @@ fn main() {
             w!("BUTTON"),
             w!("Copy"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 200, 110, 34,
-            Some(hwnd), Some(IDC_COPY as usize as HMENU), Some(instance), None,
+            20,
+            200,
+            110,
+            34,
+            Some(hwnd),
+            Some(IDC_COPY as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!copy.is_null());
 
@@ -91,8 +109,14 @@ fn main() {
             w!("BUTTON"),
             w!("Paste"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            140, 200, 110, 34,
-            Some(hwnd), Some(IDC_PASTE as usize as HMENU), Some(instance), None,
+            140,
+            200,
+            110,
+            34,
+            Some(hwnd),
+            Some(IDC_PASTE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!paste.is_null());
 
@@ -244,24 +268,26 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                 Ok(()) => {
                                     _ = SetWindowTextW(hwnd, w!("e89 · copied to the clipboard"))
                                 }
-                                Err(e) => _ = SetWindowTextW(
-                                    hwnd,
-                                    &HSTRING::from(format!("e89 · copy failed: {e}")),
-                                ),
+                                Err(e) => {
+                                    _ = SetWindowTextW(
+                                        hwnd,
+                                        &HSTRING::from(format!("e89 · copy failed: {e}")),
+                                    )
+                                }
                             }
                         }
-                        IDC_PASTE => {
-                            match paste_from_clipboard(hwnd) {
-                                Ok(text) => {
-                                    _ = SetWindowTextW(state.hwnd_edit, &HSTRING::from(text));
-                                    _ = SetWindowTextW(hwnd, w!("e89 · pasted from the clipboard"))
-                                }
-                                Err(e) => _ = SetWindowTextW(
+                        IDC_PASTE => match paste_from_clipboard(hwnd) {
+                            Ok(text) => {
+                                _ = SetWindowTextW(state.hwnd_edit, &HSTRING::from(text));
+                                _ = SetWindowTextW(hwnd, w!("e89 · pasted from the clipboard"))
+                            }
+                            Err(e) => {
+                                _ = SetWindowTextW(
                                     hwnd,
                                     &HSTRING::from(format!("e89 · paste failed: {e}")),
-                                ),
+                                )
                             }
-                        }
+                        },
                         _ => {}
                     }
                 }

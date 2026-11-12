@@ -73,8 +73,13 @@ fn main() {
             w!("e71_class"),
             w!("e71 · Tray Icon — minimize me, then use the tray"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 300,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -117,11 +122,17 @@ fn copy_into_fixed(target: &mut [u16], text: &str) {
 }
 
 /// One call, all verbs: fill the struct, pick NIM_*.
-unsafe fn shell_notify(hwnd: HWND, verb: u32, flags: u32, tip: Option<&str>, info: Option<(&str, &str)>) {
+unsafe fn shell_notify(
+    hwnd: HWND,
+    verb: u32,
+    flags: u32,
+    tip: Option<&str>,
+    info: Option<(&str, &str)>,
+) {
     unsafe {
         let mut nid = NOTIFYICONDATAW::default();
         nid.cbSize = std::mem::size_of::<NOTIFYICONDATAW>() as u32;
-        nid.hWnd = hwnd;   // who receives the callback message
+        nid.hWnd = hwnd; // who receives the callback message
         nid.uID = TRAY_ID; // our id among this window's icons
         nid.uFlags = flags; // which members of this struct are meaningful
         nid.uCallbackMessage = WM_APP_TRAY as u32; // mouse events arrive as this

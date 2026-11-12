@@ -91,7 +91,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     "Screen: {screen_w} x {screen_h}\n\
                      Window: ({}, {}) size {} x {}\n\n\
                      Drag me — WM_MOVE keeps this readout fresh.",
-                    wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top
+                    wr.left,
+                    wr.top,
+                    wr.right - wr.left,
+                    wr.bottom - wr.top
                 ));
 
                 let mut rect = RECT::default();

@@ -41,8 +41,14 @@ fn main() {
             w!("e22_class"),
             w!("e22 · Pen Gallery"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 760, 560,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            760,
+            560,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -65,7 +71,7 @@ fn to_wide(value: &str) -> Vec<u16> {
 /// One gallery row: what the label says, what CreatePen gets called with.
 struct Row {
     label: &'static str,
-    style: i32,  // PS_* constant (i32 in this crate version)
+    style: i32, // PS_* constant (i32 in this crate version)
     width: i32,
     color: COLORREF,
 }
@@ -82,14 +88,54 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let width = rc.right - rc.left;
 
                 let rows = [
-                    Row { label: "PS_SOLID · width 1 (cosmetic)", style: PS_SOLID, width: 1, color: rgb(0x20, 0x20, 0x20) },
-                    Row { label: "PS_SOLID · width 5 (geometric)", style: PS_SOLID, width: 5, color: rgb(0xC0, 0x20, 0x20) },
-                    Row { label: "PS_DASH · width 1", style: PS_DASH, width: 1, color: rgb(0x20, 0x60, 0xC0) },
-                    Row { label: "PS_DOT · width 1", style: PS_DOT, width: 1, color: rgb(0x20, 0x80, 0x40) },
-                    Row { label: "PS_DASHDOT · width 1", style: PS_DASHDOT, width: 1, color: rgb(0x90, 0x40, 0xA0) },
-                    Row { label: "PS_DASHDOTDOT · width 1", style: PS_DASHDOTDOT, width: 1, color: rgb(0xD0, 0x80, 0x20) },
-                    Row { label: "PS_DASH · width 5 — falls back to solid!", style: PS_DASH, width: 5, color: rgb(0x80, 0x80, 0x80) },
-                    Row { label: "PS_INSIDEFRAME · width 9 (stroke stays inside)", style: PS_INSIDEFRAME, width: 9, color: rgb(0x20, 0x70, 0x70) },
+                    Row {
+                        label: "PS_SOLID · width 1 (cosmetic)",
+                        style: PS_SOLID,
+                        width: 1,
+                        color: rgb(0x20, 0x20, 0x20),
+                    },
+                    Row {
+                        label: "PS_SOLID · width 5 (geometric)",
+                        style: PS_SOLID,
+                        width: 5,
+                        color: rgb(0xC0, 0x20, 0x20),
+                    },
+                    Row {
+                        label: "PS_DASH · width 1",
+                        style: PS_DASH,
+                        width: 1,
+                        color: rgb(0x20, 0x60, 0xC0),
+                    },
+                    Row {
+                        label: "PS_DOT · width 1",
+                        style: PS_DOT,
+                        width: 1,
+                        color: rgb(0x20, 0x80, 0x40),
+                    },
+                    Row {
+                        label: "PS_DASHDOT · width 1",
+                        style: PS_DASHDOT,
+                        width: 1,
+                        color: rgb(0x90, 0x40, 0xA0),
+                    },
+                    Row {
+                        label: "PS_DASHDOTDOT · width 1",
+                        style: PS_DASHDOTDOT,
+                        width: 1,
+                        color: rgb(0xD0, 0x80, 0x20),
+                    },
+                    Row {
+                        label: "PS_DASH · width 5 — falls back to solid!",
+                        style: PS_DASH,
+                        width: 5,
+                        color: rgb(0x80, 0x80, 0x80),
+                    },
+                    Row {
+                        label: "PS_INSIDEFRAME · width 9 (stroke stays inside)",
+                        style: PS_INSIDEFRAME,
+                        width: 9,
+                        color: rgb(0x20, 0x70, 0x70),
+                    },
                 ];
 
                 _ = SetBkMode(hdc, TRANSPARENT);

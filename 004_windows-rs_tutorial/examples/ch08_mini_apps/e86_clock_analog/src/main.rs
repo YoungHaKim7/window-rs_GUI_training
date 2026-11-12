@@ -46,8 +46,14 @@ fn main() {
             w!("e86_class"),
             w!("e86 · Analog Clock"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 420, 460,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            420,
+            460,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -128,7 +134,12 @@ unsafe fn draw_clock(hdc: HDC, w: i32, h: i32, now: &SYSTEMTIME) {
             now.wMinute as f64 + now.wSecond as f64 / 60.0,
             now.wSecond as f64,
         );
-        let hand = |degrees_per_unit: f64, value: f64, length: f64, width: i32, color: COLORREF, tail: f64| {
+        let hand = |degrees_per_unit: f64,
+                    value: f64,
+                    length: f64,
+                    width: i32,
+                    color: COLORREF,
+                    tail: f64| {
             let angle = value * degrees_per_unit;
             let (hx, hy) = on_circle(cx, cy, length, angle);
             let (tx, ty) = on_circle(cx, cy, tail, angle + 180.0);

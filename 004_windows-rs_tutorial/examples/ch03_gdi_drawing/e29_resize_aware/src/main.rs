@@ -56,8 +56,14 @@ fn main() {
             w!("e29_class"),
             w!("e29 · Resize — content follows the window"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 440,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            440,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -154,7 +160,16 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // from rc.right / rc.bottom instead of the center.
                 let brush = CreateSolidBrush(rgb(0xE0, 0x90, 0x20));
                 for (x, y) in [(8, 8), (w - 36, 8), (8, h - 36), (w - 36, h - 36)] {
-                    _ = FillRect(hdc, &RECT { left: x, top: y, right: x + 28, bottom: y + 28 }, brush);
+                    _ = FillRect(
+                        hdc,
+                        &RECT {
+                            left: x,
+                            top: y,
+                            right: x + 28,
+                            bottom: y + 28,
+                        },
+                        brush,
+                    );
                 }
                 _ = DeleteObject(brush as HGDIOBJ);
 

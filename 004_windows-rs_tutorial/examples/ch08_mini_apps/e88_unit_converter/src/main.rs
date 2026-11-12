@@ -76,8 +76,14 @@ fn main() {
             w!("e88_class"),
             w!("e88 · Unit Converter"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 460, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            460,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -88,53 +94,98 @@ fn main() {
         // flavor; e65's WM_NCCREATE flavor would allow doing it in
         // WM_CREATE — same result here).
         let children = (
-                CreateWindowExW(
-                    0, w!("EDIT"), w!("1"),
-                    (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL) as u32,
-                    0, 0, 10, 10, Some(hwnd), Some(IDC_VALUE_IN as usize as HMENU), Some(instance), None,
-                ),
-                CreateWindowExW(
-                    0, w!("COMBOBOX"), PCWSTR::null(),
-                    (WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST) as u32,
-                    0, 0, 10, 200, Some(hwnd), Some(IDC_UNIT_IN as usize as HMENU), Some(instance), None,
-                ),
-                CreateWindowExW(
-                    0, w!("EDIT"), PCWSTR::null(),
-                    // ES_READONLY: the output box refuses typing; a plain
-                    // SendMessageW(EM_SETREADONLY) later would work too.
-                    (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_READONLY) as u32,
-                    0, 0, 10, 10, Some(hwnd), Some(IDC_VALUE_OUT as usize as HMENU), Some(instance), None,
-                ),
-                CreateWindowExW(
-                    0, w!("COMBOBOX"), PCWSTR::null(),
-                    (WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST) as u32,
-                    0, 0, 10, 200, Some(hwnd), Some(IDC_UNIT_OUT as usize as HMENU), Some(instance), None,
-                ),
+            CreateWindowExW(
+                0,
+                w!("EDIT"),
+                w!("1"),
+                (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL) as u32,
+                0,
+                0,
+                10,
+                10,
+                Some(hwnd),
+                Some(IDC_VALUE_IN as usize as HMENU),
+                Some(instance),
+                None,
+            ),
+            CreateWindowExW(
+                0,
+                w!("COMBOBOX"),
+                PCWSTR::null(),
+                (WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST) as u32,
+                0,
+                0,
+                10,
+                200,
+                Some(hwnd),
+                Some(IDC_UNIT_IN as usize as HMENU),
+                Some(instance),
+                None,
+            ),
+            CreateWindowExW(
+                0,
+                w!("EDIT"),
+                PCWSTR::null(),
+                // ES_READONLY: the output box refuses typing; a plain
+                // SendMessageW(EM_SETREADONLY) later would work too.
+                (WS_CHILD | WS_VISIBLE | WS_BORDER | ES_READONLY) as u32,
+                0,
+                0,
+                10,
+                10,
+                Some(hwnd),
+                Some(IDC_VALUE_OUT as usize as HMENU),
+                Some(instance),
+                None,
+            ),
+            CreateWindowExW(
+                0,
+                w!("COMBOBOX"),
+                PCWSTR::null(),
+                (WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST) as u32,
+                0,
+                0,
+                10,
+                200,
+                Some(hwnd),
+                Some(IDC_UNIT_OUT as usize as HMENU),
+                Some(instance),
+                None,
+            ),
         );
 
         let s = &mut *(GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut State);
         (s.edit_in, s.combo_in, s.edit_out, s.combo_out) = children;
 
         for (combo, pick) in [(s.combo_in, 2usize), (s.combo_out, 5usize)] {
-                for (name, _) in UNITS {
-                    let wide = to_wide(name);
-                    // LPARAM is a plain isize alias — no tuple constructor.
-                    _ = SendMessageW(combo, CB_ADDSTRING as u32, 0, wide.as_ptr() as isize);
-                }
-                // Programmatic selection: no CBN_SELCHANGE fires, so we
-                // must trigger the initial conversion ourselves below.
-                _ = SendMessageW(combo, CB_SETCURSEL as u32, pick as WPARAM, 0);
+            for (name, _) in UNITS {
+                let wide = to_wide(name);
+                // LPARAM is a plain isize alias — no tuple constructor.
+                _ = SendMessageW(combo, CB_ADDSTRING as u32, 0, wide.as_ptr() as isize);
             }
+            // Programmatic selection: no CBN_SELCHANGE fires, so we
+            // must trigger the initial conversion ourselves below.
+            _ = SendMessageW(combo, CB_SETCURSEL as u32, pick as WPARAM, 0);
+        }
 
-            // Button too — position fixed up by the first WM_SIZE, which
-            // Windows sends during CreateWindowExW of this very child.
-            _ = CreateWindowExW(
-                0, w!("BUTTON"), w!("Swap"),
-                (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-                0, 0, 10, 10, Some(hwnd), Some(IDC_SWAP as usize as HMENU), Some(instance), None,
-            );
+        // Button too — position fixed up by the first WM_SIZE, which
+        // Windows sends during CreateWindowExW of this very child.
+        _ = CreateWindowExW(
+            0,
+            w!("BUTTON"),
+            w!("Swap"),
+            (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
+            0,
+            0,
+            10,
+            10,
+            Some(hwnd),
+            Some(IDC_SWAP as usize as HMENU),
+            Some(instance),
+            None,
+        );
 
-            convert(hwnd);
+        convert(hwnd);
 
         let mut message = MSG::default();
         while GetMessageW(&mut message, None, 0, 0).0 > 0 {
@@ -247,7 +298,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     _ = MoveWindow(s.combo_out, margin + col + gap, row_y[1], col, 200, true);
                     _ = MoveWindow(
                         GetDlgItem(Some(hwnd), IDC_SWAP),
-                        margin, h - margin - 32, 100, 32, true,
+                        margin,
+                        h - margin - 32,
+                        100,
+                        32,
+                        true,
                     );
                 }
                 0
@@ -256,8 +311,20 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let mut ps = PAINTSTRUCT::default();
                 let hdc = BeginPaint(hwnd, &mut ps);
                 _ = SetBkMode(hdc, TRANSPARENT);
-                _ = TextOutW(hdc, 24, 24, w!("Type a length — it converts as you type. Swap flips the units."), -1);
-                _ = TextOutW(hdc, 24, 44, w!("(Temperature needs an affine formula, not a factor — exercise!)"), -1);
+                _ = TextOutW(
+                    hdc,
+                    24,
+                    24,
+                    w!("Type a length — it converts as you type. Swap flips the units."),
+                    -1,
+                );
+                _ = TextOutW(
+                    hdc,
+                    24,
+                    44,
+                    w!("(Temperature needs an affine formula, not a factor — exercise!)"),
+                    -1,
+                );
                 _ = EndPaint(hwnd, &ps);
                 0
             }

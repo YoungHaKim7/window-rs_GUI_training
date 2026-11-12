@@ -55,8 +55,14 @@ fn main() {
             w!("e55_class"),
             w!("e55 · Modal Dialog — built in memory, no .rc file"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 460, 220,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            460,
+            220,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -65,8 +71,14 @@ fn main() {
             w!("BUTTON"),
             w!("Show the modal dialog"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 30, 180, 32,
-            Some(hwnd), Some(IDC_SHOW as usize as HMENU), Some(instance), None,
+            20,
+            30,
+            180,
+            32,
+            Some(hwnd),
+            Some(IDC_SHOW as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!show.is_null());
 
@@ -95,7 +107,11 @@ impl TemplateBuilder {
         // The fixed capacity means no reallocation can move the base.
         let words = vec![0u16; 256];
         let start = (words.as_ptr() as usize % 4 != 0) as usize;
-        Self { words, start, pos: start }
+        Self {
+            words,
+            start,
+            pos: start,
+        }
     }
 
     fn word(&mut self, w: u16) {
@@ -192,12 +208,7 @@ fn build_template() -> TemplateBuilder {
 // ======================================================================
 // The dialog procedure — a different beast from a wndproc.
 // ======================================================================
-extern "system" fn dlgproc(
-    hdlg: HWND,
-    message: u32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> INT_PTR {
+extern "system" fn dlgproc(hdlg: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> INT_PTR {
     unsafe {
         match message as i32 {
             // First message the dialog ever receives — the controls exist

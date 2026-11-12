@@ -55,8 +55,14 @@ fn main() {
             w!("e58_class"),
             w!("e58 · Task Dialog — the modern question"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 500, 240,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            500,
+            240,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -68,8 +74,14 @@ fn main() {
             w!("BUTTON"),
             w!("Ask me anything"),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 30, 150, 32,
-            Some(hwnd), Some(IDC_ASK as usize as HMENU), Some(instance), None,
+            20,
+            30,
+            150,
+            32,
+            Some(hwnd),
+            Some(IDC_ASK as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!ask.is_null());
 

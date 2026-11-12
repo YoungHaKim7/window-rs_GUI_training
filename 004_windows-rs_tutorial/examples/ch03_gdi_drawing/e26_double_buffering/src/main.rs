@@ -51,8 +51,14 @@ fn main() {
             w!("e26_class"),
             w!("e26 · Double Buffering (resize me hard)"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -79,11 +85,24 @@ unsafe fn draw_scene(hdc: HDC, w: i32, h: i32) {
         let bands = 64;
         for i in 0..bands {
             let t = i as f32 / bands as f32;
-            let color = rgb((240.0 - 60.0 * t) as u8, (244.0 - 44.0 * t) as u8, (252.0 - 28.0 * t) as u8);
+            let color = rgb(
+                (240.0 - 60.0 * t) as u8,
+                (244.0 - 44.0 * t) as u8,
+                (252.0 - 28.0 * t) as u8,
+            );
             let top = i * h / bands;
             let bottom = (i + 1) * h / bands;
             let brush = CreateSolidBrush(color);
-            _ = FillRect(hdc, &RECT { left: 0, top, right: w, bottom }, brush);
+            _ = FillRect(
+                hdc,
+                &RECT {
+                    left: 0,
+                    top,
+                    right: w,
+                    bottom,
+                },
+                brush,
+            );
             _ = DeleteObject(brush as HGDIOBJ);
         }
 
@@ -98,7 +117,13 @@ unsafe fn draw_scene(hdc: HDC, w: i32, h: i32) {
         }
         SelectObject(hdc, GetStockObject(NULL_BRUSH));
         for i in 0..12 {
-            _ = Ellipse(hdc, w / 2 - i * 28, h / 2 - i * 16, w / 2 + i * 28, h / 2 + i * 16);
+            _ = Ellipse(
+                hdc,
+                w / 2 - i * 28,
+                h / 2 - i * 16,
+                w / 2 + i * 28,
+                h / 2 + i * 16,
+            );
         }
         SelectObject(hdc, old_pen);
         SelectObject(hdc, old_brush);
@@ -107,7 +132,13 @@ unsafe fn draw_scene(hdc: HDC, w: i32, h: i32) {
 
         _ = SetBkMode(hdc, TRANSPARENT);
         _ = SetTextColor(hdc, rgb(0x40, 0x40, 0x40));
-        _ = TextOutW(hdc, 12, 10, w!("drawn entirely offscreen, blitted once — no flicker"), -1);
+        _ = TextOutW(
+            hdc,
+            12,
+            10,
+            w!("drawn entirely offscreen, blitted once — no flicker"),
+            -1,
+        );
     }
 }
 

@@ -62,8 +62,14 @@ fn main() {
             w!("e28_class"),
             w!("e28 · Scrollbars — drag a 2000×1400 canvas"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 700, 480,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            700,
+            480,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -156,10 +162,19 @@ unsafe fn on_scroll(hwnd: HWND, bar: i32, code: i32) {
             // (old - new) — sign matters, scrolling down moves content up.
             // The exposed strip is invalidated; SW_INVALIDATE|SW_ERASE make
             // it a proper WM_PAINT region. Cheaper than full repaints.
-            let (dx, dy) = if bar == SB_VERT { (0, old - new) } else { (old - new, 0) };
+            let (dx, dy) = if bar == SB_VERT {
+                (0, old - new)
+            } else {
+                (old - new, 0)
+            };
             _ = ScrollWindowEx(
-                hwnd, dx, dy,
-                None, None, None, None,
+                hwnd,
+                dx,
+                dy,
+                None,
+                None,
+                None,
+                None,
                 (SW_INVALIDATE | SW_ERASE) as u32,
             );
             // Push the new thumb position to the bar itself.
@@ -242,7 +257,16 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         }
                         if (gx + gy) % 2 == 0 {
                             let brush = CreateSolidBrush(rgb(0xF0, 0xF4, 0xF8));
-                            _ = FillRect(hdc, &RECT { left, top, right: left + CELL, bottom: top + CELL }, brush);
+                            _ = FillRect(
+                                hdc,
+                                &RECT {
+                                    left,
+                                    top,
+                                    right: left + CELL,
+                                    bottom: top + CELL,
+                                },
+                                brush,
+                            );
                             _ = DeleteObject(brush as HGDIOBJ);
                         }
                     }
@@ -281,7 +305,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = SelectObject(hdc, GetStockObject(BLACK_BRUSH));
                 _ = DeleteObject(brush as HGDIOBJ);
                 let wide = to_wide("corner marker @ (1800,1200)");
-                _ = TextOutW(hdc, 1740 + ox, 1290 + oy, PCWSTR::from_raw(wide.as_ptr()), -1);
+                _ = TextOutW(
+                    hdc,
+                    1740 + ox,
+                    1290 + oy,
+                    PCWSTR::from_raw(wide.as_ptr()),
+                    -1,
+                );
 
                 _ = EndPaint(hwnd, &ps);
                 0

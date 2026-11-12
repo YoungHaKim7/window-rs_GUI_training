@@ -60,8 +60,14 @@ fn main() {
             w!("e64_class"),
             w!("e64 · File I/O — notepad, chapter one"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 620, 440,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            620,
+            440,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -74,8 +80,14 @@ fn main() {
             w!("BUTTON"),
             w!("Open..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            8, 6, 90, 28,
-            Some(hwnd), Some(IDC_OPEN as usize as HMENU), Some(instance), None,
+            8,
+            6,
+            90,
+            28,
+            Some(hwnd),
+            Some(IDC_OPEN as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!open.is_null());
         let save = CreateWindowExW(
@@ -83,8 +95,14 @@ fn main() {
             w!("BUTTON"),
             w!("Save as..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            104, 6, 100, 28,
-            Some(hwnd), Some(IDC_SAVE as usize as HMENU), Some(instance), None,
+            104,
+            6,
+            100,
+            28,
+            Some(hwnd),
+            Some(IDC_SAVE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!save.is_null());
 
@@ -99,8 +117,14 @@ fn main() {
             w!("EDIT"),
             w!(""),
             (WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL) as u32,
-            0, TOP, 600, 360, // placeholder size; WM_SIZE fixes it for real
-            Some(hwnd), Some(IDC_EDIT as usize as HMENU), Some(instance), None,
+            0,
+            TOP,
+            600,
+            360, // placeholder size; WM_SIZE fixes it for real
+            Some(hwnd),
+            Some(IDC_EDIT as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!edit.is_null());
 
@@ -110,8 +134,14 @@ fn main() {
             w!("STATIC"),
             w!("untitled — open or type, then save"),
             (WS_CHILD | WS_VISIBLE | SS_LEFT) as u32,
-            0, 0, 200, BOTTOM,
-            Some(hwnd), Some(IDC_STATUS as usize as HMENU), Some(instance), None,
+            0,
+            0,
+            200,
+            BOTTOM,
+            Some(hwnd),
+            Some(IDC_STATUS as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!status.is_null());
 
@@ -163,7 +193,12 @@ fn filter(parts: &[&str]) -> Vec<u16> {
 /// Shared dialog plumbing for open and save. `save` picks the function.
 unsafe fn file_dialog(owner: HWND, save: bool) -> Option<String> {
     unsafe {
-        let filters = filter(&["Text files (*.txt;*.md)", "*.txt;*.md", "All files (*.*)", "*.*"]);
+        let filters = filter(&[
+            "Text files (*.txt;*.md)",
+            "*.txt;*.md",
+            "All files (*.*)",
+            "*.*",
+        ]);
         let mut file_buf = vec![0u16; MAX_PATH as usize];
         let mut ofn = OPENFILENAMEW {
             lStructSize: std::mem::size_of::<OPENFILENAMEW>() as u32,
@@ -264,7 +299,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     state.hwnd_status,
                     &HSTRING::from(format!(
                         "{} — {} bytes on disk, {} in the edit",
-                        if state.path.is_empty() { "untitled" } else { &state.path },
+                        if state.path.is_empty() {
+                            "untitled"
+                        } else {
+                            &state.path
+                        },
                         state.bytes,
                         live
                     )),

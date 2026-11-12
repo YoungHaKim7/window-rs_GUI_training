@@ -45,7 +45,12 @@ const KEYS: [[(i32, &str); 4]; 5] = [
     [(4, "4"), (5, "5"), (6, "6"), (IDC_MUL, "×")],
     [(1, "1"), (2, "2"), (3, "3"), (IDC_SUB, "−")],
     [(IDC_SIGN, "±"), (0, "0"), (IDC_DOT, "."), (IDC_ADD, "+")],
-    [(IDC_CLEAR, "C"), (IDC_BACK, "←"), (IDC_PERCENT, "%"), (IDC_EQ, "=")],
+    [
+        (IDC_CLEAR, "C"),
+        (IDC_BACK, "←"),
+        (IDC_PERCENT, "%"),
+        (IDC_EQ, "="),
+    ],
 ];
 
 struct State {
@@ -59,7 +64,12 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        State { accumulator: 0.0, current: String::from("0"), pending: None, just_evaluated: false }
+        State {
+            accumulator: 0.0,
+            current: String::from("0"),
+            pending: None,
+            just_evaluated: false,
+        }
     }
 
     /// Chain step: fold the pending operator with the current entry.
@@ -116,8 +126,13 @@ fn main() {
             w!("e79_class"),
             w!("e79 · Calculator (full) — mouse or keyboard"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 320, 520,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            320,
+            520,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -143,7 +158,11 @@ unsafe fn state_of(hwnd: HWND) -> Option<&'static mut State> {
 unsafe fn update_display(hwnd: HWND) {
     unsafe {
         if let Some(state) = state_of(hwnd) {
-            let entry = if state.current.is_empty() { "0" } else { &state.current };
+            let entry = if state.current.is_empty() {
+                "0"
+            } else {
+                &state.current
+            };
             let hist = match state.pending {
                 Some(op) => format!("{} {}", format_value(state.accumulator), symbol(op)),
                 None => String::new(),
@@ -270,7 +289,9 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
 }
 
 fn entry_is_stale(state: &State) -> bool {
-    !state.just_evaluated && state.pending.is_none() && state.current == format_value(state.accumulator)
+    !state.just_evaluated
+        && state.pending.is_none()
+        && state.current == format_value(state.accumulator)
 }
 
 fn negate(state: &mut State) {
@@ -339,7 +360,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // About menu — one item, keeps the keypad clean.
                 let bar = CreateMenu();
                 let help_menu = CreatePopupMenu();
-                _ = AppendMenuW(help_menu, MF_STRING as u32, IDM_ABOUT as usize, w!("&About e79..."));
+                _ = AppendMenuW(
+                    help_menu,
+                    MF_STRING as u32,
+                    IDM_ABOUT as usize,
+                    w!("&About e79..."),
+                );
                 _ = AppendMenuW(bar, MF_POPUP as u32, help_menu as usize, w!("&Help"));
                 _ = SetMenu(hwnd, Some(bar));
 
@@ -348,8 +374,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("STATIC"),
                     w!(""),
                     (WS_CHILD | WS_VISIBLE | SS_RIGHT) as u32,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(IDC_HISTORY as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(IDC_HISTORY as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!history.is_null());
 
@@ -358,8 +390,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     w!("EDIT"),
                     w!("0"),
                     (WS_CHILD | WS_VISIBLE | ES_READONLY | ES_RIGHT) as u32,
-                    0, 0, 0, 0,
-                    Some(hwnd), Some(IDC_DISPLAY as usize as HMENU), Some(instance), None,
+                    0,
+                    0,
+                    0,
+                    0,
+                    Some(hwnd),
+                    Some(IDC_DISPLAY as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!display.is_null());
 
@@ -371,8 +409,14 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             w!("BUTTON"),
                             PCWSTR::from_raw(wide.as_ptr()),
                             (WS_CHILD | WS_VISIBLE) as u32,
-                            0, 0, 0, 0,
-                            Some(hwnd), Some(*id as usize as HMENU), Some(instance), None,
+                            0,
+                            0,
+                            0,
+                            0,
+                            Some(hwnd),
+                            Some(*id as usize as HMENU),
+                            Some(instance),
+                            None,
                         );
                         debug_assert!(!key.is_null());
                     }

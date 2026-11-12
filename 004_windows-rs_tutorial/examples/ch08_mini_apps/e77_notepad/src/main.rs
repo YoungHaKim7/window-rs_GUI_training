@@ -53,15 +53,23 @@ fn main() {
         };
         debug_assert!(RegisterClassW(&wc) != 0);
 
-        let state = Box::into_raw(Box::new(State { dirty: false, file_name: String::from("Untitled") }));
+        let state = Box::into_raw(Box::new(State {
+            dirty: false,
+            file_name: String::from("Untitled"),
+        }));
 
         let hwnd = CreateWindowExW(
             0,
             w!("e77_class"),
             w!("e77 · Notepad"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 460,
-            None, None, Some(instance),
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            460,
+            None,
+            None,
+            Some(instance),
             Some(state as LPVOID),
         );
         debug_assert!(!hwnd.is_null());
@@ -134,7 +142,11 @@ unsafe fn pick_path(owner: HWND, save: bool) -> Option<String> {
         } else {
             GetOpenFileNameW(&mut ofn).0 != 0
         };
-        if ok { Some(wide_to_string(&file_buf)) } else { None }
+        if ok {
+            Some(wide_to_string(&file_buf))
+        } else {
+            None
+        }
     }
 }
 
@@ -236,7 +248,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 _ = AppendMenuW(bar, MF_POPUP as u32, file_menu as usize, w!("&File"));
 
                 let help_menu = CreatePopupMenu();
-                _ = AppendMenuW(help_menu, MF_STRING as u32, IDM_ABOUT, w!("&About Notepad..."));
+                _ = AppendMenuW(
+                    help_menu,
+                    MF_STRING as u32,
+                    IDM_ABOUT,
+                    w!("&About Notepad..."),
+                );
                 _ = AppendMenuW(bar, MF_POPUP as u32, help_menu as usize, w!("&Help"));
                 _ = SetMenu(hwnd, Some(bar));
 
@@ -247,10 +264,21 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     WS_EX_CLIENTEDGE as u32,
                     w!("EDIT"),
                     w!(""),
-                    (WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL
-                        | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL) as u32,
-                    0, 0, 0, 0, // WM_SIZE below owns the geometry
-                    Some(hwnd), Some(IDC_EDIT as usize as HMENU), Some(instance), None,
+                    (WS_CHILD
+                        | WS_VISIBLE
+                        | WS_VSCROLL
+                        | WS_HSCROLL
+                        | ES_MULTILINE
+                        | ES_AUTOVSCROLL
+                        | ES_AUTOHSCROLL) as u32,
+                    0,
+                    0,
+                    0,
+                    0, // WM_SIZE below owns the geometry
+                    Some(hwnd),
+                    Some(IDC_EDIT as usize as HMENU),
+                    Some(instance),
+                    None,
                 );
                 debug_assert!(!edit.is_null());
 
@@ -325,7 +353,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                     Err(err) => {
                                         _ = MessageBoxW(
                                             Some(hwnd),
-                                            &HSTRING::from(format!("Could not read the file:\n{err}")),
+                                            &HSTRING::from(format!(
+                                                "Could not read the file:\n{err}"
+                                            )),
                                             w!("e77 Notepad"),
                                             (MB_OK | MB_ICONERROR) as u32,
                                         );

@@ -41,8 +41,14 @@ fn main() {
             w!("e12_class"),
             w!("e12 · Mouse Clicks — minimize/restore me"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 400,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            400,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -94,7 +100,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // wparam's bits are the modifiers held at click time:
                 // MK_SHIFT / MK_CONTROL / MK_LBUTTON ... (e18 covers
                 // keyboard-state queries in depth).
-                let modifiers = if wparam & MK_SHIFT as usize != 0 { "+SHIFT" } else { "" };
+                let modifiers = if wparam & MK_SHIFT as usize != 0 {
+                    "+SHIFT"
+                } else {
+                    ""
+                };
                 println!("click at ({x:4},{y:4}){modifiers}");
 
                 match message as i32 {

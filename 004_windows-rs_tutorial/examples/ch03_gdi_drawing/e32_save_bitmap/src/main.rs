@@ -46,8 +46,14 @@ fn main() {
             w!("e32_class"),
             w!("e32 · Save Bitmap — press S to snapshot the client area"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 600, 420,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            600,
+            420,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -102,10 +108,10 @@ unsafe fn save_client_bitmap(hwnd: HWND) -> std::io::Result<std::path::PathBuf> 
         let copied = GetDIBits(
             mem,
             hbmp,
-            0, // first scanline to retrieve
+            0,        // first scanline to retrieve
             h as u32, // number of scanlines (all of them)
             Some(pixels.as_mut_ptr() as LPVOID),
-            &mut bmi, // in/out: describes the REQUESTED format
+            &mut bmi,              // in/out: describes the REQUESTED format
             DIB_RGB_COLORS as u32, // "no palette, literal RGB"
         );
         debug_assert!(copied == h);
@@ -143,7 +149,10 @@ unsafe fn save_client_bitmap(hwnd: HWND) -> std::io::Result<std::path::PathBuf> 
 
         // ---- 4. Write it next to the exe --------------------------------
         let exe = std::env::current_exe()?;
-        let path = exe.parent().map(std::path::Path::to_path_buf).unwrap_or_default();
+        let path = exe
+            .parent()
+            .map(std::path::Path::to_path_buf)
+            .unwrap_or_default();
         let path = path.join("client_capture.bmp");
         let mut f = std::fs::File::create(&path)?;
         f.write_all(&file)?;
@@ -176,15 +185,21 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 // Something worth snapshotting: colored bands + circles.
                 let bands = [
-                    rgb(0x2D, 0x6C, 0xAF), rgb(0x4F, 0x9D, 0x69),
-                    rgb(0xE0, 0x9B, 0x2E), rgb(0xCB, 0x5A, 0x5A),
+                    rgb(0x2D, 0x6C, 0xAF),
+                    rgb(0x4F, 0x9D, 0x69),
+                    rgb(0xE0, 0x9B, 0x2E),
+                    rgb(0xCB, 0x5A, 0x5A),
                 ];
                 let band_h = (rc.bottom - rc.top) / bands.len() as i32;
                 for (i, color) in bands.iter().enumerate() {
                     let brush = CreateSolidBrush(*color);
                     _ = FillRect(
                         hdc,
-                        &RECT { top: i as i32 * band_h, bottom: (i as i32 + 1) * band_h, ..rc },
+                        &RECT {
+                            top: i as i32 * band_h,
+                            bottom: (i as i32 + 1) * band_h,
+                            ..rc
+                        },
                         brush,
                     );
                     _ = DeleteObject(brush as HGDIOBJ);

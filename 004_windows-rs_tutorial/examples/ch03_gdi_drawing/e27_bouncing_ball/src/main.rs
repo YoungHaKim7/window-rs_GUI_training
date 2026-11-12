@@ -28,8 +28,8 @@ const TIMER_ID: usize = 1;
 
 #[derive(Default)]
 struct State {
-    pos: (f32, f32),  // ball center, client pixels
-    vel: (f32, f32),  // pixels per tick
+    pos: (f32, f32), // ball center, client pixels
+    vel: (f32, f32), // pixels per tick
 }
 
 fn main() {
@@ -53,8 +53,14 @@ fn main() {
             w!("e27_class"),
             w!("e27 · Bouncing Ball"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 640, 420,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            640,
+            420,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -175,10 +181,22 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     let (x, y) = (state.pos.0 as i32, state.pos.1 as i32);
                     let shadow = CreateSolidBrush(rgb(0x10, 0x16, 0x22));
                     _ = SelectObject(memdc, shadow as HGDIOBJ);
-                    _ = Ellipse(memdc, x - BALL_RADIUS + 4, y - BALL_RADIUS + 6, x + BALL_RADIUS + 4, y + BALL_RADIUS + 6);
+                    _ = Ellipse(
+                        memdc,
+                        x - BALL_RADIUS + 4,
+                        y - BALL_RADIUS + 6,
+                        x + BALL_RADIUS + 4,
+                        y + BALL_RADIUS + 6,
+                    );
                     let body = CreateSolidBrush(rgb(0xE0, 0x50, 0x30));
                     _ = SelectObject(memdc, body as HGDIOBJ);
-                    _ = Ellipse(memdc, x - BALL_RADIUS, y - BALL_RADIUS, x + BALL_RADIUS, y + BALL_RADIUS);
+                    _ = Ellipse(
+                        memdc,
+                        x - BALL_RADIUS,
+                        y - BALL_RADIUS,
+                        x + BALL_RADIUS,
+                        y + BALL_RADIUS,
+                    );
                     let shine = CreateSolidBrush(rgb(0xFF, 0xC0, 0xA0));
                     _ = SelectObject(memdc, shine as HGDIOBJ);
                     _ = Ellipse(memdc, x - 9, y - 11, x - 1, y - 3);
@@ -190,7 +208,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     _ = SetBkMode(memdc, TRANSPARENT);
                     _ = SetTextColor(memdc, rgb(0x88, 0x99, 0xAA));
-                    _ = TextOutW(memdc, 10, 8, w!("fixed-step physics + double buffering"), -1);
+                    _ = TextOutW(
+                        memdc,
+                        10,
+                        8,
+                        w!("fixed-step physics + double buffering"),
+                        -1,
+                    );
 
                     _ = BitBlt(hdc, 0, 0, w, h, Some(memdc), 0, 0, SRCCOPY);
                     SelectObject(memdc, old_bitmap);

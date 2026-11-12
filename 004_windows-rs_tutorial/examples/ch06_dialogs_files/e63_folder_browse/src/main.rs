@@ -56,8 +56,14 @@ fn main() {
             w!("e63_class"),
             w!("e63 · Folder Browse — pick a directory"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 520, 280,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            520,
+            280,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -69,8 +75,14 @@ fn main() {
             w!("BUTTON"),
             w!("Browse for folder..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 20, 160, 32,
-            Some(hwnd), Some(IDC_BROWSE as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            160,
+            32,
+            Some(hwnd),
+            Some(IDC_BROWSE as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!browse.is_null());
 

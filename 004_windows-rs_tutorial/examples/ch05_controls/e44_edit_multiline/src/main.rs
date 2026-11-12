@@ -41,8 +41,14 @@ fn main() {
             w!("e44_class"),
             w!("e44 · Multiline Edit — scrolling is free"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 420,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            420,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -67,9 +73,16 @@ fn main() {
             WS_EX_CLIENTEDGE as usize as u32,
             w!("EDIT"),
             w!(""),
-            (WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL) as u32,
-            20, 20, 500, 340,
-            Some(hwnd), None, Some(instance), None,
+            (WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL)
+                as u32,
+            20,
+            20,
+            500,
+            340,
+            Some(hwnd),
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd_edit.is_null());
 

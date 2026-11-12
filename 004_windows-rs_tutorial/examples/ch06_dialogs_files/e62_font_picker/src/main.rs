@@ -53,8 +53,14 @@ fn main() {
             w!("e62_class"),
             w!("e62 · Font Picker — the sample wears the choice"),
             (WS_OVERLAPPEDWINDOW | WS_VISIBLE) as u32,
-            CW_USEDEFAULT, CW_USEDEFAULT, 560, 300,
-            None, None, Some(instance), None,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            560,
+            300,
+            None,
+            None,
+            Some(instance),
+            None,
         );
         debug_assert!(!hwnd.is_null());
 
@@ -81,8 +87,14 @@ fn main() {
             w!("BUTTON"),
             w!("Font..."),
             (WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON) as u32,
-            20, 20, 100, 32,
-            Some(hwnd), Some(IDC_FONT as usize as HMENU), Some(instance), None,
+            20,
+            20,
+            100,
+            32,
+            Some(hwnd),
+            Some(IDC_FONT as usize as HMENU),
+            Some(instance),
+            None,
         );
         debug_assert!(!font_button.is_null());
 
@@ -123,9 +135,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         // (CF_INITTOLOGFONTSTRUCT) and writes the user's
                         // choices back into the same struct on OK.
                         lpLogFont: &mut state.logfont,
-                        Flags: (CF_INITTOLOGFONTSTRUCT
-                            | CF_SCREENFONTS
-                            | CF_EFFECTS) as u32,
+                        Flags: (CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS | CF_EFFECTS) as u32,
                         rgbColors: state.color, // in/out with CF_EFFECTS
                         ..Default::default()
                     };
@@ -172,18 +182,32 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 );
 
                 // Describe what's on screen straight from the LOGFONTW.
-                let face_end =
-                    state.logfont.lfFaceName.iter().position(|&u| u == 0).unwrap_or(0);
+                let face_end = state
+                    .logfont
+                    .lfFaceName
+                    .iter()
+                    .position(|&u| u == 0)
+                    .unwrap_or(0);
                 let face = String::from_utf16_lossy(&state.logfont.lfFaceName[..face_end]);
                 let info = to_wide(&format!(
                     "{} {} — height {} px, weight {}",
                     face,
-                    if state.logfont.lfWeight == FW_BOLD as i32 { "bold" } else { "regular" },
+                    if state.logfont.lfWeight == FW_BOLD as i32 {
+                        "bold"
+                    } else {
+                        "regular"
+                    },
                     -state.logfont.lfHeight,
                     state.logfont.lfWeight
                 ));
                 let info_color = SetTextColor(hdc, 0x404040);
-                _ = TextOutW(hdc, 20, 60, PCWSTR::from_raw(info.as_ptr()), info.len() as i32 - 1);
+                _ = TextOutW(
+                    hdc,
+                    20,
+                    60,
+                    PCWSTR::from_raw(info.as_ptr()),
+                    info.len() as i32 - 1,
+                );
                 SetTextColor(hdc, info_color);
 
                 SetTextColor(hdc, old_color);
