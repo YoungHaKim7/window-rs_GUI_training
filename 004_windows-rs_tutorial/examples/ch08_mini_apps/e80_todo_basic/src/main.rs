@@ -257,7 +257,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                             // Same index, both stores — the mirror rule.
                             SendMessageW(list, LB_DELETESTRING as u32, sel as WPARAM, 0);
                             if let Some(state) = state_of(hwnd)
-                                && (sel as usize) < state.items.len() {
+                                && (sel as usize) < state.items.len()
+                            {
                                 state.items.remove(sel as usize);
                             }
                             // After a deletion there is NO selection (and

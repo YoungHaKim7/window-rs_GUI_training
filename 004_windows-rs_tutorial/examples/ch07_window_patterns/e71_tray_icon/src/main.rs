@@ -132,9 +132,9 @@ unsafe fn shell_notify(
     unsafe {
         let mut nid = NOTIFYICONDATAW {
             cbSize: std::mem::size_of::<NOTIFYICONDATAW>() as u32,
-            hWnd: hwnd, // who receives the callback message
-            uID: TRAY_ID, // our id among this window's icons
-            uFlags: flags, // which members of this struct are meaningful
+            hWnd: hwnd,                           // who receives the callback message
+            uID: TRAY_ID,                         // our id among this window's icons
+            uFlags: flags,                        // which members of this struct are meaningful
             uCallbackMessage: WM_APP_TRAY as u32, // mouse events arrive as this
             hIcon: LoadIconW(None, PCWSTR(IDI_APPLICATION.0.cast())),
             ..Default::default()

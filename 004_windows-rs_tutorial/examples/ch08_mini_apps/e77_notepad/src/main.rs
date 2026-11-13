@@ -308,7 +308,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // load/open below clears the flag AFTER setting text).
                 if notification == EN_CHANGE as u32 && id == IDC_EDIT as usize {
                     if let Some(state) = state_of(hwnd)
-                        && !state.dirty {
+                        && !state.dirty
+                    {
                         state.dirty = true;
                         update_title(hwnd);
                     }
@@ -337,7 +338,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     IDM_OPEN => {
                         let dirty_now = state_of(hwnd).map(|s| s.dirty).unwrap_or(false);
                         if (!dirty_now || confirm_discard(hwnd))
-                            && let Some(path) = pick_path(hwnd, false) {
+                            && let Some(path) = pick_path(hwnd, false)
+                        {
                             match std::fs::read(&path) {
                                 Ok(bytes) => {
                                     let text = String::from_utf8_lossy(&bytes).into_owned();
@@ -352,9 +354,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                 Err(err) => {
                                     _ = MessageBoxW(
                                         Some(hwnd),
-                                        &HSTRING::from(format!(
-                                            "Could not read the file:\n{err}"
-                                        )),
+                                        &HSTRING::from(format!("Could not read the file:\n{err}")),
                                         w!("e77 Notepad"),
                                         (MB_OK | MB_ICONERROR) as u32,
                                     );

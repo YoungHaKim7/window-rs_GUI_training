@@ -268,7 +268,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // batch. D2DERR_RECREATE_TARGET = device lost: throw the
                 // target away and let the next WM_PAINT build a fresh one.
                 if let Err(err) = target.EndDraw(None, None).ok()
-                    && err.code() == D2DERR_RECREATE_TARGET {
+                    && err.code() == D2DERR_RECREATE_TARGET
+                {
                     state.target = None;
                 }
 

@@ -282,7 +282,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_TIMER => {
                 if wparam == TIMER_ID
                     && let Some(state) = state_of(hwnd)
-                    && state.phase == Phase::Playing {
+                    && state.phase == Phase::Playing
+                {
                     state.seconds += 1;
                     _ = InvalidateRect(Some(hwnd), None, false);
                 }
@@ -308,8 +309,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let x = (lparam & 0xffff) as i16 as i32;
                 let y = ((lparam >> 16) & 0xffff) as i16 as i32;
                 let (cx, cy) = ((x - 8) / CELL, (y - STRIP_H - 8) / CELL);
-                let inside =
-                    (0..COLS).contains(&cx) && (0..ROWS).contains(&cy) && y >= STRIP_H;
+                let inside = (0..COLS).contains(&cx) && (0..ROWS).contains(&cy) && y >= STRIP_H;
 
                 if inside {
                     let left = message as i32 == WM_LBUTTONUP;

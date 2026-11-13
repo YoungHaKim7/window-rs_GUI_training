@@ -520,7 +520,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let sel = SendMessageW(list, LB_GETCURSEL as u32, 0, 0) as i32;
                         if sel >= 0 {
                             if let Some(state) = state_of(hwnd)
-                                && (sel as usize) < state.items.len() {
+                                && (sel as usize) < state.items.len()
+                            {
                                 state.items[sel as usize].1 = !state.items[sel as usize].1;
                             }
                             refill_list(hwnd);

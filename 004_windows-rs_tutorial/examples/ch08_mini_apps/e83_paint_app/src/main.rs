@@ -319,7 +319,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_MOUSEMOVE => {
                 if GetCapture() == hwnd {
                     if let Some(state) = state_of(hwnd)
-                        && let Some(stroke) = state.current.as_mut() {
+                        && let Some(stroke) = state.current.as_mut()
+                    {
                         stroke.pts.push(mouse_pos(lparam));
                     }
                     _ = InvalidateRect(Some(hwnd), None, false);
@@ -332,7 +333,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     _ = ReleaseCapture();
                     if let Some(state) = state_of(hwnd)
                         && let Some(stroke) = state.current.take()
-                        && stroke.pts.len() >= 2 {
+                        && stroke.pts.len() >= 2
+                    {
                         state.strokes.push(stroke);
                     }
                     _ = InvalidateRect(Some(hwnd), None, false);

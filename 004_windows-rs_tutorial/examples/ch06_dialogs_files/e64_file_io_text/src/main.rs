@@ -246,8 +246,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 //         { state.dirty = true; retitle with '*'; }
                 // We skip it here so closing never blocks on "save?".
 
-                if notification == BN_CLICKED as u32 && control_id == IDC_OPEN as u32
-                    && let Some(path) = file_dialog(hwnd, false) {
+                if notification == BN_CLICKED as u32
+                    && control_id == IDC_OPEN as u32
+                    && let Some(path) = file_dialog(hwnd, false)
+                {
                     // Read the whole file as UTF-8. A non-UTF-8 file
                     // errors here — a real editor would offer an
                     // encoding fallback; we report and keep the old
@@ -268,8 +270,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         }
                     }
                 }
-                if notification == BN_CLICKED as u32 && control_id == IDC_SAVE as u32
-                    && let Some(path) = file_dialog(hwnd, true) {
+                if notification == BN_CLICKED as u32
+                    && control_id == IDC_SAVE as u32
+                    && let Some(path) = file_dialog(hwnd, true)
+                {
                     // The document's truth lives in the control —
                     // pull it out and write it, byte for byte.
                     let text = window_text(state.hwnd_edit);

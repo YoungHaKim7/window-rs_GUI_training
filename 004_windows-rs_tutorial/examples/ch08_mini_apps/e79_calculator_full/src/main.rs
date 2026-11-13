@@ -238,7 +238,8 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
 
             k if k == b'=' as i32 || k == b'\r' as i32 => {
                 if let Some(state) = state_of(hwnd)
-                    && state.pending.is_some() {
+                    && state.pending.is_some()
+                {
                     state.apply_pending();
                     state.just_evaluated = true;
                 }
@@ -253,7 +254,8 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
             0x08 => {
                 // Backspace: trim the entry, never the accumulator.
                 if let Some(state) = state_of(hwnd)
-                    && !state.just_evaluated {
+                    && !state.just_evaluated
+                {
                     state.current.pop();
                     if state.current.is_empty() || state.current == "-" {
                         state.current = String::from("0");
@@ -263,7 +265,8 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
 
             k if k == b'%' as i32 => {
                 if let Some(state) = state_of(hwnd)
-                    && let Ok(v) = state.current.parse::<f64>() {
+                    && let Ok(v) = state.current.parse::<f64>()
+                {
                     // Simple %-model: the entry becomes entry/100
                     // ("50 + 10%" as "50 + 0.1"). The "percent OF the
                     // accumulator" model is a two-line upgrade.

@@ -340,7 +340,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         let sel = SendMessageW(list, LB_GETCURSEL as u32, 0, 0) as i32;
                         if sel >= 0 {
                             if let Some(state) = state_of(hwnd)
-                                && let Some(&actual) = state.shown.get(sel as usize) {
+                                && let Some(&actual) = state.shown.get(sel as usize)
+                            {
                                 // Map display row -> model index
                                 // (the whole point of `shown`).
                                 state.items[actual].1 = !state.items[actual].1;

@@ -310,7 +310,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     IDC_DOT => {
                         if let Some(state) = state_of(hwnd)
-                            && !state.current.contains('.') {
+                            && !state.current.contains('.')
+                        {
                             if state.current.is_empty() || state.current == "Error" {
                                 state.current = String::from("0");
                             }
@@ -339,7 +340,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     IDC_EQ => {
                         if let Some(state) = state_of(hwnd)
-                            && state.pending.is_some() {
+                            && state.pending.is_some()
+                        {
                             if state.current.is_empty() {
                                 // "2 + =" -> repeat-free no-op guard
                                 state.current = format_value(state.accumulator);

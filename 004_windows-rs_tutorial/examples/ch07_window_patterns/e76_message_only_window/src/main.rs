@@ -152,7 +152,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_TIMER => {
                 if wparam == TIMER_ID
                     && let Some(state) = state_of(hwnd)
-                    && !state.worker.is_null() {
+                    && !state.worker.is_null()
+                {
                     state.sent += 1;
                     // Alternate the message id so the mailbox's
                     // match arms both get exercise. POST (async)

@@ -399,11 +399,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     0,
                     0,
                     0,
-                    if s.bold {
-                        FW_BOLD
-                    } else {
-                        FW_NORMAL
-                    },
+                    if s.bold { FW_BOLD } else { FW_NORMAL },
                     0,
                     0,
                     0,

@@ -265,7 +265,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // arrive as ordinary BN_CLICKED notifications. Owner-draw
                 // changed the PAINT, never the input plumbing.
                 if notification == BN_CLICKED as u32
-                    && let Some(state) = state_of(hwnd) {
+                    && let Some(state) = state_of(hwnd)
+                {
                     let index = if control_id == IDC_BLUE as u32 { 0 } else { 1 };
                     state.clicks[index] += 1;
                     _ = InvalidateRect(Some(hwnd), None, true);

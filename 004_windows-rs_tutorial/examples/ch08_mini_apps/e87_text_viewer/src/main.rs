@@ -318,7 +318,8 @@ extern "system" fn find_dlgproc(
             WM_INITDIALOG => {
                 // Seed the edit with the previous query, if any.
                 if let Some(state) = state_of(GetParent(hdlg))
-                    && !state.query.is_empty() {
+                    && !state.query.is_empty()
+                {
                     let edit = GetDlgItem(Some(hdlg), IDC_FIND_EDIT);
                     _ = SetWindowTextW(edit, &HSTRING::from(state.query.clone()));
                 }
