@@ -1,0 +1,10 @@
+[package]
+name = "editor"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+windows-canvas = { git = "https://github.com/microsoft/windows-rs/", features = ["reactor"], rev = "8ca69fd"}
+windows-reactor = { git = "https://github.com/microsoft/windows-rs/", rev = "8ca69fd" }
+windows-text = {git = "https://github.com/microsoft/windows-rs/", rev = "8ca69fd" }
+
