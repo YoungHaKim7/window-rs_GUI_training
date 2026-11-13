@@ -420,7 +420,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
             WM_COMMAND => {
                 let notification = ((wparam >> 16) & 0xffff) as i32;
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
 
                 match id {
                     IDM_NEW => {
@@ -481,7 +481,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     // Pattern ranges can't hold expressions (STYLE.md's
                     // pattern rule) — a guard covers the recent-id span.
-                    id2 if id2 >= IDM_RECENT_BASE && id2 <= IDM_RECENT_BASE + 2 => {
+                    id2 if (IDM_RECENT_BASE..=IDM_RECENT_BASE + 2).contains(&id2) => {
                         // The shown index equals the state index (Recent
                         // entries and menu items were appended together).
                         let idx = id2 - IDM_RECENT_BASE;
@@ -492,7 +492,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                         0
                     }
 
-                    _ if id == IDC_ADD as usize && notification == BN_CLICKED as i32 => {
+                    _ if id == IDC_ADD as usize && notification == BN_CLICKED => {
                         let entry = GetDlgItem(Some(hwnd), IDC_ENTRY);
                         let len = SendMessageW(entry, WM_GETTEXTLENGTH as u32, 0, 0) as usize;
                         let mut buf = vec![0u16; len + 1];
@@ -515,14 +515,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     }
 
                     // Double-click toggles done (e81).
-                    _ if id == IDC_LIST as usize && notification == LBN_DBLCLK as i32 => {
+                    _ if id == IDC_LIST as usize && notification == LBN_DBLCLK => {
                         let list = GetDlgItem(Some(hwnd), IDC_LIST);
                         let sel = SendMessageW(list, LB_GETCURSEL as u32, 0, 0) as i32;
                         if sel >= 0 {
-                            if let Some(state) = state_of(hwnd) {
-                                if (sel as usize) < state.items.len() {
-                                    state.items[sel as usize].1 = !state.items[sel as usize].1;
-                                }
+                            if let Some(state) = state_of(hwnd)
+                                && (sel as usize) < state.items.len() {
+                                state.items[sel as usize].1 = !state.items[sel as usize].1;
                             }
                             refill_list(hwnd);
                         }

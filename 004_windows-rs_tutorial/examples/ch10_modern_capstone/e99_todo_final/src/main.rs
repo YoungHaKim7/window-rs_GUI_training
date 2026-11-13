@@ -370,7 +370,7 @@ unsafe fn refresh_status(state: &mut State) {
         let wide: Vec<u16> = part0.encode_utf16().chain(std::iter::once(0)).collect();
         SendMessageW(
             state.hwnd_status,
-            (SB_SETTEXTW | 0) as u32,
+            SB_SETTEXTW as u32,
             0,
             wide.as_ptr() as isize,
         );
@@ -438,13 +438,15 @@ unsafe fn apply_dark_titlebar(hwnd: HWND, dark: bool) {
 
 unsafe fn tray_add(hwnd: HWND) {
     unsafe {
-        let mut nid = NOTIFYICONDATAW::default();
-        nid.cbSize = std::mem::size_of::<NOTIFYICONDATAW>() as u32;
-        nid.hWnd = hwnd;
-        nid.uID = TRAY_ID;
-        nid.uFlags = (NIF_MESSAGE | NIF_ICON | NIF_TIP) as u32;
-        nid.uCallbackMessage = WM_APP_TRAY as u32; // posted on mouse activity
-        nid.hIcon = LoadIconW(None, PCWSTR(IDI_APPLICATION.0.cast()));
+        let mut nid = NOTIFYICONDATAW {
+            cbSize: std::mem::size_of::<NOTIFYICONDATAW>() as u32,
+            hWnd: hwnd,
+            uID: TRAY_ID,
+            uFlags: (NIF_MESSAGE | NIF_ICON | NIF_TIP) as u32,
+            uCallbackMessage: WM_APP_TRAY as u32, // posted on mouse activity
+            hIcon: LoadIconW(None, PCWSTR(IDI_APPLICATION.0.cast())),
+            ..Default::default()
+        };
         // Fixed [WCHAR;128] buffer (e91's PROCESSENTRY32W rule): write the
         // UTF-16 ourselves, keep the terminating NUL, never overrun.
         for (i, unit) in "e99 todo".encode_utf16().take(127).enumerate() {
@@ -456,10 +458,12 @@ unsafe fn tray_add(hwnd: HWND) {
 
 unsafe fn tray_delete(hwnd: HWND) {
     unsafe {
-        let mut nid = NOTIFYICONDATAW::default();
-        nid.cbSize = std::mem::size_of::<NOTIFYICONDATAW>() as u32;
-        nid.hWnd = hwnd;
-        nid.uID = TRAY_ID;
+        let mut nid = NOTIFYICONDATAW {
+            cbSize: std::mem::size_of::<NOTIFYICONDATAW>() as u32,
+            hWnd: hwnd,
+            uID: TRAY_ID,
+            ..Default::default()
+        };
         _ = Shell_NotifyIconW(NIM_DELETE as u32, &mut nid);
     }
 }

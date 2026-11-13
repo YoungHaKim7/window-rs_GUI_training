@@ -306,11 +306,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // EN_CHANGE: the EDIT text changed under the user (and
                 // under us: SetWindowTextW triggers it too — note how
                 // load/open below clears the flag AFTER setting text).
-                if notification == EN_CHANGE as u32 && id == IDC_EDIT as usize
-                    && let Some(state) = state_of(hwnd)
-                    && !state.dirty {
-                    state.dirty = true;
-                    update_title(hwnd);
+                if notification == EN_CHANGE as u32 && id == IDC_EDIT as usize {
+                    if let Some(state) = state_of(hwnd)
+                        && !state.dirty {
+                        state.dirty = true;
+                        update_title(hwnd);
+                    }
                     return 0;
                 }
 
@@ -335,29 +336,28 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                     IDM_OPEN => {
                         let dirty_now = state_of(hwnd).map(|s| s.dirty).unwrap_or(false);
-                        if !dirty_now || confirm_discard(hwnd) {
-                            if let Some(path) = pick_path(hwnd, false) {
-                                match std::fs::read(&path) {
-                                    Ok(bytes) => {
-                                        let text = String::from_utf8_lossy(&bytes).into_owned();
-                                        let edit = GetDlgItem(Some(hwnd), IDC_EDIT);
-                                        set_edit_text(edit, &text);
-                                        if let Some(state) = state_of(hwnd) {
-                                            state.dirty = false;
-                                            state.file_name = path;
-                                        }
-                                        update_title(hwnd);
+                        if (!dirty_now || confirm_discard(hwnd))
+                            && let Some(path) = pick_path(hwnd, false) {
+                            match std::fs::read(&path) {
+                                Ok(bytes) => {
+                                    let text = String::from_utf8_lossy(&bytes).into_owned();
+                                    let edit = GetDlgItem(Some(hwnd), IDC_EDIT);
+                                    set_edit_text(edit, &text);
+                                    if let Some(state) = state_of(hwnd) {
+                                        state.dirty = false;
+                                        state.file_name = path;
                                     }
-                                    Err(err) => {
-                                        _ = MessageBoxW(
-                                            Some(hwnd),
-                                            &HSTRING::from(format!(
-                                                "Could not read the file:\n{err}"
-                                            )),
-                                            w!("e77 Notepad"),
-                                            (MB_OK | MB_ICONERROR) as u32,
-                                        );
-                                    }
+                                    update_title(hwnd);
+                                }
+                                Err(err) => {
+                                    _ = MessageBoxW(
+                                        Some(hwnd),
+                                        &HSTRING::from(format!(
+                                            "Could not read the file:\n{err}"
+                                        )),
+                                        w!("e77 Notepad"),
+                                        (MB_OK | MB_ICONERROR) as u32,
+                                    );
                                 }
                             }
                         }

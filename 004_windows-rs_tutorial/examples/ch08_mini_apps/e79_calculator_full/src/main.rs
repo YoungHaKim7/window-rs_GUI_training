@@ -237,11 +237,10 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
             }
 
             k if k == b'=' as i32 || k == b'\r' as i32 => {
-                if let Some(state) = state_of(hwnd) {
-                    if state.pending.is_some() {
-                        state.apply_pending();
-                        state.just_evaluated = true;
-                    }
+                if let Some(state) = state_of(hwnd)
+                    && state.pending.is_some() {
+                    state.apply_pending();
+                    state.just_evaluated = true;
                 }
             }
 
@@ -251,26 +250,24 @@ unsafe fn on_key(hwnd: HWND, key: i32) {
                 }
             }
 
-            k if k == 0x08 => {
+            0x08 => {
                 // Backspace: trim the entry, never the accumulator.
-                if let Some(state) = state_of(hwnd) {
-                    if !state.just_evaluated {
-                        state.current.pop();
-                        if state.current.is_empty() || state.current == "-" {
-                            state.current = String::from("0");
-                        }
+                if let Some(state) = state_of(hwnd)
+                    && !state.just_evaluated {
+                    state.current.pop();
+                    if state.current.is_empty() || state.current == "-" {
+                        state.current = String::from("0");
                     }
                 }
             }
 
             k if k == b'%' as i32 => {
-                if let Some(state) = state_of(hwnd) {
-                    if let Ok(v) = state.current.parse::<f64>() {
-                        // Simple %-model: the entry becomes entry/100
-                        // ("50 + 10%" as "50 + 0.1"). The "percent OF the
-                        // accumulator" model is a two-line upgrade.
-                        state.current = format_value(v / 100.0);
-                    }
+                if let Some(state) = state_of(hwnd)
+                    && let Ok(v) = state.current.parse::<f64>() {
+                    // Simple %-model: the entry becomes entry/100
+                    // ("50 + 10%" as "50 + 0.1"). The "percent OF the
+                    // accumulator" model is a two-line upgrade.
+                    state.current = format_value(v / 100.0);
                 }
             }
 
@@ -403,7 +400,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 for row in KEYS.iter() {
                     for (id, label) in row.iter() {
-                        let wide = to_wide(*label);
+                        let wide = to_wide(label);
                         let key = CreateWindowExW(
                             0,
                             w!("BUTTON"),

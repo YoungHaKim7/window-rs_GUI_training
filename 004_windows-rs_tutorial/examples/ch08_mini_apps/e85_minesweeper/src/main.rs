@@ -105,10 +105,8 @@ impl State {
                     for dx in -1..=1 {
                         let (nx, ny) = (x + dx, y + dy);
                         if (dx != 0 || dy != 0)
-                            && nx >= 0
-                            && nx < COLS
-                            && ny >= 0
-                            && ny < ROWS
+                            && (0..COLS).contains(&nx)
+                            && (0..ROWS).contains(&ny)
                             && self.at(nx, ny).mine
                         {
                             n += 1;
@@ -125,7 +123,7 @@ impl State {
     fn reveal(&mut self, x: i32, y: i32) {
         let mut stack = vec![(x, y)];
         while let Some((x, y)) = stack.pop() {
-            if x < 0 || x >= COLS || y < 0 || y >= ROWS {
+            if !(0..COLS).contains(&x) || !(0..ROWS).contains(&y) {
                 continue;
             }
             let cell = self.at(x, y);
@@ -282,13 +280,11 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             }
 
             WM_TIMER => {
-                if wparam == TIMER_ID {
-                    if let Some(state) = state_of(hwnd) {
-                        if state.phase == Phase::Playing {
-                            state.seconds += 1;
-                            _ = InvalidateRect(Some(hwnd), None, false);
-                        }
-                    }
+                if wparam == TIMER_ID
+                    && let Some(state) = state_of(hwnd)
+                    && state.phase == Phase::Playing {
+                    state.seconds += 1;
+                    _ = InvalidateRect(Some(hwnd), None, false);
                 }
                 0
             }
@@ -312,7 +308,8 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let x = (lparam & 0xffff) as i16 as i32;
                 let y = ((lparam >> 16) & 0xffff) as i16 as i32;
                 let (cx, cy) = ((x - 8) / CELL, (y - STRIP_H - 8) / CELL);
-                let inside = cx >= 0 && cx < COLS && cy >= 0 && cy < ROWS && y >= STRIP_H;
+                let inside =
+                    (0..COLS).contains(&cx) && (0..ROWS).contains(&cy) && y >= STRIP_H;
 
                 if inside {
                     let left = message as i32 == WM_LBUTTONUP;

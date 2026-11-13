@@ -309,10 +309,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
             WM_COMMAND => {
                 let notification = ((wparam >> 16) & 0xffff) as i32;
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
 
                 match id {
-                    IDC_ADD if notification == BN_CLICKED as i32 => {
+                    IDC_ADD if notification == BN_CLICKED => {
                         let entry = GetDlgItem(Some(hwnd), IDC_ENTRY as i32);
                         let len = SendMessageW(entry, WM_GETTEXTLENGTH as u32, 0, 0) as usize;
                         let mut buf = vec![0u16; len + 1];
@@ -335,16 +335,15 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     }
 
                     // Double-click = toggle. LBN_DBLCLK needs LBS_NOTIFY.
-                    IDC_LIST if notification == LBN_DBLCLK as i32 => {
+                    IDC_LIST if notification == LBN_DBLCLK => {
                         let list = GetDlgItem(Some(hwnd), IDC_LIST as i32);
                         let sel = SendMessageW(list, LB_GETCURSEL as u32, 0, 0) as i32;
                         if sel >= 0 {
-                            if let Some(state) = state_of(hwnd) {
-                                if let Some(&actual) = state.shown.get(sel as usize) {
-                                    // Map display row -> model index
-                                    // (the whole point of `shown`).
-                                    state.items[actual].1 = !state.items[actual].1;
-                                }
+                            if let Some(state) = state_of(hwnd)
+                                && let Some(&actual) = state.shown.get(sel as usize) {
+                                // Map display row -> model index
+                                // (the whole point of `shown`).
+                                state.items[actual].1 = !state.items[actual].1;
                             }
                             refill_list(hwnd);
                         }

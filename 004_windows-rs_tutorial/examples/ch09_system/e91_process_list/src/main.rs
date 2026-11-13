@@ -139,10 +139,12 @@ unsafe fn refresh_list(hwnd: HWND, hwnd_list: HWND) {
             return;
         }
 
-        let mut entry = PROCESSENTRY32W::default();
         // The dwSize contract: you tell it which struct version you compiled
         // against; Process32FirstW fails outright if it disagrees.
-        entry.dwSize = std::mem::size_of::<PROCESSENTRY32W>() as u32;
+        let mut entry = PROCESSENTRY32W {
+            dwSize: std::mem::size_of::<PROCESSENTRY32W>() as u32,
+            ..Default::default()
+        };
 
         let mut count = 0usize;
         if Process32FirstW(snap, &mut entry).as_bool() {

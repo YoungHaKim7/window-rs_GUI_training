@@ -222,7 +222,7 @@ struct TemplateBuilder {
 impl TemplateBuilder {
     fn new() -> Self {
         let words = vec![0u16; 256];
-        let start = (words.as_ptr() as usize % 4 != 0) as usize;
+        let start = (!(words.as_ptr() as usize).is_multiple_of(4)) as usize;
         Self {
             words,
             start,
@@ -263,7 +263,7 @@ fn build_find_template() -> TemplateBuilder {
     let mut t = TemplateBuilder::new();
 
     // DLGTEMPLATE header.
-    t.dword(WS_POPUP as u32 | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
+    t.dword(WS_POPUP | (WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER) as u32);
     t.dword(0);
     t.word(3); // three items: EDIT + two buttons
     t.i16s(&[0, 0, 190, 64]); // dialog units
@@ -317,11 +317,10 @@ extern "system" fn find_dlgproc(
         match message as i32 {
             WM_INITDIALOG => {
                 // Seed the edit with the previous query, if any.
-                if let Some(state) = state_of(GetParent(hdlg)) {
-                    if !state.query.is_empty() {
-                        let edit = GetDlgItem(Some(hdlg), IDC_FIND_EDIT);
-                        _ = SetWindowTextW(edit, &HSTRING::from(state.query.clone()));
-                    }
+                if let Some(state) = state_of(GetParent(hdlg))
+                    && !state.query.is_empty() {
+                    let edit = GetDlgItem(Some(hdlg), IDC_FIND_EDIT);
+                    _ = SetWindowTextW(edit, &HSTRING::from(state.query.clone()));
                 }
                 1 // "set focus yourself"
             }
@@ -467,7 +466,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             }
 
             WM_COMMAND => {
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
                 match id {
                     IDM_OPEN => {
                         // e59 picker, condensed.
@@ -569,7 +568,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
                 if let Some(state) = state_of(hwnd) {
                     state.line_height = line_h;
-                    let page = (rc.bottom / line_h) as i32;
+                    let page = rc.bottom / line_h;
 
                     _ = SetBkMode(hdc, TRANSPARENT);
                     _ = SetTextColor(hdc, 0x00202020);
@@ -612,7 +611,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                                     hw.len() as i32 - 1,
                                     &mut hit_size,
                                 );
-                                let brush = CreateSolidBrush(0x00FFFF_00); // yellow (BGR)
+                                let brush = CreateSolidBrush(0x00FF_FF00); // yellow (BGR)
                                 _ = FillRect(
                                     hdc,
                                     &RECT {

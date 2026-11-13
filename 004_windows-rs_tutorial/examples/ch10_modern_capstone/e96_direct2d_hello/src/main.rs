@@ -187,7 +187,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 let h = (rect.bottom - rect.top) as f32;
 
                 // ---- BeginDraw / draw / EndDraw --------------------------
-                _ = target.BeginDraw();
+                target.BeginDraw();
 
                 // Colors are four f32s (RGBA), premultiplied by convention.
                 // Dark slate background, painted over the whole client area.
@@ -267,10 +267,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // EndDraw returns everything that went wrong during the
                 // batch. D2DERR_RECREATE_TARGET = device lost: throw the
                 // target away and let the next WM_PAINT build a fresh one.
-                if let Err(err) = target.EndDraw(None, None).ok() {
-                    if err.code() == D2DERR_RECREATE_TARGET {
-                        state.target = None;
-                    }
+                if let Err(err) = target.EndDraw(None, None).ok()
+                    && err.code() == D2DERR_RECREATE_TARGET {
+                    state.target = None;
                 }
 
                 _ = EndPaint(hwnd, &ps);

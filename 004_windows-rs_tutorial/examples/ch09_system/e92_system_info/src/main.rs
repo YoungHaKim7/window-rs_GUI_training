@@ -92,7 +92,7 @@ fn gather_rows() -> Vec<(String, String)> {
             PROCESSOR_ARCHITECTURE_ARM => "ARM32".into(),
             other => format!("arch code {other}"),
         };
-        rows.push(("Architecture".into(), arch.into()));
+        rows.push(("Architecture".into(), arch));
         rows.push(("Page size".into(), format!("{} bytes", info.dwPageSize)));
         rows.push((
             "Allocation granularity".into(),

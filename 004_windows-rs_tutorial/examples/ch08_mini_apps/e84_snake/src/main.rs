@@ -265,11 +265,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     Some(state) => (START_MS - (state.score as u32) * 6).max(FASTEST_MS),
                     None => START_MS,
                 };
-                if let Some(state) = state_of(hwnd) {
-                    if interval != state.interval_ms {
-                        state.interval_ms = interval;
-                        rearm_timer(hwnd, interval);
-                    }
+                if let Some(state) = state_of(hwnd)
+                    && interval != state.interval_ms {
+                    state.interval_ms = interval;
+                    rearm_timer(hwnd, interval);
                 }
                 update_title(hwnd);
                 _ = InvalidateRect(Some(hwnd), None, false);
@@ -284,10 +283,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     VK_DOWN => Some((0, 1)),
                     _ => None,
                 };
-                if let Some(dir) = dir {
-                    if let Some(state) = state_of(hwnd) {
-                        state.pending_dir = dir;
-                    }
+                if let Some(dir) = dir
+                    && let Some(state) = state_of(hwnd) {
+                    state.pending_dir = dir;
                 }
                 0
             }

@@ -238,7 +238,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                 // Keys from the table — same loop later re-lays them out.
                 for row in KEYS.iter() {
                     for (id, label) in row.iter() {
-                        let wide = to_wide(*label);
+                        let wide = to_wide(label);
                         let key = CreateWindowExW(
                             0,
                             w!("BUTTON"),
@@ -309,13 +309,12 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     }
 
                     IDC_DOT => {
-                        if let Some(state) = state_of(hwnd) {
-                            if !state.current.contains('.') {
-                                if state.current.is_empty() || state.current == "Error" {
-                                    state.current = String::from("0");
-                                }
-                                state.current.push('.');
+                        if let Some(state) = state_of(hwnd)
+                            && !state.current.contains('.') {
+                            if state.current.is_empty() || state.current == "Error" {
+                                state.current = String::from("0");
                             }
+                            state.current.push('.');
                         }
                     }
 
@@ -339,14 +338,13 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     }
 
                     IDC_EQ => {
-                        if let Some(state) = state_of(hwnd) {
-                            if state.pending.is_some() {
-                                if state.current.is_empty() {
-                                    // "2 + =" -> repeat-free no-op guard
-                                    state.current = format_value(state.accumulator);
-                                }
-                                state.apply_pending();
+                        if let Some(state) = state_of(hwnd)
+                            && state.pending.is_some() {
+                            if state.current.is_empty() {
+                                // "2 + =" -> repeat-free no-op guard
+                                state.current = format_value(state.accumulator);
                             }
+                            state.apply_pending();
                         }
                     }
 

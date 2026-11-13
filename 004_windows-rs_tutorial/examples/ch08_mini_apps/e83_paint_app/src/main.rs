@@ -318,10 +318,9 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
 
             WM_MOUSEMOVE => {
                 if GetCapture() == hwnd {
-                    if let Some(state) = state_of(hwnd) {
-                        if let Some(stroke) = state.current.as_mut() {
-                            stroke.pts.push(mouse_pos(lparam));
-                        }
+                    if let Some(state) = state_of(hwnd)
+                        && let Some(stroke) = state.current.as_mut() {
+                        stroke.pts.push(mouse_pos(lparam));
                     }
                     _ = InvalidateRect(Some(hwnd), None, false);
                 }
@@ -331,12 +330,10 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             WM_LBUTTONUP | WM_RBUTTONUP => {
                 if GetCapture() == hwnd {
                     _ = ReleaseCapture();
-                    if let Some(state) = state_of(hwnd) {
-                        if let Some(stroke) = state.current.take() {
-                            if stroke.pts.len() >= 2 {
-                                state.strokes.push(stroke);
-                            }
-                        }
+                    if let Some(state) = state_of(hwnd)
+                        && let Some(stroke) = state.current.take()
+                        && stroke.pts.len() >= 2 {
+                        state.strokes.push(stroke);
                     }
                     _ = InvalidateRect(Some(hwnd), None, false);
                 }
@@ -344,7 +341,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
             }
 
             WM_COMMAND => {
-                let id = (wparam & 0xffff) as usize;
+                let id = wparam & 0xffff;
                 match id {
                     // Colors: update state, move the radio dot.
                     cid if cid >= IDM_COLOR_BASE && cid < IDM_COLOR_BASE + PALETTE.len() => {
