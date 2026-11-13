@@ -1,8 +1,9 @@
 #![windows_subsystem = "windows"]
 
-use windows_canvas::Ellipse as CanvasEllipse;
-use windows_canvas::*;
-use windows_reactor::*;
+use windows_canvas::{ColorF, DrawContext, Ellipse as CanvasEllipse, Result, Vector2, canvas};
+use windows_reactor::{
+    App, Component, ComponentContext, View, ViewContext, WindowBackdrop, WindowVisuals,
+};
 
 fn draw(ctx: &DrawContext) -> Result<()> {
     ctx.clear(ColorF::DARK_SLATE_BLUE);
@@ -13,10 +14,6 @@ fn draw(ctx: &DrawContext) -> Result<()> {
         &brush,
     );
     Ok(())
-}
-
-fn main() -> Result<()> {
-    App::run_component::<Sample>(())
 }
 
 struct Sample;
@@ -34,4 +31,8 @@ impl Component for Sample {
         context.window_visuals(WindowVisuals::new().backdrop(WindowBackdrop::Mica));
         canvas(draw)
     }
+}
+
+fn main() -> Result<()> {
+    App::run_component::<Sample>(())
 }
