@@ -1,9 +1,13 @@
 #![windows_subsystem = "windows"]
 
 use std::f32::consts::TAU;
-use windows_canvas::Rect as CanvasRect;
-use windows_canvas::*;
-use windows_reactor::*;
+use windows_canvas::{
+    ColorF, DrawContext, Invalidator, Rect as CanvasRect, Result, canvas_invalidated,
+};
+use windows_reactor::{
+    App, Border, Button, Component, ComponentContext, Orientation, StackPanel, Thickness, View,
+    ViewContext, WindowBackdrop, WindowVisuals,
+};
 
 const BARS: usize = 12;
 const WIDTH: f64 = 640.0;
