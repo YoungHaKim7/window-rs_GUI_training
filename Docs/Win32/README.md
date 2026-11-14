@@ -600,6 +600,8 @@ I recommend following this exact progression:
 My recommendation: Start with diagrams 1–3, then investigate each subsystem using WinDbg. Compare the Windows concepts against your own Rust x86-64 operating system implementation. This will help you understand not just what each Windows component does, but why an operating system needs it.
 
 
+# Where they fit in Windows architecture(Mermaid)
+
 ```mermaid
 flowchart TB
 
