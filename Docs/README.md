@@ -16,3 +16,9 @@
 
 ### 마소 공식 설명서
 - https://learn.microsoft.com/en-us/windows/win32/
+
+# Sysinternals
+- Sysinternals 웹 사이트는 Mark Russinovich에서 1996년에 고급 시스템 유틸리티 및 기술 정보를 호스팅하기 위해 제작했습니다. IT 전문가와 개발자 모두 Windows와 Linux 시스템 및 애플리케이션을 관리, 문제 해결 및 진단하는 데 도움이 되는 Sysinternals 유틸리티를 찾을 수 있습니다.
+  - https://learn.microsoft.com/ko-kr/sysinternals/
+  - eng.
+    - https://learn.microsoft.com/en-us/sysinternals/
