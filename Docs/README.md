@@ -22,3 +22,8 @@
   - https://learn.microsoft.com/ko-kr/sysinternals/
   - eng.
     - https://learn.microsoft.com/en-us/sysinternals/
+
+
+# Windows 앱 개발 설명서
+- 새 Windows 앱에 권장되는 UI 프레임워크인 Windows 앱 SDK 및 WinUI 3을 사용하여 네이티브 Windows 데스크톱 앱을 빌드합니다
+  - https://learn.microsoft.com/ko-kr/windows/apps/
