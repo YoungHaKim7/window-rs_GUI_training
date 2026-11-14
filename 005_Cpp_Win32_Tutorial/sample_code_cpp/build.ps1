@@ -53,6 +53,17 @@ function find-clangpp {
     return "clang++"
 }
 
+function find-clang-format {
+
+    $c = Get-Command clang-format -ErrorAction SilentlyContinue
+    if ($c) { return $c.Path }
+
+    $p = "C:\Program Files\LLVM\bin\clang-format.exe"
+    if (Test-Path $p) { return $p }
+
+    return "clang-format"
+}
+
 function find-cmake {
 
     $c = Get-Command cmake -ErrorAction SilentlyContinue
@@ -77,6 +88,7 @@ function find-ninja {
 $gcc = find-gcc
 $clang = find-clang
 $clangpp = find-clangpp
+$clang_format = find-clang-format
 $cmake = find-cmake
 
 # -----------------------------
@@ -120,6 +132,8 @@ function run {
 
     ensure-target
 
+    & ./build.ps1 fmt
+
     & $clangpp $ldflags_common -o $target $source
 
     & $target
@@ -146,6 +160,8 @@ function cr {
 
     Remove-Item build -Recurse -Force -ErrorAction Ignore
     New-Item build -ItemType Directory | Out-Null
+
+    & ./build.ps1 fmt
 
     $ninja = find-ninja
     if ($ninja) {
@@ -205,6 +221,28 @@ function ll {
 }
 
 # -----------------------------
+# clang-format sources
+# -----------------------------
+
+function fmt {
+
+    $exts = @(".c", ".h", ".cpp", ".hpp", ".cc", ".cxx", ".cppm", ".ixx")
+
+    # whole tree, but skip output dirs
+    # (-style=file falls back to LLVM style when no .clang-format is found)
+    $files = Get-ChildItem -Recurse -File |
+        Where-Object { $exts -contains $_.Extension -and $_.FullName -notmatch '\\(build|target|\.git)\\' }
+
+    if (-not $files) {
+        Write-Host "no source files found"
+        return
+    }
+
+    Write-Host "fmt:" ($files.FullName -join " ")
+    & $clang_format -style=file -i $files.FullName
+}
+
+# -----------------------------
 # clean
 # -----------------------------
 
@@ -256,6 +294,7 @@ switch ($cmd) {
     "san" { san $arg }
     "asm" { asm }
     "ll" { ll }
+    "fmt" { fmt }
     "clean" { clean }
     "init" { init }
     "compilers" { compilers }
@@ -263,6 +302,6 @@ switch ($cmd) {
     default {
         Write-Host ""
         Write-Host "commands:"
-        Write-Host "r ro cr san asm ll clean init compilers"
+        Write-Host "r ro cr san asm ll fmt clean init compilers"
     }
 }
