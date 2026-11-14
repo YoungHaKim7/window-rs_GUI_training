@@ -93,8 +93,11 @@ $target = "$target_dir\$project_name.exe"
 # flags
 # -----------------------------
 
-$ldflags_common = @("-std=c++2c", "-Wall", "-Wextra")
-$ldflags_opt = @("-std=c++2c", "-O2", "-Wall", "-Wextra", "-g")
+# -municode + windows subsystem: source uses wWinMain (GUI entry), not main
+# (-mwindows is MinGW-only; for the MSVC target use -Wl,/subsystem:windows)
+# user32/gdi32: Win32 GUI APIs — CMake links these by default, raw clang++ does not
+$ldflags_common = @("-std=c++2c", "-Wall", "-Wextra", "-municode", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
+$ldflags_opt = @("-std=c++2c", "-O2", "-Wall", "-Wextra", "-g", "-municode", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
 
 # -----------------------------
 # helpers
@@ -158,7 +161,9 @@ function cr {
 
     & $cmake --build build
 
-    & $target
+    # cmake outputs into build\ — $target points at target\ used by r/ro/san
+    $exe = Get-ChildItem build -Filter *.exe | Select-Object -First 1
+    if ($exe) { & $exe.FullName }
 
 }
 
@@ -170,7 +175,7 @@ function san($type) {
 
     ensure-target
 
-    & $clangpp "-fsanitize=$type" "-g" $source -o $target
+    & $clangpp "-fsanitize=$type" "-g" "-municode" "-Wl,/subsystem:windows" "-luser32" "-lgdi32" $source -o $target
 
     & $target
 }
