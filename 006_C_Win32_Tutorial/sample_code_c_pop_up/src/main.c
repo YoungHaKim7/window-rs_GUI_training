@@ -1,6 +1,12 @@
 #include <windows.h>
 
-int main(void) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
+                   int nCmdShow) {
+    (void)hInstance;
+    (void)hPrevInstance;
+    (void)pCmdLine;
+    (void)nCmdShow;
+
     int response = MessageBoxA(NULL,                       // No parent window
                                "Do you want to continue?", // Message text
                                "Win32 Alert",              // Window title

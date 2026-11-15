@@ -105,11 +105,11 @@ $target = "$target_dir\$project_name.exe"
 # flags
 # -----------------------------
 
-# -municode + windows subsystem: source uses wWinMain (GUI entry), not main
+# windows subsystem: source uses WinMain (GUI entry), not main
 # (-mwindows is MinGW-only; for the MSVC target use -Wl,/subsystem:windows)
-# user32/gdi32: Win32 GUI APIs — CMake links these by default, raw clang++ does not
-$ldflags_common = @("-std=c23", "-Wall", "-Wextra", "-municode", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
-$ldflags_opt = @("-std=c23", "-O2", "-Wall", "-Wextra", "-g", "-municode", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
+# user32/gdi32: Win32 GUI APIs — CMake links these by default, raw clang does not
+$ldflags_common = @("-std=c23", "-Wall", "-Wextra", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
+$ldflags_opt = @("-std=c23", "-O2", "-Wall", "-Wextra", "-g", "-Wl,/subsystem:windows", "-luser32", "-lgdi32")
 
 # -----------------------------
 # helpers
@@ -135,6 +135,7 @@ function run {
     & ./build.ps1 fmt
 
     & $clang $ldflags_common -o $target $source
+    if ($LASTEXITCODE -ne 0) { Write-Host "build failed"; return }
 
     & $target
 }
@@ -148,6 +149,7 @@ function ro {
     ensure-target
 
     & $clang $ldflags_opt -o $target $source
+    if ($LASTEXITCODE -ne 0) { Write-Host "build failed"; return }
 
     & $target
 }
@@ -191,7 +193,8 @@ function san($type) {
 
     ensure-target
 
-    & $clang "-fsanitize=$type" "-g" "-municode" "-Wl,/subsystem:windows" "-luser32" "-lgdi32" $source -o $target
+    & $clang "-fsanitize=$type" "-g" "-Wl,/subsystem:windows" "-luser32" "-lgdi32" $source -o $target
+    if ($LASTEXITCODE -ne 0) { Write-Host "build failed"; return }
 
     & $target
 }
