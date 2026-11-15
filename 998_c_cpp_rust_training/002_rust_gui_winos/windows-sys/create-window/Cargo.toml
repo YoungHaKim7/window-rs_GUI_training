@@ -1,0 +1,12 @@
+[package]
+name = "create-window"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+windows-sys = { git = "https://github.com/microsoft/windows-rs", features = [
+    "libloaderapi",
+    "minwindef",
+    "windef",
+    "winuser",
+] , rev="fd1ae45"}
