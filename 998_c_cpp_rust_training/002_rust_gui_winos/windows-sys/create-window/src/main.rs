@@ -1,5 +1,5 @@
 fn main() {
-    use windows_sys::{Win32::*, core::*};
+    use windows_sys::{Win32::GetModuleHandleA, Win32::*, core::*};
     extern "system" fn wndproc(
         window: HWND,
         message: u32,
