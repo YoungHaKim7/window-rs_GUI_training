@@ -1,3 +1,13 @@
+<p align="center">
+  <!-- Rust version -->
+  <a href="https://www.rust-lang.org/" rel="nofollow noopener noreferrer">
+    <img src="https://img.shields.io/badge/Rust-1.100+-orange.svg" alt="Rust">
+  </a>
+</p>
+
+<hr />
+
+
 # windows-rs Tutorial — 100 Examples
 
 A progressive, build-verified tutorial of **100 self-contained GUI examples**
