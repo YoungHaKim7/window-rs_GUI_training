@@ -1,3 +1,12 @@
+<p align="center">
+  <!-- Rust version -->
+  <a href="https://www.rust-lang.org/" rel="nofollow noopener noreferrer">
+    <img src="https://img.shields.io/badge/Rust-1.100+-orange.svg" alt="Rust">
+  </a>
+</p>
+
+<hr />
+
 # window-rs_GUI_training
 
 - https://github.com/microsoft/windows-rs/tree/master/crates/samples
