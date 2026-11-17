@@ -2,7 +2,7 @@
 edition = "2024"
 publish = false
 version = "0.1.0"
-rust-version = "1.99.1"
+rust-version = "1.100.0"
 description = "Creating a GUI Using the Windows Kernel, Basic Course."
 
 [workspace]
@@ -18,9 +18,9 @@ exclude = ["windows-rs"]
 # All examples depend on the vendored windows-rs clone in ./windows-rs.
 # The `windows` crate's Win32 features are opt-in per example: each example's
 # Cargo.toml adds only the narrow features it needs (e.g. "winuser").
-windows = { path = "windows-rs/crates/libs/windows" }
-windows-window = { path = "windows-rs/crates/libs/window" }
-windows-webview = { path = "windows-rs/crates/libs/webview" }
+windows = { git = "https://github.com/microsoft/windows-rs" }
+windows-window = { git = "https://github.com/microsoft/windows-rs" }
+windows-webview = { git = "https://github.com/microsoft/windows-rs" }
 
 [profile.dev]
 # Debug builds are fine for tutorials; slightly optimize for smoother animation
