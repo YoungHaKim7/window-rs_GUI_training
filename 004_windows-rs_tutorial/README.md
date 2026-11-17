@@ -25,7 +25,7 @@ memory.
 ## Prerequisites
 
 - Windows 10 or 11
-- Rust **stable ≥ 1.95** (rustup: `rustup default stable`) — the vendored
+- Rust **stable ≥ 1.100** (rustup: `rustup default stable`) — the vendored
   `windows` crate uses edition 2024
 - No network needed: all dependencies are **path dependencies** into the
   vendored windows-rs clone in [`windows-rs/`](windows-rs/) (master branch,
