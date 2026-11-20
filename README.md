@@ -1,5 +1,7 @@
 <p align="center">
   <!-- Rust version -->
+  <img alt="windows" width=30px src="https://user-images.githubusercontent.com/67513038/210921131-627bcc59-266f-4228-b6ee-37018b5004b7.png" />
+  <img alt="rust" width=30px src="https://github.com/user-attachments/assets/3489669b-63c0-439e-b507-9b2bfb3fdd5e" />
   <a href="https://www.rust-lang.org/" rel="nofollow noopener noreferrer">
     <img src="https://img.shields.io/badge/Rust-1.100+-orange.svg" alt="Rust">
   </a>
